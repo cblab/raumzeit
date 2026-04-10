@@ -1,5 +1,5 @@
 model_configs:
-  - configs/baseline_ref.yaml
-  - configs/v8a_fast.yaml
-  - configs/v9a_fast.yaml
+  - configs/baseline_ref_paper.yaml
+  - configs/v8a_fast_paper.yaml
+  - configs/v9a_fast_paper.yaml
 seeds: [11, 23, 37, 49, 61]
