@@ -52,9 +52,21 @@ def _sample_bfs_region(g: GraphState, target_size: int) -> list[int]:
     return region
 
 
-def _estimate_return_probabilities(adj: dict[int, set[int]], taus: list[int], walkers: int, rng: np.random.Generator) -> dict[str, float]:
+def _estimate_return_probabilities(
+    adj: dict[int, set[int]],
+    taus: list[int],
+    walkers: int,
+    rng: np.random.Generator,
+    start_nodes: list[int] | None = None,
+) -> dict[str, float]:
     valid_nodes = [u for u, nbrs in adj.items() if len(nbrs) > 0]
-    if not valid_nodes:
+    if start_nodes is None:
+        allowed_starts = valid_nodes
+    else:
+        start_set = set(start_nodes)
+        allowed_starts = [u for u in valid_nodes if u in start_set]
+
+    if not allowed_starts:
         return {str(int(t)): 0.0 for t in taus}
 
     taus_sorted = sorted(int(t) for t in taus)
@@ -62,7 +74,7 @@ def _estimate_return_probabilities(adj: dict[int, set[int]], taus: list[int], wa
     max_tau = taus_sorted[-1]
     returns = {tau: 0 for tau in taus_sorted}
 
-    starts = rng.choice(valid_nodes, size=max(1, walkers), replace=True)
+    starts = rng.choice(allowed_starts, size=max(1, walkers), replace=True)
     for start in starts:
         cur = int(start)
         for t in range(1, max_tau + 1):

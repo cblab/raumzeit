@@ -1,0 +1,9 @@
+inherits: v9a_fast.yaml
+name: v9a_fast_verify
+
+# Verification run: long enough for repeated post-init diagnostics and V9 age gating.
+steps: 3200
+
+# Keep cadence aligned with v8a verification for side-by-side comparison.
+k7_every: 500
+k2_global_every: 1000

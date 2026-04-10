@@ -1,0 +1,9 @@
+inherits: v8a_fast.yaml
+name: v8a_fast_verify
+
+# Verification run: long enough to include nontrivial post-init diagnostics.
+steps: 3200
+
+# Ensure at least one post-init K7 and K2 measurement during the run.
+k7_every: 500
+k2_global_every: 1000

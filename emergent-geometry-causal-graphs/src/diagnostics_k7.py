@@ -119,7 +119,7 @@ def _start_class_ds(full_neigh, start_nodes, taus, n_walkers, rng, min_start_nod
     valid_starts = [u for u in start_nodes if u in full_neigh and len(full_neigh[u]) > 0]
     if len(valid_starts) < min_start_nodes:
         return None
-    probs = _estimate_return_probabilities(full_neigh, taus, n_walkers, rng)
+    probs = _estimate_return_probabilities(full_neigh, taus, n_walkers, rng, start_nodes=valid_starts)
     return _estimate_spectral_dimension(probs)
 
 
