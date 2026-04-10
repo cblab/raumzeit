@@ -7,8 +7,8 @@ import numpy as np
 from .graph_model import GraphState, active_undirected_neighbors
 
 
-
 def _sample_bfs_region(g: GraphState, target_size: int) -> list[int]:
+    """Sample a connected-ish region via BFS and random fill to target size."""
     if g.num_nodes <= 0:
         return []
 
@@ -26,21 +26,20 @@ def _sample_bfs_region(g: GraphState, target_size: int) -> list[int]:
             if len(visited) >= target_size:
                 break
 
-    if len(visited) < min(target_size, g.num_nodes):
-        candidates = np.arange(g.num_nodes)
-        perm = g.rng.permutation(candidates)
-        for node in perm:
+    target = min(target_size, g.num_nodes)
+    if len(visited) < target:
+        for node in g.rng.permutation(np.arange(g.num_nodes)):
             node_i = int(node)
             if node_i not in visited:
                 visited.add(node_i)
-            if len(visited) >= min(target_size, g.num_nodes):
+            if len(visited) >= target:
                 break
 
     return sorted(visited)
 
 
-
 def _shadow_adjacency_for_region(g: GraphState, region_nodes: list[int]) -> dict[int, list[int]]:
+    """Build undirected adjacency restricted to the sampled region."""
     region_set = set(region_nodes)
     adj: dict[int, list[int]] = {u: [] for u in region_nodes}
 
@@ -51,10 +50,10 @@ def _shadow_adjacency_for_region(g: GraphState, region_nodes: list[int]) -> dict
     return adj
 
 
-
 def _estimate_return_probabilities(
     adj: dict[int, list[int]], taus: list[int], walkers: int, rng: np.random.Generator
 ) -> dict[str, float]:
+    """Estimate random-walk return probabilities on the shadow graph."""
     if not adj:
         return {str(int(t)): 0.0 for t in taus}
 
@@ -84,8 +83,8 @@ def _estimate_return_probabilities(
     return probs
 
 
-
 def _estimate_spectral_dimension(return_probs: dict[str, float]) -> float | None:
+    """Estimate ds from slope of log P(return, tau) vs log tau."""
     xs = []
     ys = []
     for tau_s, p in return_probs.items():
@@ -101,8 +100,8 @@ def _estimate_spectral_dimension(return_probs: dict[str, float]) -> float | None
     return float(-2.0 * slope)
 
 
-
 def _estimate_volume_growth_dimension(adj: dict[int, list[int]], root: int) -> float | None:
+    """Estimate dv from slope of log ball-volume vs log radius."""
     if root not in adj:
         return None
 
@@ -136,8 +135,8 @@ def _estimate_volume_growth_dimension(adj: dict[int, list[int]], root: int) -> f
     return float(slope)
 
 
-
 def measure_k2_global(g: GraphState, config: dict) -> dict:
+    """Compute global K2 observables on a sampled shadow region."""
     region_size = int(config.get("k2_region_size", 256))
     taus = [int(t) for t in config.get("k2_taus", [1, 2, 4, 8, 16])]
     walkers = int(config.get("k2_walkers", 256))

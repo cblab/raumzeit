@@ -7,16 +7,14 @@ from .graph_model import create_graph_state
 from .updates import initialize_graph, step
 
 
-
 def run_single(config: dict) -> dict:
     """Run one simulation and return a structured, JSON-serializable result."""
-
     g = create_graph_state(config)
     ancestry = create_ancestry(max_nodes=int(config["max_nodes"]))
 
     initialize_graph(g, ancestry, config)
 
-    history = []
+    history: list[dict] = []
     history.append({"step": int(g.current_step), **measure_k1(g, config=config)})
 
     k2_every = int(config.get("k2_global_every", 0))
