@@ -1,1 +1,5 @@
-# TODO: configuration
+inherits: baseline.yaml
+name: v71
+p_birth: 0.25
+p_link: 0.35
+state_update_fraction: 0.65

@@ -1,1 +1,4 @@
-# TODO: configuration
+inherits: v8.yaml
+name: v8a_fast
+steps: 80
+k2_global_every: 20

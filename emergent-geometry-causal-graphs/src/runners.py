@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from .ancestry import create_ancestry
 from .diagnostics_k1 import measure_k1
+from .diagnostics_k2 import measure_k2_global
 from .graph_model import create_graph_state
 from .updates import initialize_graph, step
+
 
 
 def run_single(config: dict) -> dict:
@@ -17,15 +19,24 @@ def run_single(config: dict) -> dict:
     history = []
     history.append({"step": int(g.current_step), **measure_k1(g, config=config)})
 
+    k2_every = int(config.get("k2_global_every", 0))
+    observables_k2_global: list[dict] = []
+    if k2_every > 0:
+        observables_k2_global.append({"step": int(g.current_step), **measure_k2_global(g, config=config)})
+
     n_steps = int(config.get("steps", 0))
     for _ in range(n_steps):
         step(g, ancestry, config)
         history.append({"step": int(g.current_step), **measure_k1(g, config=config)})
 
+        if k2_every > 0 and g.current_step % k2_every == 0:
+            observables_k2_global.append({"step": int(g.current_step), **measure_k2_global(g, config=config)})
+
     return {
         "config": dict(config),
         "final": history[-1] if history else {},
         "history": history,
+        "observables_k2_global": observables_k2_global,
         "graph": {
             "num_nodes": int(g.num_nodes),
             "num_edges_total": int(len(g.src)),

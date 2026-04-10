@@ -1,1 +1,5 @@
-# TODO: configuration
+inherits: baseline.yaml
+name: v8
+p_birth: 0.42
+p_link: 0.55
+w_noise: 0.06
