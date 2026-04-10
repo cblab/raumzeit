@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+title: "emergent-geometry-causal-graphs"
+message: "If you use this software, please cite it using this metadata."
+authors:
+  - family-names: "TODO"
+    given-names: "TODO"
+version: 0.1.0
+date-released: 2026-04-10
