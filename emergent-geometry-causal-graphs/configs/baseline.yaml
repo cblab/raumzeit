@@ -13,3 +13,16 @@ k2_global_every: 30
 k2_region_size: 128
 k2_taus: [1, 2, 4, 8, 16]
 k2_walkers: 300
+k7_every: 30
+fine_start: 60
+fine_end: 120
+fine_every: 10
+num_anchors: 6
+anchor_region_size: 128
+anchor_min_region: 24
+k6_taus: [1, 2, 4, 8, 16]
+k6_walkers: 300
+k6_min_start_nodes: 2
+k6_core_frac: 0.25
+k6_mid_frac: 0.50
+k6_front_frac: 0.25
