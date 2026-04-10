@@ -21,6 +21,46 @@ def _safe_mean(vals: list[float]) -> float | None:
     return float(np.mean(np.array(vals, dtype=np.float64)))
 
 
+def _safe_std(vals: list[float]) -> float | None:
+    if not vals:
+        return None
+    return float(np.std(np.array(vals, dtype=np.float64)))
+
+
+def _last_step_anchor_aggregate(obs: list[dict]) -> dict | None:
+    if not isinstance(obs, list) or not obs:
+        return None
+
+    valid = [row for row in obs if isinstance(row, dict) and "step" in row]
+    if not valid:
+        return None
+
+    last_step = int(max(int(row.get("step", 0)) for row in valid))
+    last_rows = [row for row in valid if int(row.get("step", -1)) == last_step]
+    if not last_rows:
+        return None
+
+    def agg(field: str) -> float | None:
+        vals = []
+        for row in last_rows:
+            val = row.get(field)
+            if val is not None:
+                vals.append(float(val))
+        return _safe_mean(vals)
+
+    out = {
+        "ds_global": agg("ds_global"),
+        "dv_global": agg("dv_global"),
+        "g_fc": agg("g_fc"),
+        "iso_defect": agg("iso_defect"),
+        "num_records": float(len(last_rows)),
+    }
+
+    if out["ds_global"] is None and out["dv_global"] is None and out["g_fc"] is None:
+        return None
+    return out
+
+
 def main() -> None:
     raw_dir = Path("results/raw")
     by_model: dict[str, list[dict]] = defaultdict(list)
@@ -112,6 +152,46 @@ def main() -> None:
             "mean_final_k2_ds": _safe_mean(k2_final_ds),
             "mean_final_k2_dv": _safe_mean(k2_final_dv),
         }
+
+        k7_last_ds: list[float] = []
+        k7_last_dv: list[float] = []
+        k7_last_gap: list[float] = []
+        k7_last_iso: list[float] = []
+        k7_num_records: list[float] = []
+        k7_run_count = 0
+
+        for run in runs:
+            obs_k7 = run.get("observables_k7", [])
+            aggregated = _last_step_anchor_aggregate(obs_k7)
+            if aggregated is None:
+                continue
+
+            k7_run_count += 1
+            if aggregated["ds_global"] is not None:
+                k7_last_ds.append(float(aggregated["ds_global"]))
+            if aggregated["dv_global"] is not None:
+                k7_last_dv.append(float(aggregated["dv_global"]))
+            if aggregated["g_fc"] is not None:
+                k7_last_gap.append(float(aggregated["g_fc"]))
+            if aggregated["iso_defect"] is not None:
+                k7_last_iso.append(float(aggregated["iso_defect"]))
+            k7_num_records.append(float(aggregated["num_records"]))
+
+        if k7_run_count > 0:
+            summary.update(
+                {
+                    "run_count_with_k7": int(k7_run_count),
+                    "mean_last_k7_ds_global": _safe_mean(k7_last_ds),
+                    "std_last_k7_ds_global": _safe_std(k7_last_ds),
+                    "mean_last_k7_dv_global": _safe_mean(k7_last_dv),
+                    "std_last_k7_dv_global": _safe_std(k7_last_dv),
+                    "mean_last_k7_g_fc": _safe_mean(k7_last_gap),
+                    "std_last_k7_g_fc": _safe_std(k7_last_gap),
+                    "mean_num_k7_records": _safe_mean(k7_num_records),
+                }
+            )
+            if k7_last_iso:
+                summary["mean_last_k7_iso"] = _safe_mean(k7_last_iso)
 
         out_path = out_dir / f"{model}_summary.json"
         save_json(out_path, summary)

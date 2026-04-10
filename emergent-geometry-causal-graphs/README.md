@@ -8,7 +8,8 @@ The current simulation slice is now runnable end-to-end:
 - raw JSON result capture,
 - summary statistics aggregation,
 - baseline K1 figure generation,
-- optional K2 global observables (sampled-region spectral/volume-growth diagnostics).
+- optional K2 global observables (sampled-region spectral/volume-growth diagnostics),
+- optional K7 fixed-anchor diagnostics for separating sampling heterogeneity from genuine temporal drift.
 
 ## Quickstart
 
@@ -50,6 +51,36 @@ k2_walkers: 256
 - `k2_global_every <= 0` disables K2 collection.
 - Measurements are appended at step `0` and every `k2_global_every` steps thereafter.
 
+
+## Enable K7 fixed-anchor diagnostics
+
+K7 keeps anchor seeds fixed across time and measures local geometry in seed-centered
+BFS regions, helping separate sampling heterogeneity from genuine temporal drift.
+Records are stored under `observables_k7` in each raw run payload.
+
+Set these fields in your config:
+
+```yaml
+k7_every: 20
+fine_start: 80
+fine_end: 140
+fine_every: 5
+num_anchors: 6
+anchor_region_size: 128
+anchor_min_region: 24
+k6_taus: [1, 2, 4, 8, 16]
+k6_walkers: 256
+k6_min_start_nodes: 2
+k6_core_frac: 0.25
+k6_mid_frac: 0.50
+k6_front_frac: 0.25
+```
+
+- `k7_every <= 0` disables K7 collection.
+- K7 anchors are initialized once after graph initialization and reused for all steps.
+- Measurements run on the standard cadence (`k7_every`) with optional finer cadence in
+  `[fine_start, fine_end]` using `fine_every`.
+
 ## Run a paper-style batch
 
 ```bash
@@ -79,6 +110,7 @@ Each summary includes:
 - number of runs
 - K2 coverage fields (`k2_run_count`, `k2_missing_run_count`)
 - K2 aggregate fields when available (`mean_final_k2_ds`, `mean_final_k2_dv`)
+- K7 aggregate fields when available (`run_count_with_k7`, `mean_last_k7_ds_global`, `mean_last_k7_dv_global`, `mean_last_k7_g_fc`, `mean_num_k7_records`, and optional `mean_last_k7_iso`)
 
 ## Make figures
 
@@ -90,10 +122,12 @@ This always creates:
 
 - `figures/fig1_baseline_k1.png`
 
-and creates K2 figures when corresponding observables exist in the raw payloads:
+and creates K2/K7 figures when corresponding observables exist in the raw payloads:
 
 - `figures/fig2_baseline_k2_ds.png`
 - `figures/fig3_baseline_k2_dv.png`
+- `figures/fig3_baseline_k7.png`
+- optionally `figures/fig3b_baseline_k7_iso.png`
 
 based on baseline seeds under `results/raw/baseline/`.
 
