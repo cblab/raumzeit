@@ -1,0 +1,7 @@
+inherits: v8a_fast.yaml
+name: baseline_ref
+
+# Reference-grade baseline: keep core engine/diagnostics, disable contrast terms.
+enable_ball_integrity_contrast: false
+enable_weight_calibration: false
+enable_v9_ball_coherence: false
