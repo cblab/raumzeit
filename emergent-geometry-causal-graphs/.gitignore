@@ -1,6 +1,22 @@
+# Python/cache/env
 __pycache__/
 *.py[cod]
 .venv/
 .env
 .ipynb_checkpoints/
+
+# Temporary intermediate outputs
 results/raw/**/tmp/
+
+# Generated run artifacts (not tracked)
+results/raw/
+results/summary/
+results/manifests/
+figures/
+
+# Binary exports / compiled manuscripts
+*.pdf
+
+# Optional: generated tables are ignored by default.
+# Uncomment the next line if you decide to stop tracking summary tables entirely.
+# results/tables/
