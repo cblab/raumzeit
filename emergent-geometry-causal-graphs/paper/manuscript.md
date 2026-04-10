@@ -3,7 +3,7 @@
 ## Abstract
 We test a narrow hypothesis: whether a specific class of local, causal, edge-based update rules on growing directed graphs can stabilize robust macroscopic geometry. The contribution is not a claim of emergent spacetime. The contribution is a maintained modular engine, a canonical three-model ablation (`baseline_ref`, `v8a_fast`, `v9a_fast`), a reproducible diagnostics stack (K1, K2, K4, K5, K7), and a disciplined negative result.
 
-Geometry is measured rather than assumed. The workflow is fixed to config → batch → raw outputs → summary tables → figures → commit hash. Within this canonical scope, the baseline mechanism does not stabilize robust macroscopic isotropic geometry. `v8a_fast` improves local ball integrity and selected diagnostics through local contrast and weight calibration, but does not change the asymptotic geometry class. `v9a_fast` adds mesoscale ball coherence and pushes these effects further, but still does not yield robust macroscopic isotropic geometry. The mechanism line organizes transport and local patch structure, yet remains in an anisotropic diffusion-geometric patch regime.
+Geometry is measured rather than assumed. The workflow is fixed to config → batch → raw outputs → summary tables → figures → commit hash. In the current repository state, available canonical summaries provide direct quantitative support for `baseline_ref`/`baseline` and `v8a_fast` on final K1, active-edge count, and final node count, while the designated `reference_table.json`/`.csv` artifacts and canonical `v9a_fast` summary outputs are not present. Accordingly, the negative conclusion is bounded: the available evidence shows no robust macroscopic isotropic stabilization, and `v8a_fast` shifts local structural statistics without establishing a new asymptotic geometry class. `v9a_fast` remains part of canonical scope, but in this checkout its evaluation is evidence-limited rather than numerically resolved.
 
 ## 1. Introduction
 This paper asks one focused question: **can this specific local causal mechanism class stabilize robust macroscopic geometry, as measured from graph dynamics alone?**
@@ -181,19 +181,25 @@ This paper is bound to the modular reproducibility chain:
 Reproducibility procedure is documented in `REPRODUCIBILITY.md`.
 
 ## 6. Results
-This section reports only the canonical three-model ablation logic.
+This section stays within the canonical three-model ablation (`baseline_ref`, `v8a_fast`, `v9a_fast`) and is restricted to evidence that is present in this checkout.
 
-### 6.1 `baseline_ref`
-The baseline mechanism produces a nontrivial sparse adaptive graph, but does not stabilize robust macroscopic isotropic geometry under the K2/K7 criteria. Diffusion/volume behavior and anchor-local isotropy diagnostics do not support a stable low-dimensional isotropic asymptotic regime.
+### 6.1 `baseline_ref`: reference regime from available summaries
+The available summary artifact for the baseline mechanism is `results/summary/baseline_summary.json` (model label `baseline`). Across 6 runs, final K1 is $0.1027\pm0.0218$ (mean±std), with $120.17$ active edges and $39.33$ nodes at the final recorded step. This establishes the reference regime as a sparse adaptive graph with moderate seed variability rather than collapse or explosive densification.
 
-### 6.2 `v8a_fast`
-Adding ball-integrity contrast plus weight calibration improves local organization and selected diagnostic behavior (especially local ball-level structure and transport regularization), but does not change the asymptotic geometry class. The mechanism remains short of robust macroscopic isotropic stabilization.
+Global diffusion/volume estimates can be extracted from the last K2-global record in available baseline raw runs (`results/raw/baseline/seed_*.json`): $d_s\approx1.99\pm0.26$ and $d_v\approx1.31\pm0.19$ (6/6 runs finite). These values indicate nontrivial diffusion geometry, but by themselves do not establish robust isotropic macroscopic closure; notably, no canonical aggregated K7 isotropy table is available in this checkout.
 
-### 6.3 `v9a_fast`
-Adding mesoscale ball coherence extends these local/mesoscale improvements, yet still fails to stabilize robust macroscopic isotropic geometry at the level required by the diagnostics framework.
+### 6.2 `v8a_fast`: what changes relative to baseline, and what does not
+For `v8a_fast`, the available summary (`results/summary/v8a_fast_summary.json`) reports final K1 $0.1013\pm0.0174$, active edges $105.0$, and nodes $35.2$ over 5 runs. Relative to baseline summary values, the dominant shift is structural sparsification (fewer active edges and fewer retained nodes), while mean K1 remains close.
+
+The last-step K2-global values from available `v8a_fast` raw runs give $d_s\approx1.92\pm0.11$ and $d_v\approx1.18\pm0.14$ (5/5 runs finite), again in a similar diffusion-geometric band to baseline. Taken conservatively, the available evidence supports a local/structural retuning (including reduced variance in K1 and lower final size) rather than a clear asymptotic geometry-class transition.
+
+### 6.3 `v9a_fast`: canonical in scope, unresolved in this checkout
+`v9a_fast` remains part of canonical scope by config and batch definition (`configs/v9a_fast.yaml`, `configs/paper_batch_ref.yaml`). However, this checkout does not contain `results/summary/reference_table.json`, `results/summary/reference_table.csv`, a `v9a_fast` summary JSON, `results/raw/v9a_fast/` runs, or canonical comparison figures for the three-model reference set.
+
+Therefore, no quantitative incremental claim over `v8a_fast` is made here. The correct status is evidence-limited: the additional mesoscale-coherence mechanism is specified, but its canonical outcome is not resolved by the currently available artifacts.
 
 ### 6.4 Evidence policy in the present repository state
-The canonical table artifacts are designated as `results/summary/reference_table.json` and `.csv`. If these artifacts are absent or incomplete in a checkout, interpretation must remain qualitative and traceable to available raw diagnostics and scripts; no quantitative claims should be fabricated.
+The designated canonical tables are `results/summary/reference_table.json` and `.csv`, but they are absent in this checkout. Reported numbers in this section are therefore taken only from available per-model summaries and raw final/last-step diagnostics. Missing canonical aggregates (especially K7 and full three-model reference tables) are treated as unresolved, not inferred.
 
 ## 7. Interpretation
 The evidence supports a narrow negative conclusion: this local causal edge-dynamics line can self-organize transport and ball-like local structure but does not robustly stabilize macroscopic isotropic geometry.
@@ -213,9 +219,9 @@ This study is positioned among discrete causal and network-based approaches to g
 Our contribution is methodological and falsification-oriented within one specific local mechanism lineage, rather than a broad unification claim [REF].
 
 ## 10. Conclusion
-Within the canonical modular engine and canonical three-model ablation (`baseline_ref`, `v8a_fast`, `v9a_fast`), the tested local mechanism line is **not sufficient** to stabilize robust macroscopic isotropic geometry.
+Within the canonical modular engine and canonical three-model scope (`baseline_ref`, `v8a_fast`, `v9a_fast`), the currently available repository evidence is sufficient to reject robust macroscopic isotropic stabilization for the baseline→`v8a_fast` slice, but insufficient to numerically resolve the `v9a_fast` increment in this checkout.
 
-What it does provide is reproducible organization of transport and local ball structure. Future progress likely requires stronger nonlocal consistency constraints, higher-order relational structure, or different parent/selection principles beyond the present local edge-update family.
+What is supported is reproducible local structural organization and transport retuning in available runs; what is not yet supported here is a complete canonical three-model quantitative closure. Future progress likely requires stronger nonlocal consistency constraints, higher-order relational structure, and a completed canonical evidence bundle (`reference_table.*`, `v9a_fast` raw/summary, and three-model comparison figures).
 
 ## 11. Reproducibility note
 Authoritative execution path:
