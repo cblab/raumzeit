@@ -1,289 +1,325 @@
 from __future__ import annotations
 
-from collections import deque
+import bisect
+import math
+from collections import Counter, deque
 
 import numpy as np
 
-from .diagnostics_k2 import (
-    _estimate_return_probabilities,
-    _estimate_spectral_dimension,
-    _estimate_volume_growth_dimension,
-)
-from .graph_model import GraphState, active_undirected_neighbors
+from .diagnostics_k2 import _estimate_return_probabilities, _estimate_spectral_dimension, _estimate_volume_growth_dimension
+from .graph_model import GraphState
 
 
-def sample_bfs_region_from_seed(g: GraphState, seed: int, target_size: int) -> list[int]:
-    """Grow a region from a fixed seed using BFS over active shadow edges."""
-    if g.num_nodes <= 0:
+def sample_bfs_region_from_seed(g: GraphState, seed: int, target_size: int):
+    if seed >= g.num_nodes:
         return []
 
-    seed_i = int(seed)
-    if seed_i < 0 or seed_i >= g.num_nodes:
-        return []
+    q = deque([seed])
+    seen = {seed}
+    region = [seed]
 
-    target = max(1, min(int(target_size), int(g.num_nodes)))
-    visited: set[int] = {seed_i}
-    queue: deque[int] = deque([seed_i])
+    while q and len(region) < target_size:
+        u = q.popleft()
+        nbrs = []
+        for eid in g.out_edges[u]:
+            if g.active[eid]:
+                nbrs.append(g.dst[eid])
+        for eid in g.in_edges[u]:
+            if g.active[eid]:
+                nbrs.append(g.src[eid])
 
-    while queue and len(visited) < target:
-        u = queue.popleft()
-        for v in sorted(active_undirected_neighbors(g, u)):
-            if v in visited:
-                continue
-            visited.add(int(v))
-            queue.append(int(v))
-            if len(visited) >= target:
-                break
+        g.rng.shuffle(nbrs)
+        for v in nbrs:
+            if v not in seen and v < g.num_nodes:
+                seen.add(v)
+                q.append(v)
+                region.append(v)
+                if len(region) >= target_size:
+                    break
 
-    return sorted(visited)
+    return region
 
 
 def initialize_anchors(g: GraphState, config: dict) -> list[dict]:
-    """Initialize fixed anchors once using deterministic seed selection."""
-    num_anchors = max(0, int(config.get("num_anchors", 6)))
-    if num_anchors <= 0 or g.num_nodes <= 0:
-        return []
+    num_anchors = int(config.get("num_anchors", 8))
+    candidates = list(range(g.num_nodes))
+    g.rng.shuffle(candidates)
 
-    region_size = max(1, int(config.get("anchor_region_size", 128)))
+    seeds = []
+    for u in candidates:
+        if len(seeds) >= num_anchors:
+            break
+        ok = True
+        for s in seeds:
+            if abs(u - s) < 2:
+                ok = False
+                break
+        if ok:
+            seeds.append(u)
 
-    if num_anchors >= g.num_nodes:
-        seeds = list(range(g.num_nodes))
-    else:
-        perm = g.rng.permutation(np.arange(g.num_nodes))
-        seeds = [int(v) for v in perm[:num_anchors]]
-
-    anchors: list[dict] = []
-    for anchor_id, seed in enumerate(sorted(seeds)):
-        anchors.append(
-            {
-                "anchor_id": int(anchor_id),
-                "seed": int(seed),
-                "target_size": int(region_size),
-            }
-        )
-
-    return anchors
+    return [{"anchor_id": aid, "seed": int(seed)} for aid, seed in enumerate(seeds)]
 
 
-def shell_distribution_from_seed(neigh: dict[int, list[int]], seed: int) -> dict[int, int]:
-    """Compute BFS shell distances from seed on adjacency map."""
-    seed_i = int(seed)
-    if seed_i not in neigh:
-        return {}
-
-    dist: dict[int, int] = {seed_i: 0}
-    queue: deque[int] = deque([seed_i])
-
-    while queue:
-        u = queue.popleft()
-        for v in neigh.get(u, []):
-            if v in dist:
-                continue
-            dist[int(v)] = int(dist[u] + 1)
-            queue.append(int(v))
-
-    return dist
+def _build_shadow_adjacency(g: GraphState, region_nodes):
+    region_set = set(region_nodes)
+    neigh = {u: set() for u in region_nodes}
+    for eid in g.active_edge_ids:
+        i = g.src[eid]
+        j = g.dst[eid]
+        if i in region_set and j in region_set:
+            neigh[i].add(j)
+            neigh[j].add(i)
+    return neigh
 
 
-def rank_quantile_partition_from_dist(
-    dist_map: dict[int, int], core_frac: float, mid_frac: float
-) -> dict[str, list[int]]:
-    """Partition nodes into core/mid/front by rank quantiles of BFS distance."""
+def shell_distribution_from_seed(neigh, seed):
+    q = deque([(seed, 0)])
+    dist = {seed: 0}
+
+    while q:
+        u, d = q.popleft()
+        for v in neigh[u]:
+            if v not in dist:
+                dist[v] = d + 1
+                q.append((v, d + 1))
+
+    cnt = Counter(dist.values())
+    max_r = max(cnt.keys()) if cnt else 0
+    shells = [cnt.get(r, 0) for r in range(max_r + 1)]
+    return shells, dist
+
+
+def rank_quantile_partition_from_dist(dist_map, core_frac=0.50, mid_frac=0.30):
     if not dist_map:
-        return {"core": [], "mid": [], "front": []}
+        return [], [], [], None, None
 
-    core_f = float(np.clip(core_frac, 0.0, 1.0))
-    mid_f = float(np.clip(mid_frac, 0.0, 1.0))
+    pairs = sorted(dist_map.items(), key=lambda x: (x[1], x[0]))
+    n = len(pairs)
 
-    ordered = sorted(dist_map.items(), key=lambda item: (item[1], item[0]))
-    n = len(ordered)
+    i_core = int(round(core_frac * n))
+    i_mid = int(round((core_frac + mid_frac) * n))
 
-    n_core = int(np.floor(core_f * n))
-    n_mid = int(np.floor(mid_f * n))
-    n_core = max(1, min(n_core, n))
-    n_mid = max(0, min(n_mid, n - n_core))
+    i_core = max(1, min(i_core, n))
+    i_mid = max(i_core, min(i_mid, n))
 
-    core_nodes = [int(node) for node, _ in ordered[:n_core]]
-    mid_nodes = [int(node) for node, _ in ordered[n_core : n_core + n_mid]]
-    front_nodes = [int(node) for node, _ in ordered[n_core + n_mid :]]
+    core_pairs = pairs[:i_core]
+    mid_pairs = pairs[i_core:i_mid]
+    front_pairs = pairs[i_mid:]
 
-    if not front_nodes and mid_nodes:
-        front_nodes = [mid_nodes.pop()]
+    core = [u for u, _ in core_pairs]
+    mid = [u for u, _ in mid_pairs]
+    front = [u for u, _ in front_pairs]
 
-    return {
-        "core": core_nodes,
-        "mid": mid_nodes,
-        "front": front_nodes,
-    }
+    core_max_d = core_pairs[-1][1] if core_pairs else None
+    front_min_d = front_pairs[0][1] if front_pairs else None
+    return core, mid, front, core_max_d, front_min_d
 
 
-def _shadow_adjacency_for_region(g: GraphState, region_nodes: list[int]) -> dict[int, list[int]]:
-    region_set = set(int(n) for n in region_nodes)
-    adj: dict[int, list[int]] = {}
-
-    for u in sorted(region_set):
-        nbrs = sorted(v for v in active_undirected_neighbors(g, u) if v in region_set)
-        adj[int(u)] = [int(v) for v in nbrs]
-
-    return adj
-
-
-def _subset_adjacency(adj: dict[int, list[int]], nodes: list[int]) -> dict[int, list[int]]:
-    node_set = set(int(n) for n in nodes)
-    out: dict[int, list[int]] = {}
-    for u in sorted(node_set):
-        out[int(u)] = [int(v) for v in adj.get(u, []) if v in node_set]
-    return out
-
-
-def _estimate_ds_on_subset(adj: dict[int, list[int]], nodes: list[int], config: dict, rng: np.random.Generator) -> float | None:
-    if len(nodes) < 2:
+def _start_class_ds(full_neigh, start_nodes, taus, n_walkers, rng, min_start_nodes=120):
+    valid_starts = [u for u in start_nodes if u in full_neigh and len(full_neigh[u]) > 0]
+    if len(valid_starts) < min_start_nodes:
         return None
-
-    taus = [int(t) for t in config.get("k6_taus", [1, 2, 4, 8, 16])]
-    walkers = int(config.get("k6_walkers", 256))
-    sub_adj = _subset_adjacency(adj, nodes)
-
-    probs = _estimate_return_probabilities(sub_adj, taus, max(1, walkers), rng)
+    probs = _estimate_return_probabilities(full_neigh, taus, n_walkers, rng)
     return _estimate_spectral_dimension(probs)
 
 
-def _compute_iso_defect(
-    adj: dict[int, list[int]], dist_map: dict[int, int], seed: int
-) -> tuple[float | None, int | None, int | None, bool]:
-    """
-    Compute an anchor-local isotropy defect from branch-descendant imbalance.
+def bfs_branch_partition(neigh, center):
+    first_branch = {}
+    dist = {center: 0}
+    q = deque([center])
 
-    Branches are defined by the first hop from the seed along deterministic BFS.
-    Returns (iso_defect, branch_count, shell_used, iso_valid).
-    """
-    seed_i = int(seed)
-    if seed_i not in dist_map:
-        return None, None, None, False
+    for nb in neigh[center]:
+        first_branch[nb] = nb
+        dist[nb] = 1
+        q.append(nb)
 
-    first_hop: dict[int, int | None] = {seed_i: None}
-    queue: deque[int] = deque([seed_i])
+    while q:
+        u = q.popleft()
+        for v in neigh[u]:
+            if v not in dist:
+                dist[v] = dist[u] + 1
+                first_branch[v] = first_branch[u]
+                q.append(v)
 
-    while queue:
-        u = queue.popleft()
-        for v in adj.get(u, []):
-            if v in first_hop:
+    return dist, first_branch
+
+
+def estimate_isotropy_defect(neigh, region_nodes, rng, radii=(2, 4, 6), num_centers=10):
+    candidates = [u for u in region_nodes if len(neigh[u]) >= 3]
+    if len(candidates) == 0:
+        return None, []
+
+    centers = rng.choice(candidates, size=min(num_centers, len(candidates)), replace=False)
+    defects = []
+
+    for center in centers:
+        dist, first_branch = bfs_branch_partition(neigh, int(center))
+        branch_to_dists = {}
+
+        for u, b in first_branch.items():
+            branch_to_dists.setdefault(b, []).append(dist[u])
+
+        for b in branch_to_dists:
+            branch_to_dists[b].sort()
+
+        local_defects = []
+        for r in radii:
+            counts = []
+            for _, dlist in branch_to_dists.items():
+                counts.append(bisect.bisect_right(dlist, r))
+            if len(counts) >= 3 and np.mean(counts) > 0:
+                local_defects.append(float(np.std(counts) / np.mean(counts)))
+
+        if local_defects:
+            defects.append(float(np.mean(local_defects)))
+
+    if not defects:
+        return None, []
+    return float(np.mean(defects)), defects
+
+
+def _estimate_causal_front_proxy(g: GraphState, region_nodes, num_seeds=10, max_depth=8):
+    seeds = g.rng.choice(region_nodes, size=min(num_seeds, len(region_nodes)), replace=False)
+
+    shell_profiles = []
+    jump_defects = []
+    max_depths = []
+
+    for seed in seeds:
+        q = deque([(int(seed), 0)])
+        dist = {int(seed): 0}
+
+        while q:
+            u, d = q.popleft()
+            if d >= max_depth:
                 continue
-            if u == seed_i:
-                first_hop[int(v)] = int(v)
-            else:
-                first_hop[int(v)] = first_hop.get(u)
-            queue.append(int(v))
+            for eid in g.out_edges[u]:
+                if not g.active[eid]:
+                    continue
+                v = g.dst[eid]
+                if v not in dist:
+                    dist[v] = d + 1
+                    q.append((v, d + 1))
 
-    branch_counts: dict[int, int] = {}
-    for node, hop in first_hop.items():
-        if node == seed_i or hop is None:
-            continue
-        branch_counts[int(hop)] = int(branch_counts.get(int(hop), 0) + 1)
+        cnt = Counter(dist.values())
+        shells = [cnt.get(d, 0) for d in range(1, max_depth + 1)]
 
-    k = int(len(branch_counts))
-    if k < 2:
-        return None, k, 1, False
+        total = max(1, len(dist) - 1)
+        cum_frac = np.cumsum(shells) / total
+        jump_defect = float(cum_frac[min(1, len(cum_frac) - 1)]) if len(cum_frac) > 0 else 0.0
+        max_depth_found = max(dist.values()) if len(dist) > 0 else 0
 
-    counts = np.array([float(c) for c in branch_counts.values()], dtype=np.float64)
-    total = float(np.sum(counts))
-    if total <= 0.0:
-        return None, k, 1, False
+        shell_profiles.append(shells)
+        jump_defects.append(jump_defect)
+        max_depths.append(max_depth_found)
 
-    probs = counts / total
-    uniform = 1.0 / float(k)
-    iso_defect = float(0.5 * np.sum(np.abs(probs - uniform)))
-    return iso_defect, k, 1, True
+    mean_shells = list(np.mean(np.array(shell_profiles, dtype=np.float64), axis=0))
+    return {
+        "jump_defect": float(np.mean(jump_defects)),
+        "mean_shell_sizes": mean_shells,
+        "max_depth_found_mean": float(np.mean(max_depths)),
+    }
 
 
 def measure_anchor(g: GraphState, anchor: dict, config: dict) -> dict | None:
-    """Measure anchor-local fixed-seed geometry. Returns None when invalid."""
-    seed = int(anchor.get("seed", -1))
-    anchor_id = int(anchor.get("anchor_id", -1))
-    target_size = int(anchor.get("target_size", config.get("anchor_region_size", 128)))
-    min_region = max(2, int(config.get("anchor_min_region", 24)))
-
-    region_nodes = sample_bfs_region_from_seed(g, seed=seed, target_size=target_size)
-    if len(region_nodes) < min_region:
+    seed = int(anchor["seed"])
+    if seed >= g.num_nodes:
         return None
 
-    shadow_adj = _shadow_adjacency_for_region(g, region_nodes)
-    dist_map = shell_distribution_from_seed(shadow_adj, seed)
-    if len(dist_map) < min_region:
+    region_live = sample_bfs_region_from_seed(g, seed, int(config.get("anchor_region_size", 1500)))
+    if len(region_live) < int(config.get("anchor_min_region", 100)):
         return None
 
-    core_frac = float(config.get("k6_core_frac", 0.25))
-    mid_frac = float(config.get("k6_mid_frac", 0.50))
-    partition = rank_quantile_partition_from_dist(dist_map, core_frac=core_frac, mid_frac=mid_frac)
+    full_neigh = _build_shadow_adjacency(g, region_live)
+    if seed not in full_neigh or len(full_neigh[seed]) == 0:
+        connected = [u for u in region_live if u in full_neigh and len(full_neigh[u]) > 0]
+        if not connected:
+            return None
+        seed = connected[0]
 
-    core_nodes = partition["core"]
-    mid_nodes = partition["mid"]
-    front_nodes = partition["front"]
+    taus = [int(t) for t in config.get("k2_taus", [2, 4, 8, 16])]
+    walkers = int(config.get("k2_walkers", 800))
+    ret_probs = _estimate_return_probabilities(full_neigh, taus, walkers, g.rng)
+    ds_global = _estimate_spectral_dimension(ret_probs)
+    dv_global = _estimate_volume_growth_dimension(full_neigh, region_live, g.rng)
+    shadow_deg = float(np.mean([len(full_neigh[u]) for u in region_live]))
 
-    deg_vals = [len(shadow_adj.get(u, [])) for u in dist_map]
-    shadow_mean_degree = float(np.mean(np.array(deg_vals, dtype=np.float64))) if deg_vals else 0.0
+    iso_defect, _ = estimate_isotropy_defect(
+        full_neigh,
+        region_live,
+        g.rng,
+        radii=tuple(config.get("k3_radii", [2, 4, 6])),
+        num_centers=int(config.get("k3_num_centers", 10)),
+    )
 
-    taus = [int(t) for t in config.get("k6_taus", [1, 2, 4, 8, 16])]
-    walkers = int(config.get("k6_walkers", 256))
-    return_probs = _estimate_return_probabilities(shadow_adj, taus, max(1, walkers), g.rng)
+    causal = _estimate_causal_front_proxy(
+        g,
+        region_live,
+        num_seeds=int(config.get("k3_num_seeds", 10)),
+        max_depth=int(config.get("k3_max_depth", 8)),
+    )
 
-    ds_global = _estimate_spectral_dimension(return_probs)
-    dv_global = _estimate_volume_growth_dimension(shadow_adj, root=seed)
+    _, dist = shell_distribution_from_seed(full_neigh, seed)
+    core, mid, front, core_max_d, front_min_d = rank_quantile_partition_from_dist(
+        dist,
+        core_frac=float(config.get("k6_core_frac", 0.50)),
+        mid_frac=float(config.get("k6_mid_frac", 0.30)),
+    )
 
-    ds_core = _estimate_ds_on_subset(shadow_adj, core_nodes, config, g.rng)
-    ds_mid = _estimate_ds_on_subset(shadow_adj, mid_nodes, config, g.rng)
-    ds_front = _estimate_ds_on_subset(shadow_adj, front_nodes, config, g.rng)
+    k6_taus = [int(t) for t in config.get("k6_taus", [2, 4, 8, 16])]
+    k6_walkers = int(config.get("k6_walkers", 800))
+    min_start_nodes = int(config.get("k6_min_start_nodes", 120))
 
-    reachable = len(dist_map)
-    region_fraction = float(reachable / max(1, g.num_nodes))
-    mean_shells = float(np.mean(np.array(list(dist_map.values()), dtype=np.float64)))
-    iso_defect, iso_branch_count, iso_shell_used, iso_valid = _compute_iso_defect(shadow_adj, dist_map, seed)
+    ds_core = _start_class_ds(full_neigh, core, k6_taus, k6_walkers, g.rng, min_start_nodes)
+    ds_mid = _start_class_ds(full_neigh, mid, k6_taus, k6_walkers, g.rng, min_start_nodes)
+    ds_front = _start_class_ds(full_neigh, front, k6_taus, k6_walkers, g.rng, min_start_nodes)
 
-    core_ds = float(ds_core) if ds_core is not None else None
-    front_ds = float(ds_front) if ds_front is not None else None
-    g_fc = None
-    if core_ds is not None and front_ds is not None:
-        g_fc = float(front_ds - core_ds)
+    g_fm = None if (ds_front is None or ds_mid is None) else (ds_front - ds_mid)
+    g_mc = None if (ds_mid is None or ds_core is None) else (ds_mid - ds_core)
+    g_fc = None if (ds_front is None or ds_core is None) else (ds_front - ds_core)
 
-    record = {
-        "anchor_id": int(anchor_id),
-        "seed": int(seed),
-        "region_nodes": int(reachable),
-        "region_fraction": float(region_fraction),
-        "shadow_mean_degree": float(shadow_mean_degree),
-        "ds_global": float(ds_global) if ds_global is not None else None,
-        "dv_global": float(dv_global) if dv_global is not None else None,
-        "n_core": int(len(core_nodes)),
-        "n_mid": int(len(mid_nodes)),
-        "n_front": int(len(front_nodes)),
-        "ds_core": core_ds,
-        "ds_mid": float(ds_mid) if ds_mid is not None else None,
-        "ds_front": front_ds,
+    # auxiliary surrogate for audit/debug only
+    iso_surrogate = None
+    if len(full_neigh[seed]) >= 2:
+        counts = [len(full_neigh[n]) for n in full_neigh[seed]]
+        m = np.mean(counts)
+        if m > 0:
+            iso_surrogate = float(np.std(counts) / m)
+
+    return {
+        "anchor_id": anchor["anchor_id"],
+        "seed": anchor["seed"],
+        "seed_used": seed,
+        "region_nodes": len(region_live),
+        "region_fraction": len(region_live) / max(1, g.num_nodes),
+        "shadow_mean_degree": shadow_deg,
+        "return_probs": ret_probs,
+        "ds_global": ds_global,
+        "dv_global": dv_global,
+        "iso_defect": iso_defect,
+        "iso_defect_surrogate": iso_surrogate,
+        "jump_defect": causal["jump_defect"],
+        "mean_max_depth": causal["max_depth_found_mean"],
+        "mean_shells": causal["mean_shell_sizes"],
+        "n_core": len(core),
+        "n_mid": len(mid),
+        "n_front": len(front),
+        "core_max_d": core_max_d,
+        "front_min_d": front_min_d,
+        "ds_core": ds_core,
+        "ds_mid": ds_mid,
+        "ds_front": ds_front,
+        "g_fm": g_fm,
+        "g_mc": g_mc,
         "g_fc": g_fc,
-        "iso_defect": float(iso_defect) if iso_defect is not None else None,
-        "iso_branch_count": int(iso_branch_count) if iso_branch_count is not None else None,
-        "iso_shell_used": int(iso_shell_used) if iso_shell_used is not None else None,
-        "iso_valid": bool(iso_valid),
-        "mean_shells": float(mean_shells),
-        "core_max_d": int(max((dist_map[n] for n in core_nodes), default=0)),
-        "front_min_d": int(min((dist_map[n] for n in front_nodes), default=0)),
     }
-    return record
 
 
 def measure_k7(step: int, g: GraphState, anchors: list[dict], config: dict) -> list[dict]:
-    """Measure all anchors at one step and emit JSON-safe records."""
-    records: list[dict] = []
-
-    min_start_nodes = max(1, int(config.get("k6_min_start_nodes", 2)))
-    if g.num_nodes < min_start_nodes:
-        return records
-
+    out = []
     for anchor in anchors:
         record = measure_anchor(g, anchor, config)
-        if record is None:
-            continue
-        record["step"] = int(step)
-        records.append(record)
-
-    return records
+        if record is not None:
+            record["step"] = int(step)
+            out.append(record)
+    return out

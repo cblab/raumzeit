@@ -4,6 +4,8 @@ from .ancestry import create_ancestry
 from .diagnostics_k1 import measure_k1
 from .diagnostics_k2 import measure_k2_global
 from .diagnostics_k7 import initialize_anchors, measure_k7
+from .diagnostics_k4 import measure_k4_global
+from .diagnostics_k5 import measure_k5_global
 from .graph_model import create_graph_state
 from .updates import initialize_graph, step
 
@@ -29,6 +31,20 @@ def run_single(config: dict) -> dict:
     if k7_enabled:
         observables_k7.extend(measure_k7(step=int(g.current_step), g=g, anchors=anchors, config=config))
 
+    k4_every = int(config.get("k4_measure_every", 0))
+    observables_k4_global: list[dict] = []
+    if k4_every > 0:
+        k4 = measure_k4_global(g, config=config)
+        if k4 is not None:
+            observables_k4_global.append({"step": int(g.current_step), **k4})
+
+    k5_every = int(config.get("k5_measure_every", 0))
+    observables_k5_global: list[dict] = []
+    if k5_every > 0:
+        k5 = measure_k5_global(g, config=config)
+        if k5 is not None:
+            observables_k5_global.append({"step": int(g.current_step), **k5})
+
     n_steps = int(config.get("steps", 0))
     for _ in range(n_steps):
         step(g, ancestry, config)
@@ -36,6 +52,16 @@ def run_single(config: dict) -> dict:
 
         if k2_every > 0 and g.current_step % k2_every == 0:
             observables_k2_global.append({"step": int(g.current_step), **measure_k2_global(g, config=config)})
+
+        if k4_every > 0 and g.current_step % k4_every == 0:
+            k4 = measure_k4_global(g, config=config)
+            if k4 is not None:
+                observables_k4_global.append({"step": int(g.current_step), **k4})
+
+        if k5_every > 0 and g.current_step % k5_every == 0:
+            k5 = measure_k5_global(g, config=config)
+            if k5 is not None:
+                observables_k5_global.append({"step": int(g.current_step), **k5})
 
         if k7_enabled:
             step_now = int(g.current_step)
@@ -56,6 +82,8 @@ def run_single(config: dict) -> dict:
         "history": history,
         "observables_k2_global": observables_k2_global,
         "observables_k7": observables_k7,
+        "observables_k4_global": observables_k4_global,
+        "observables_k5_global": observables_k5_global,
         "graph": {
             "num_nodes": int(g.num_nodes),
             "num_edges_total": int(len(g.src)),

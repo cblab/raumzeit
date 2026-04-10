@@ -1,0 +1,4 @@
+model_configs:
+  - configs/v8a_fast.yaml
+  - configs/v9a_fast.yaml
+seeds: [11, 23, 37, 49, 61]
