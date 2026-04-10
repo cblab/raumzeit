@@ -27,6 +27,18 @@ def _safe_std(vals: list[float]) -> float | None:
     return float(np.std(np.array(vals, dtype=np.float64)))
 
 
+def _as_valid_float(value: object) -> float | None:
+    if value is None:
+        return None
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not np.isfinite(out):
+        return None
+    return out
+
+
 def _last_step_anchor_aggregate(obs: list[dict]) -> dict | None:
     if not isinstance(obs, list) or not obs:
         return None
@@ -43,9 +55,9 @@ def _last_step_anchor_aggregate(obs: list[dict]) -> dict | None:
     def agg(field: str) -> float | None:
         vals = []
         for row in last_rows:
-            val = row.get(field)
+            val = _as_valid_float(row.get(field))
             if val is not None:
-                vals.append(float(val))
+                vals.append(val)
         return _safe_mean(vals)
 
     out = {
@@ -53,6 +65,8 @@ def _last_step_anchor_aggregate(obs: list[dict]) -> dict | None:
         "dv_global": agg("dv_global"),
         "g_fc": agg("g_fc"),
         "iso_defect": agg("iso_defect"),
+        "iso_valid_count": sum(1 for row in last_rows if _as_valid_float(row.get("iso_defect")) is not None),
+        "iso_undefined_count": sum(1 for row in last_rows if _as_valid_float(row.get("iso_defect")) is None),
         "num_records": float(len(last_rows)),
     }
 
@@ -190,8 +204,7 @@ def main() -> None:
                     "mean_num_k7_records": _safe_mean(k7_num_records),
                 }
             )
-            if k7_last_iso:
-                summary["mean_last_k7_iso"] = _safe_mean(k7_last_iso)
+            summary["mean_last_k7_iso"] = _safe_mean(k7_last_iso) if k7_last_iso else None
 
         out_path = out_dir / f"{model}_summary.json"
         save_json(out_path, summary)
