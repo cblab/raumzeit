@@ -1,0 +1,11 @@
+inherits: baseline_ref.yaml
+name: baseline_ref
+
+# Paper-grade runtime/measurement cadence for K7/K2 evidence collection.
+steps: 12000
+k2_global_every: 1000
+k7_every: 500
+
+# Optional coarse cadence for additional global diagnostics.
+k4_measure_every: 2000
+k5_measure_every: 2000
