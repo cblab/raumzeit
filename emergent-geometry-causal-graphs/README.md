@@ -7,7 +7,8 @@ The current simulation slice is now runnable end-to-end:
 - deterministic batch execution over model configs and seeds,
 - raw JSON result capture,
 - summary statistics aggregation,
-- first baseline K1 figure generation.
+- baseline K1 figure generation,
+- optional K2 global observables (sampled-region spectral/volume-growth diagnostics).
 
 ## Quickstart
 
@@ -31,6 +32,23 @@ python scripts/run_single.py \
   --seed 123 \
   --output results/raw/baseline/seed_123.json
 ```
+
+## Enable K2 global diagnostics
+
+K2 is sampled from a BFS-defined shadow region and written under
+`observables_k2_global` in each raw run payload.
+
+Set these fields in your config:
+
+```yaml
+k2_global_every: 10
+k2_region_size: 256
+k2_taus: [1, 2, 4, 8, 16]
+k2_walkers: 256
+```
+
+- `k2_global_every <= 0` disables K2 collection.
+- Measurements are appended at step `0` and every `k2_global_every` steps thereafter.
 
 ## Run a paper-style batch
 
@@ -59,18 +77,25 @@ Each summary includes:
 - mean final number of nodes
 - mean final active edge count
 - number of runs
+- K2 coverage fields (`k2_run_count`, `k2_missing_run_count`)
+- K2 aggregate fields when available (`mean_final_k2_ds`, `mean_final_k2_dv`)
 
-## Make first figure
+## Make figures
 
 ```bash
 python scripts/make_figures.py
 ```
 
-This creates:
+This always creates:
 
 - `figures/fig1_baseline_k1.png`
 
-based on all baseline seeds under `results/raw/baseline/`.
+and creates K2 figures when corresponding observables exist in the raw payloads:
+
+- `figures/fig2_baseline_k2_ds.png`
+- `figures/fig3_baseline_k2_dv.png`
+
+based on baseline seeds under `results/raw/baseline/`.
 
 ## Config notes
 
