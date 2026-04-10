@@ -1,1 +1,323 @@
-{}
+{
+  "batch_config": "configs\\paper_batch.yaml",
+  "models": [
+    {
+      "config": "configs\\baseline.yaml",
+      "name": "baseline"
+    },
+    {
+      "config": "configs\\v71.yaml",
+      "name": "v71"
+    },
+    {
+      "config": "configs\\v8.yaml",
+      "name": "v8"
+    },
+    {
+      "config": "configs\\v8a_fast.yaml",
+      "name": "v8a_fast"
+    }
+  ],
+  "runs": [
+    {
+      "final": {
+        "active_edges": 130,
+        "k1": 0.09578082643455352,
+        "max_level": 10,
+        "mean_shadow_degree": 5.3023255813953485,
+        "mean_weight": 0.9935100318089337,
+        "num_nodes": 43,
+        "step": 120,
+        "weight_std": 0.02643438838422779
+      },
+      "model": "baseline",
+      "output": "results/raw/baseline/seed_11.json",
+      "seed": 11
+    },
+    {
+      "final": {
+        "active_edges": 130,
+        "k1": 0.057621388065243744,
+        "max_level": 7,
+        "mean_shadow_degree": 5.5,
+        "mean_weight": 0.9964706917172103,
+        "num_nodes": 44,
+        "step": 120,
+        "weight_std": 0.03353681385360396
+      },
+      "model": "baseline",
+      "output": "results/raw/baseline/seed_23.json",
+      "seed": 23
+    },
+    {
+      "final": {
+        "active_edges": 122,
+        "k1": 0.10963588848174952,
+        "max_level": 8,
+        "mean_shadow_degree": 5.641025641025641,
+        "mean_weight": 0.9881775480800854,
+        "num_nodes": 39,
+        "step": 120,
+        "weight_std": 0.030332782998533474
+      },
+      "model": "baseline",
+      "output": "results/raw/baseline/seed_37.json",
+      "seed": 37
+    },
+    {
+      "final": {
+        "active_edges": 101,
+        "k1": 0.12257641262714371,
+        "max_level": 5,
+        "mean_shadow_degree": 5.393939393939394,
+        "mean_weight": 1.0035371196055451,
+        "num_nodes": 33,
+        "step": 120,
+        "weight_std": 0.03146991684120262
+      },
+      "model": "baseline",
+      "output": "results/raw/baseline/seed_49.json",
+      "seed": 49
+    },
+    {
+      "final": {
+        "active_edges": 115,
+        "k1": 0.11452384534596137,
+        "max_level": 7,
+        "mean_shadow_degree": 5.351351351351352,
+        "mean_weight": 1.0078255615441443,
+        "num_nodes": 37,
+        "step": 120,
+        "weight_std": 0.025140451806840308
+      },
+      "model": "baseline",
+      "output": "results/raw/baseline/seed_61.json",
+      "seed": 61
+    },
+    {
+      "final": {
+        "active_edges": 102,
+        "k1": 0.1038889559013398,
+        "max_level": 7,
+        "mean_shadow_degree": 5.393939393939394,
+        "mean_weight": 0.9905455737477612,
+        "num_nodes": 33,
+        "step": 120,
+        "weight_std": 0.033141494357944085
+      },
+      "model": "v71",
+      "output": "results/raw/v71/seed_11.json",
+      "seed": 11
+    },
+    {
+      "final": {
+        "active_edges": 79,
+        "k1": 0.07477072856819691,
+        "max_level": 6,
+        "mean_shadow_degree": 4.896551724137931,
+        "mean_weight": 1.0151547615179708,
+        "num_nodes": 29,
+        "step": 120,
+        "weight_std": 0.03016735817731349
+      },
+      "model": "v71",
+      "output": "results/raw/v71/seed_23.json",
+      "seed": 23
+    },
+    {
+      "final": {
+        "active_edges": 108,
+        "k1": 0.11292692571287342,
+        "max_level": 9,
+        "mean_shadow_degree": 5.314285714285714,
+        "mean_weight": 0.9833095451070774,
+        "num_nodes": 35,
+        "step": 120,
+        "weight_std": 0.03250648315513626
+      },
+      "model": "v71",
+      "output": "results/raw/v71/seed_37.json",
+      "seed": 37
+    },
+    {
+      "final": {
+        "active_edges": 106,
+        "k1": 0.098085096764196,
+        "max_level": 8,
+        "mean_shadow_degree": 5.111111111111111,
+        "mean_weight": 0.9954370095229456,
+        "num_nodes": 36,
+        "step": 120,
+        "weight_std": 0.03309357864899665
+      },
+      "model": "v71",
+      "output": "results/raw/v71/seed_49.json",
+      "seed": 49
+    },
+    {
+      "final": {
+        "active_edges": 100,
+        "k1": 0.11324106449106448,
+        "max_level": 8,
+        "mean_shadow_degree": 5.375,
+        "mean_weight": 0.9918565333465721,
+        "num_nodes": 32,
+        "step": 120,
+        "weight_std": 0.03176863236557515
+      },
+      "model": "v71",
+      "output": "results/raw/v71/seed_61.json",
+      "seed": 61
+    },
+    {
+      "final": {
+        "active_edges": 174,
+        "k1": 0.04418284505825874,
+        "max_level": 8,
+        "mean_shadow_degree": 5.52542372881356,
+        "mean_weight": 1.0055091837889887,
+        "num_nodes": 59,
+        "step": 120,
+        "weight_std": 0.035269495313511645
+      },
+      "model": "v8",
+      "output": "results/raw/v8/seed_11.json",
+      "seed": 11
+    },
+    {
+      "final": {
+        "active_edges": 166,
+        "k1": 0.06692543776026448,
+        "max_level": 8,
+        "mean_shadow_degree": 5.473684210526316,
+        "mean_weight": 1.018678976994485,
+        "num_nodes": 57,
+        "step": 120,
+        "weight_std": 0.0311116242412353
+      },
+      "model": "v8",
+      "output": "results/raw/v8/seed_23.json",
+      "seed": 23
+    },
+    {
+      "final": {
+        "active_edges": 171,
+        "k1": 0.06413116922267878,
+        "max_level": 10,
+        "mean_shadow_degree": 5.428571428571429,
+        "mean_weight": 0.9620671909189931,
+        "num_nodes": 56,
+        "step": 120,
+        "weight_std": 0.031234266204675204
+      },
+      "model": "v8",
+      "output": "results/raw/v8/seed_37.json",
+      "seed": 37
+    },
+    {
+      "final": {
+        "active_edges": 165,
+        "k1": 0.06715736710881659,
+        "max_level": 6,
+        "mean_shadow_degree": 5.527272727272727,
+        "mean_weight": 0.9990825515893091,
+        "num_nodes": 55,
+        "step": 120,
+        "weight_std": 0.0346305687017049
+      },
+      "model": "v8",
+      "output": "results/raw/v8/seed_49.json",
+      "seed": 49
+    },
+    {
+      "final": {
+        "active_edges": 172,
+        "k1": 0.08619056693400598,
+        "max_level": 9,
+        "mean_shadow_degree": 5.649122807017544,
+        "mean_weight": 0.9913283489622924,
+        "num_nodes": 57,
+        "step": 120,
+        "weight_std": 0.03798637192782964
+      },
+      "model": "v8",
+      "output": "results/raw/v8/seed_61.json",
+      "seed": 61
+    },
+    {
+      "final": {
+        "active_edges": 103,
+        "k1": 0.08369402822572439,
+        "max_level": 6,
+        "mean_shadow_degree": 5.052631578947368,
+        "mean_weight": 1.005492780643027,
+        "num_nodes": 38,
+        "step": 80,
+        "weight_std": 0.0352128226261776
+      },
+      "model": "v8a_fast",
+      "output": "results/raw/v8a_fast/seed_11.json",
+      "seed": 11
+    },
+    {
+      "final": {
+        "active_edges": 112,
+        "k1": 0.08307308335400164,
+        "max_level": 9,
+        "mean_shadow_degree": 5.631578947368421,
+        "mean_weight": 1.0191373888362014,
+        "num_nodes": 38,
+        "step": 80,
+        "weight_std": 0.03213007356958304
+      },
+      "model": "v8a_fast",
+      "output": "results/raw/v8a_fast/seed_23.json",
+      "seed": 23
+    },
+    {
+      "final": {
+        "active_edges": 108,
+        "k1": 0.12532625931318742,
+        "max_level": 7,
+        "mean_shadow_degree": 5.647058823529412,
+        "mean_weight": 0.9674112608357597,
+        "num_nodes": 34,
+        "step": 80,
+        "weight_std": 0.03593687508797381
+      },
+      "model": "v8a_fast",
+      "output": "results/raw/v8a_fast/seed_37.json",
+      "seed": 37
+    },
+    {
+      "final": {
+        "active_edges": 96,
+        "k1": 0.09663173920986419,
+        "max_level": 6,
+        "mean_shadow_degree": 5.1875,
+        "mean_weight": 1.001456660500917,
+        "num_nodes": 32,
+        "step": 80,
+        "weight_std": 0.04377202437199758
+      },
+      "model": "v8a_fast",
+      "output": "results/raw/v8a_fast/seed_49.json",
+      "seed": 49
+    },
+    {
+      "final": {
+        "active_edges": 106,
+        "k1": 0.1178835794230239,
+        "max_level": 7,
+        "mean_shadow_degree": 5.647058823529412,
+        "mean_weight": 0.9877351654741725,
+        "num_nodes": 34,
+        "step": 80,
+        "weight_std": 0.038018019570397896
+      },
+      "model": "v8a_fast",
+      "output": "results/raw/v8a_fast/seed_61.json",
+      "seed": 61
+    }
+  ]
+}

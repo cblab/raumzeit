@@ -1,0 +1,1477 @@
+{
+  "config": {
+    "init_nodes": 4,
+    "k1_edge_sample": 2048,
+    "k2_global_every": 30,
+    "k2_region_size": 128,
+    "k2_taus": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "k2_walkers": 300,
+    "max_nodes": 600,
+    "name": "v71",
+    "p_birth": 0.25,
+    "p_link": 0.35,
+    "seed": 49,
+    "state_update_fraction": 0.65,
+    "steps": 120,
+    "w0": 1.0,
+    "w_noise": 0.05
+  },
+  "final": {
+    "active_edges": 106,
+    "k1": 0.098085096764196,
+    "max_level": 8,
+    "mean_shadow_degree": 5.111111111111111,
+    "mean_weight": 0.9954370095229456,
+    "num_nodes": 36,
+    "step": 120,
+    "weight_std": 0.03309357864899665
+  },
+  "graph": {
+    "max_level": 8,
+    "mean_weight_snapshot": 0.9954370095229459,
+    "num_edges_active": 106,
+    "num_edges_total": 106,
+    "num_nodes": 36
+  },
+  "history": [
+    {
+      "active_edges": 3,
+      "k1": 0.0,
+      "max_level": 0,
+      "mean_shadow_degree": 1.5,
+      "mean_weight": 1.0,
+      "num_nodes": 4,
+      "step": 0,
+      "weight_std": 0.0
+    },
+    {
+      "active_edges": 3,
+      "k1": 0.0,
+      "max_level": 0,
+      "mean_shadow_degree": 1.5,
+      "mean_weight": 1.0,
+      "num_nodes": 4,
+      "step": 1,
+      "weight_std": 0.0
+    },
+    {
+      "active_edges": 4,
+      "k1": 0.20833333333333331,
+      "max_level": 0,
+      "mean_shadow_degree": 2.0,
+      "mean_weight": 1.0023723037681178,
+      "num_nodes": 4,
+      "step": 2,
+      "weight_std": 0.00410895065736705
+    },
+    {
+      "active_edges": 5,
+      "k1": 0.21666666666666665,
+      "max_level": 0,
+      "mean_shadow_degree": 2.0,
+      "mean_weight": 0.9959059888092119,
+      "num_nodes": 4,
+      "step": 3,
+      "weight_std": 0.013444690290029995
+    },
+    {
+      "active_edges": 6,
+      "k1": 0.2222222222222222,
+      "max_level": 0,
+      "mean_shadow_degree": 2.0,
+      "mean_weight": 1.0022200212511099,
+      "num_nodes": 4,
+      "step": 4,
+      "weight_std": 0.018707434597392686
+    },
+    {
+      "active_edges": 8,
+      "k1": 0.1375,
+      "max_level": 1,
+      "mean_shadow_degree": 2.4,
+      "mean_weight": 1.0022200212511096,
+      "num_nodes": 5,
+      "step": 5,
+      "weight_std": 0.01620111360097798
+    },
+    {
+      "active_edges": 9,
+      "k1": 0.15000000000000002,
+      "max_level": 1,
+      "mean_shadow_degree": 2.4,
+      "mean_weight": 1.0008393610821222,
+      "num_nodes": 5,
+      "step": 6,
+      "weight_std": 0.015765844500955663
+    },
+    {
+      "active_edges": 12,
+      "k1": 0.225,
+      "max_level": 1,
+      "mean_shadow_degree": 3.0,
+      "mean_weight": 0.9974655213416418,
+      "num_nodes": 6,
+      "step": 7,
+      "weight_std": 0.017653105397072013
+    },
+    {
+      "active_edges": 15,
+      "k1": 0.2622222222222222,
+      "max_level": 1,
+      "mean_shadow_degree": 3.4285714285714284,
+      "mean_weight": 0.9894841127598846,
+      "num_nodes": 7,
+      "step": 8,
+      "weight_std": 0.03378085353293126
+    },
+    {
+      "active_edges": 15,
+      "k1": 0.2622222222222222,
+      "max_level": 1,
+      "mean_shadow_degree": 3.4285714285714284,
+      "mean_weight": 0.9894841127598846,
+      "num_nodes": 7,
+      "step": 9,
+      "weight_std": 0.03378085353293126
+    },
+    {
+      "active_edges": 17,
+      "k1": 0.2548319327731092,
+      "max_level": 2,
+      "mean_shadow_degree": 3.5,
+      "mean_weight": 0.9894841127598847,
+      "num_nodes": 8,
+      "step": 10,
+      "weight_std": 0.03173158658386672
+    },
+    {
+      "active_edges": 19,
+      "k1": 0.21574770258980783,
+      "max_level": 2,
+      "mean_shadow_degree": 3.5555555555555554,
+      "mean_weight": 0.9894841127598848,
+      "num_nodes": 9,
+      "step": 11,
+      "weight_std": 0.030015076019964154
+    },
+    {
+      "active_edges": 19,
+      "k1": 0.21574770258980783,
+      "max_level": 2,
+      "mean_shadow_degree": 3.5555555555555554,
+      "mean_weight": 0.9894841127598848,
+      "num_nodes": 9,
+      "step": 12,
+      "weight_std": 0.030015076019964154
+    },
+    {
+      "active_edges": 20,
+      "k1": 0.2121031746031746,
+      "max_level": 2,
+      "mean_shadow_degree": 3.5555555555555554,
+      "mean_weight": 0.9886445964997439,
+      "num_nodes": 9,
+      "step": 13,
+      "weight_std": 0.02948305466755088
+    },
+    {
+      "active_edges": 21,
+      "k1": 0.22656840513983376,
+      "max_level": 2,
+      "mean_shadow_degree": 3.7777777777777777,
+      "mean_weight": 0.9898331633625946,
+      "num_nodes": 9,
+      "step": 14,
+      "weight_std": 0.029259382336783865
+    },
+    {
+      "active_edges": 23,
+      "k1": 0.22556935817805385,
+      "max_level": 3,
+      "mean_shadow_degree": 3.8,
+      "mean_weight": 0.9898331633625945,
+      "num_nodes": 10,
+      "step": 15,
+      "weight_std": 0.027958307895967937
+    },
+    {
+      "active_edges": 24,
+      "k1": 0.23179563492063493,
+      "max_level": 3,
+      "mean_shadow_degree": 3.8,
+      "mean_weight": 0.9900144212321628,
+      "num_nodes": 10,
+      "step": 16,
+      "weight_std": 0.02738344708834673
+    },
+    {
+      "active_edges": 26,
+      "k1": 0.19884004884004883,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8181818181818183,
+      "mean_weight": 0.9900144212321629,
+      "num_nodes": 11,
+      "step": 17,
+      "weight_std": 0.026309164962457502
+    },
+    {
+      "active_edges": 26,
+      "k1": 0.19884004884004883,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8181818181818183,
+      "mean_weight": 0.9900144212321629,
+      "num_nodes": 11,
+      "step": 18,
+      "weight_std": 0.026309164962457502
+    },
+    {
+      "active_edges": 26,
+      "k1": 0.19884004884004883,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8181818181818183,
+      "mean_weight": 0.9900144212321629,
+      "num_nodes": 11,
+      "step": 19,
+      "weight_std": 0.026309164962457502
+    },
+    {
+      "active_edges": 28,
+      "k1": 0.17773526077097504,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8333333333333335,
+      "mean_weight": 0.990014421232163,
+      "num_nodes": 12,
+      "step": 20,
+      "weight_std": 0.025352145715449553
+    },
+    {
+      "active_edges": 28,
+      "k1": 0.17773526077097504,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8333333333333335,
+      "mean_weight": 0.990014421232163,
+      "num_nodes": 12,
+      "step": 21,
+      "weight_std": 0.025352145715449553
+    },
+    {
+      "active_edges": 28,
+      "k1": 0.17773526077097504,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8333333333333335,
+      "mean_weight": 0.990014421232163,
+      "num_nodes": 12,
+      "step": 22,
+      "weight_std": 0.025352145715449553
+    },
+    {
+      "active_edges": 29,
+      "k1": 0.18145867542419264,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8333333333333335,
+      "mean_weight": 0.9915835681502858,
+      "num_nodes": 12,
+      "step": 23,
+      "weight_std": 0.026258529314923455
+    },
+    {
+      "active_edges": 29,
+      "k1": 0.18145867542419264,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8333333333333335,
+      "mean_weight": 0.9915835681502858,
+      "num_nodes": 12,
+      "step": 24,
+      "weight_std": 0.026258529314923455
+    },
+    {
+      "active_edges": 29,
+      "k1": 0.18145867542419264,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8333333333333335,
+      "mean_weight": 0.9915835681502858,
+      "num_nodes": 12,
+      "step": 25,
+      "weight_std": 0.026258529314923455
+    },
+    {
+      "active_edges": 29,
+      "k1": 0.18145867542419264,
+      "max_level": 4,
+      "mean_shadow_degree": 3.8333333333333335,
+      "mean_weight": 0.9915835681502858,
+      "num_nodes": 12,
+      "step": 26,
+      "weight_std": 0.026258529314923455
+    },
+    {
+      "active_edges": 30,
+      "k1": 0.19160052910052908,
+      "max_level": 4,
+      "mean_shadow_degree": 4.0,
+      "mean_weight": 0.9934118944785987,
+      "num_nodes": 12,
+      "step": 27,
+      "weight_std": 0.027630910603486672
+    },
+    {
+      "active_edges": 33,
+      "k1": 0.1898651012287376,
+      "max_level": 5,
+      "mean_shadow_degree": 4.153846153846154,
+      "mean_weight": 0.9937812830965602,
+      "num_nodes": 13,
+      "step": 28,
+      "weight_std": 0.02642777789055707
+    },
+    {
+      "active_edges": 34,
+      "k1": 0.1919722434428317,
+      "max_level": 5,
+      "mean_shadow_degree": 4.3076923076923075,
+      "mean_weight": 0.9953095266087978,
+      "num_nodes": 13,
+      "step": 29,
+      "weight_std": 0.02747649708856098
+    },
+    {
+      "active_edges": 34,
+      "k1": 0.1919722434428317,
+      "max_level": 5,
+      "mean_shadow_degree": 4.3076923076923075,
+      "mean_weight": 0.9953095266087978,
+      "num_nodes": 13,
+      "step": 30,
+      "weight_std": 0.02747649708856098
+    },
+    {
+      "active_edges": 36,
+      "k1": 0.19535032868366203,
+      "max_level": 5,
+      "mean_shadow_degree": 4.285714285714286,
+      "mean_weight": 0.9953095266087979,
+      "num_nodes": 14,
+      "step": 31,
+      "weight_std": 0.026702355460376012
+    },
+    {
+      "active_edges": 36,
+      "k1": 0.19535032868366203,
+      "max_level": 5,
+      "mean_shadow_degree": 4.285714285714286,
+      "mean_weight": 0.9953095266087979,
+      "num_nodes": 14,
+      "step": 32,
+      "weight_std": 0.026702355460376012
+    },
+    {
+      "active_edges": 36,
+      "k1": 0.19535032868366203,
+      "max_level": 5,
+      "mean_shadow_degree": 4.285714285714286,
+      "mean_weight": 0.9953095266087979,
+      "num_nodes": 14,
+      "step": 33,
+      "weight_std": 0.026702355460376012
+    },
+    {
+      "active_edges": 37,
+      "k1": 0.1977925977925978,
+      "max_level": 5,
+      "mean_shadow_degree": 4.285714285714286,
+      "mean_weight": 0.9945283725240864,
+      "num_nodes": 14,
+      "step": 34,
+      "weight_std": 0.02675280081653071
+    },
+    {
+      "active_edges": 37,
+      "k1": 0.1977925977925978,
+      "max_level": 5,
+      "mean_shadow_degree": 4.285714285714286,
+      "mean_weight": 0.9945283725240864,
+      "num_nodes": 14,
+      "step": 35,
+      "weight_std": 0.02675280081653071
+    },
+    {
+      "active_edges": 37,
+      "k1": 0.1977925977925978,
+      "max_level": 5,
+      "mean_shadow_degree": 4.285714285714286,
+      "mean_weight": 0.9945283725240864,
+      "num_nodes": 14,
+      "step": 36,
+      "weight_std": 0.02675280081653071
+    },
+    {
+      "active_edges": 38,
+      "k1": 0.19668109668109668,
+      "max_level": 5,
+      "mean_shadow_degree": 4.428571428571429,
+      "mean_weight": 0.9961861098843405,
+      "num_nodes": 14,
+      "step": 37,
+      "weight_std": 0.028258755505488106
+    },
+    {
+      "active_edges": 40,
+      "k1": 0.17922799422799424,
+      "max_level": 5,
+      "mean_shadow_degree": 4.4,
+      "mean_weight": 0.9961861098843405,
+      "num_nodes": 15,
+      "step": 38,
+      "weight_std": 0.02754322783522307
+    },
+    {
+      "active_edges": 40,
+      "k1": 0.17922799422799424,
+      "max_level": 5,
+      "mean_shadow_degree": 4.4,
+      "mean_weight": 0.9961861098843405,
+      "num_nodes": 15,
+      "step": 39,
+      "weight_std": 0.02754322783522307
+    },
+    {
+      "active_edges": 41,
+      "k1": 0.1748565797346285,
+      "max_level": 5,
+      "mean_shadow_degree": 4.4,
+      "mean_weight": 0.9977463539692667,
+      "num_nodes": 15,
+      "step": 40,
+      "weight_std": 0.028939604483777956
+    },
+    {
+      "active_edges": 43,
+      "k1": 0.1577351588979496,
+      "max_level": 5,
+      "mean_shadow_degree": 4.375,
+      "mean_weight": 0.9977463539692668,
+      "num_nodes": 16,
+      "step": 41,
+      "weight_std": 0.028258577218079742
+    },
+    {
+      "active_edges": 44,
+      "k1": 0.16331137297046386,
+      "max_level": 5,
+      "mean_shadow_degree": 4.5,
+      "mean_weight": 0.998653732142665,
+      "num_nodes": 16,
+      "step": 42,
+      "weight_std": 0.02856224427685161
+    },
+    {
+      "active_edges": 45,
+      "k1": 0.17556887556887557,
+      "max_level": 5,
+      "mean_shadow_degree": 4.625,
+      "mean_weight": 0.997732594637944,
+      "num_nodes": 16,
+      "step": 43,
+      "weight_std": 0.028896481076382916
+    },
+    {
+      "active_edges": 45,
+      "k1": 0.17556887556887557,
+      "max_level": 5,
+      "mean_shadow_degree": 4.625,
+      "mean_weight": 0.997732594637944,
+      "num_nodes": 16,
+      "step": 44,
+      "weight_std": 0.028896481076382916
+    },
+    {
+      "active_edges": 47,
+      "k1": 0.17259879600305128,
+      "max_level": 6,
+      "mean_shadow_degree": 4.588235294117647,
+      "mean_weight": 0.997732594637944,
+      "num_nodes": 17,
+      "step": 45,
+      "weight_std": 0.02827497872787319
+    },
+    {
+      "active_edges": 47,
+      "k1": 0.17259879600305128,
+      "max_level": 6,
+      "mean_shadow_degree": 4.588235294117647,
+      "mean_weight": 0.997732594637944,
+      "num_nodes": 17,
+      "step": 46,
+      "weight_std": 0.02827497872787319
+    },
+    {
+      "active_edges": 47,
+      "k1": 0.17259879600305128,
+      "max_level": 6,
+      "mean_shadow_degree": 4.588235294117647,
+      "mean_weight": 0.997732594637944,
+      "num_nodes": 17,
+      "step": 47,
+      "weight_std": 0.02827497872787319
+    },
+    {
+      "active_edges": 47,
+      "k1": 0.17259879600305128,
+      "max_level": 6,
+      "mean_shadow_degree": 4.588235294117647,
+      "mean_weight": 0.997732594637944,
+      "num_nodes": 17,
+      "step": 48,
+      "weight_std": 0.02827497872787319
+    },
+    {
+      "active_edges": 49,
+      "k1": 0.1589610502875809,
+      "max_level": 6,
+      "mean_shadow_degree": 4.555555555555555,
+      "mean_weight": 0.9977325946379438,
+      "num_nodes": 18,
+      "step": 49,
+      "weight_std": 0.027691926855997924
+    },
+    {
+      "active_edges": 52,
+      "k1": 0.1481608669108669,
+      "max_level": 7,
+      "mean_shadow_degree": 4.526315789473684,
+      "mean_weight": 0.9983826401560213,
+      "num_nodes": 19,
+      "step": 50,
+      "weight_std": 0.027279156868074736
+    },
+    {
+      "active_edges": 53,
+      "k1": 0.1508079446758692,
+      "max_level": 7,
+      "mean_shadow_degree": 4.631578947368421,
+      "mean_weight": 1.0001121531723025,
+      "num_nodes": 19,
+      "step": 51,
+      "weight_std": 0.029759956020536254
+    },
+    {
+      "active_edges": 55,
+      "k1": 0.15020080929171836,
+      "max_level": 7,
+      "mean_shadow_degree": 4.6,
+      "mean_weight": 0.9986901113957245,
+      "num_nodes": 20,
+      "step": 52,
+      "weight_std": 0.031026574071215937
+    },
+    {
+      "active_edges": 58,
+      "k1": 0.13908510072303176,
+      "max_level": 7,
+      "mean_shadow_degree": 4.666666666666667,
+      "mean_weight": 0.9986622338748873,
+      "num_nodes": 21,
+      "step": 53,
+      "weight_std": 0.030214242388690433
+    },
+    {
+      "active_edges": 60,
+      "k1": 0.13275104525104525,
+      "max_level": 7,
+      "mean_shadow_degree": 4.636363636363637,
+      "mean_weight": 0.9986622338748873,
+      "num_nodes": 22,
+      "step": 54,
+      "weight_std": 0.029706403827319563
+    },
+    {
+      "active_edges": 60,
+      "k1": 0.13275104525104525,
+      "max_level": 7,
+      "mean_shadow_degree": 4.636363636363637,
+      "mean_weight": 0.9986622338748873,
+      "num_nodes": 22,
+      "step": 55,
+      "weight_std": 0.029706403827319563
+    },
+    {
+      "active_edges": 62,
+      "k1": 0.12534692010498463,
+      "max_level": 7,
+      "mean_shadow_degree": 4.608695652173913,
+      "mean_weight": 0.9986622338748874,
+      "num_nodes": 23,
+      "step": 56,
+      "weight_std": 0.029223340677281207
+    },
+    {
+      "active_edges": 62,
+      "k1": 0.12534692010498463,
+      "max_level": 7,
+      "mean_shadow_degree": 4.608695652173913,
+      "mean_weight": 0.9986622338748874,
+      "num_nodes": 23,
+      "step": 57,
+      "weight_std": 0.029223340677281207
+    },
+    {
+      "active_edges": 65,
+      "k1": 0.11722602184140647,
+      "max_level": 7,
+      "mean_shadow_degree": 4.583333333333333,
+      "mean_weight": 0.9997401869924037,
+      "num_nodes": 24,
+      "step": 58,
+      "weight_std": 0.029815348309509573
+    },
+    {
+      "active_edges": 65,
+      "k1": 0.11722602184140647,
+      "max_level": 7,
+      "mean_shadow_degree": 4.583333333333333,
+      "mean_weight": 0.9997401869924037,
+      "num_nodes": 24,
+      "step": 59,
+      "weight_std": 0.029815348309509573
+    },
+    {
+      "active_edges": 66,
+      "k1": 0.11502899457444912,
+      "max_level": 7,
+      "mean_shadow_degree": 4.666666666666667,
+      "mean_weight": 0.9993372760355733,
+      "num_nodes": 24,
+      "step": 60,
+      "weight_std": 0.029766388768006406
+    },
+    {
+      "active_edges": 66,
+      "k1": 0.11502899457444912,
+      "max_level": 7,
+      "mean_shadow_degree": 4.666666666666667,
+      "mean_weight": 0.9993372760355733,
+      "num_nodes": 24,
+      "step": 61,
+      "weight_std": 0.029766388768006406
+    },
+    {
+      "active_edges": 66,
+      "k1": 0.11502899457444912,
+      "max_level": 7,
+      "mean_shadow_degree": 4.666666666666667,
+      "mean_weight": 0.9993372760355733,
+      "num_nodes": 24,
+      "step": 62,
+      "weight_std": 0.029766388768006406
+    },
+    {
+      "active_edges": 66,
+      "k1": 0.11502899457444912,
+      "max_level": 7,
+      "mean_shadow_degree": 4.666666666666667,
+      "mean_weight": 0.9993372760355733,
+      "num_nodes": 24,
+      "step": 63,
+      "weight_std": 0.029766388768006406
+    },
+    {
+      "active_edges": 68,
+      "k1": 0.1105812608191501,
+      "max_level": 7,
+      "mean_shadow_degree": 4.64,
+      "mean_weight": 0.9993372760355733,
+      "num_nodes": 25,
+      "step": 64,
+      "weight_std": 0.029325380850797663
+    },
+    {
+      "active_edges": 68,
+      "k1": 0.1105812608191501,
+      "max_level": 7,
+      "mean_shadow_degree": 4.64,
+      "mean_weight": 0.9993372760355733,
+      "num_nodes": 25,
+      "step": 65,
+      "weight_std": 0.029325380850797663
+    },
+    {
+      "active_edges": 68,
+      "k1": 0.1105812608191501,
+      "max_level": 7,
+      "mean_shadow_degree": 4.64,
+      "mean_weight": 0.9993372760355733,
+      "num_nodes": 25,
+      "step": 66,
+      "weight_std": 0.029325380850797663
+    },
+    {
+      "active_edges": 70,
+      "k1": 0.10718370098622199,
+      "max_level": 8,
+      "mean_shadow_degree": 4.615384615384615,
+      "mean_weight": 0.9993372760355734,
+      "num_nodes": 26,
+      "step": 67,
+      "weight_std": 0.02890341092550805
+    },
+    {
+      "active_edges": 70,
+      "k1": 0.10718370098622199,
+      "max_level": 8,
+      "mean_shadow_degree": 4.615384615384615,
+      "mean_weight": 0.9993372760355734,
+      "num_nodes": 26,
+      "step": 68,
+      "weight_std": 0.02890341092550805
+    },
+    {
+      "active_edges": 70,
+      "k1": 0.10718370098622199,
+      "max_level": 8,
+      "mean_shadow_degree": 4.615384615384615,
+      "mean_weight": 0.9993372760355734,
+      "num_nodes": 26,
+      "step": 69,
+      "weight_std": 0.02890341092550805
+    },
+    {
+      "active_edges": 71,
+      "k1": 0.10324316896396432,
+      "max_level": 8,
+      "mean_shadow_degree": 4.6923076923076925,
+      "mean_weight": 0.9995375301447882,
+      "num_nodes": 26,
+      "step": 70,
+      "weight_std": 0.0287480083594422
+    },
+    {
+      "active_edges": 74,
+      "k1": 0.10175516278457455,
+      "max_level": 8,
+      "mean_shadow_degree": 4.7407407407407405,
+      "mean_weight": 0.9992653826436126,
+      "num_nodes": 27,
+      "step": 71,
+      "weight_std": 0.028255088528683407
+    },
+    {
+      "active_edges": 74,
+      "k1": 0.10175516278457455,
+      "max_level": 8,
+      "mean_shadow_degree": 4.7407407407407405,
+      "mean_weight": 0.9992653826436126,
+      "num_nodes": 27,
+      "step": 72,
+      "weight_std": 0.028255088528683407
+    },
+    {
+      "active_edges": 75,
+      "k1": 0.10733549021784315,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.9989423173602023,
+      "num_nodes": 27,
+      "step": 73,
+      "weight_std": 0.028203347812811395
+    },
+    {
+      "active_edges": 75,
+      "k1": 0.10733549021784315,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.9989423173602023,
+      "num_nodes": 27,
+      "step": 74,
+      "weight_std": 0.028203347812811395
+    },
+    {
+      "active_edges": 76,
+      "k1": 0.109431953065854,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.9989881105494407,
+      "num_nodes": 27,
+      "step": 75,
+      "weight_std": 0.028019991707287382
+    },
+    {
+      "active_edges": 76,
+      "k1": 0.109431953065854,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.9989881105494407,
+      "num_nodes": 27,
+      "step": 76,
+      "weight_std": 0.028019991707287382
+    },
+    {
+      "active_edges": 77,
+      "k1": 0.11200676286619757,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.998308327585412,
+      "num_nodes": 27,
+      "step": 77,
+      "weight_std": 0.028461263907680175
+    },
+    {
+      "active_edges": 77,
+      "k1": 0.11200676286619757,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.998308327585412,
+      "num_nodes": 27,
+      "step": 78,
+      "weight_std": 0.028461263907680175
+    },
+    {
+      "active_edges": 77,
+      "k1": 0.11200676286619757,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.998308327585412,
+      "num_nodes": 27,
+      "step": 79,
+      "weight_std": 0.028461263907680175
+    },
+    {
+      "active_edges": 77,
+      "k1": 0.11200676286619757,
+      "max_level": 8,
+      "mean_shadow_degree": 4.814814814814815,
+      "mean_weight": 0.998308327585412,
+      "num_nodes": 27,
+      "step": 80,
+      "weight_std": 0.028461263907680175
+    },
+    {
+      "active_edges": 79,
+      "k1": 0.10876396086746053,
+      "max_level": 8,
+      "mean_shadow_degree": 4.785714285714286,
+      "mean_weight": 0.9983083275854118,
+      "num_nodes": 28,
+      "step": 81,
+      "weight_std": 0.02809868523167281
+    },
+    {
+      "active_edges": 79,
+      "k1": 0.10876396086746053,
+      "max_level": 8,
+      "mean_shadow_degree": 4.785714285714286,
+      "mean_weight": 0.9983083275854118,
+      "num_nodes": 28,
+      "step": 82,
+      "weight_std": 0.02809868523167281
+    },
+    {
+      "active_edges": 79,
+      "k1": 0.10876396086746053,
+      "max_level": 8,
+      "mean_shadow_degree": 4.785714285714286,
+      "mean_weight": 0.9983083275854118,
+      "num_nodes": 28,
+      "step": 83,
+      "weight_std": 0.02809868523167281
+    },
+    {
+      "active_edges": 80,
+      "k1": 0.11048521943742533,
+      "max_level": 8,
+      "mean_shadow_degree": 4.857142857142857,
+      "mean_weight": 0.9969150105080363,
+      "num_nodes": 28,
+      "step": 84,
+      "weight_std": 0.03054557539353644
+    },
+    {
+      "active_edges": 82,
+      "k1": 0.10700208646765319,
+      "max_level": 8,
+      "mean_shadow_degree": 4.827586206896552,
+      "mean_weight": 0.9969150105080362,
+      "num_nodes": 29,
+      "step": 85,
+      "weight_std": 0.030170768862887377
+    },
+    {
+      "active_edges": 83,
+      "k1": 0.10945614941008279,
+      "max_level": 8,
+      "mean_shadow_degree": 4.896551724137931,
+      "mean_weight": 0.9975237405482703,
+      "num_nodes": 29,
+      "step": 86,
+      "weight_std": 0.030490874159951956
+    },
+    {
+      "active_edges": 84,
+      "k1": 0.10708865519789888,
+      "max_level": 8,
+      "mean_shadow_degree": 4.9655172413793105,
+      "mean_weight": 0.9962543136471252,
+      "num_nodes": 29,
+      "step": 87,
+      "weight_std": 0.03244033808305547
+    },
+    {
+      "active_edges": 84,
+      "k1": 0.10708865519789888,
+      "max_level": 8,
+      "mean_shadow_degree": 4.9655172413793105,
+      "mean_weight": 0.9962543136471252,
+      "num_nodes": 29,
+      "step": 88,
+      "weight_std": 0.03244033808305547
+    },
+    {
+      "active_edges": 85,
+      "k1": 0.11020171005465122,
+      "max_level": 8,
+      "mean_shadow_degree": 5.0344827586206895,
+      "mean_weight": 0.9965991827357166,
+      "num_nodes": 29,
+      "step": 89,
+      "weight_std": 0.03240347450676981
+    },
+    {
+      "active_edges": 86,
+      "k1": 0.1082229624380787,
+      "max_level": 8,
+      "mean_shadow_degree": 5.103448275862069,
+      "mean_weight": 0.997335559589037,
+      "num_nodes": 29,
+      "step": 90,
+      "weight_std": 0.03292214079158818
+    },
+    {
+      "active_edges": 87,
+      "k1": 0.11085850611712679,
+      "max_level": 8,
+      "mean_shadow_degree": 5.172413793103448,
+      "mean_weight": 0.9972353236335323,
+      "num_nodes": 29,
+      "step": 91,
+      "weight_std": 0.03274558248179665
+    },
+    {
+      "active_edges": 87,
+      "k1": 0.11085850611712679,
+      "max_level": 8,
+      "mean_shadow_degree": 5.172413793103448,
+      "mean_weight": 0.9972353236335323,
+      "num_nodes": 29,
+      "step": 92,
+      "weight_std": 0.03274558248179665
+    },
+    {
+      "active_edges": 87,
+      "k1": 0.11085850611712679,
+      "max_level": 8,
+      "mean_shadow_degree": 5.172413793103448,
+      "mean_weight": 0.9972353236335323,
+      "num_nodes": 29,
+      "step": 93,
+      "weight_std": 0.03274558248179665
+    },
+    {
+      "active_edges": 87,
+      "k1": 0.11085850611712679,
+      "max_level": 8,
+      "mean_shadow_degree": 5.172413793103448,
+      "mean_weight": 0.9972353236335323,
+      "num_nodes": 29,
+      "step": 94,
+      "weight_std": 0.03274558248179665
+    },
+    {
+      "active_edges": 89,
+      "k1": 0.10780092254811356,
+      "max_level": 8,
+      "mean_shadow_degree": 5.133333333333334,
+      "mean_weight": 0.9972353236335323,
+      "num_nodes": 30,
+      "step": 95,
+      "weight_std": 0.03237556402185834
+    },
+    {
+      "active_edges": 90,
+      "k1": 0.10951331076331075,
+      "max_level": 8,
+      "mean_shadow_degree": 5.2,
+      "mean_weight": 0.9971913729082295,
+      "num_nodes": 30,
+      "step": 96,
+      "weight_std": 0.032197867185572084
+    },
+    {
+      "active_edges": 92,
+      "k1": 0.10560716457455586,
+      "max_level": 8,
+      "mean_shadow_degree": 5.161290322580645,
+      "mean_weight": 0.9971913729082296,
+      "num_nodes": 31,
+      "step": 97,
+      "weight_std": 0.03184596736073579
+    },
+    {
+      "active_edges": 93,
+      "k1": 0.10754380028573576,
+      "max_level": 8,
+      "mean_shadow_degree": 5.161290322580645,
+      "mean_weight": 0.9961289462342722,
+      "num_nodes": 31,
+      "step": 98,
+      "weight_std": 0.03327319748000492
+    },
+    {
+      "active_edges": 93,
+      "k1": 0.10754380028573576,
+      "max_level": 8,
+      "mean_shadow_degree": 5.161290322580645,
+      "mean_weight": 0.9961289462342722,
+      "num_nodes": 31,
+      "step": 99,
+      "weight_std": 0.03327319748000492
+    },
+    {
+      "active_edges": 96,
+      "k1": 0.1031683016058016,
+      "max_level": 8,
+      "mean_shadow_degree": 5.1875,
+      "mean_weight": 0.996770229401862,
+      "num_nodes": 32,
+      "step": 100,
+      "weight_std": 0.03334031805392944
+    },
+    {
+      "active_edges": 96,
+      "k1": 0.1031683016058016,
+      "max_level": 8,
+      "mean_shadow_degree": 5.1875,
+      "mean_weight": 0.996770229401862,
+      "num_nodes": 32,
+      "step": 101,
+      "weight_std": 0.03334031805392944
+    },
+    {
+      "active_edges": 96,
+      "k1": 0.1031683016058016,
+      "max_level": 8,
+      "mean_shadow_degree": 5.1875,
+      "mean_weight": 0.996770229401862,
+      "num_nodes": 32,
+      "step": 102,
+      "weight_std": 0.03334031805392944
+    },
+    {
+      "active_edges": 96,
+      "k1": 0.1031683016058016,
+      "max_level": 8,
+      "mean_shadow_degree": 5.1875,
+      "mean_weight": 0.996770229401862,
+      "num_nodes": 32,
+      "step": 103,
+      "weight_std": 0.03334031805392944
+    },
+    {
+      "active_edges": 98,
+      "k1": 0.10403180209286862,
+      "max_level": 8,
+      "mean_shadow_degree": 5.151515151515151,
+      "mean_weight": 0.9967702294018619,
+      "num_nodes": 33,
+      "step": 104,
+      "weight_std": 0.03299835703423526
+    },
+    {
+      "active_edges": 98,
+      "k1": 0.10403180209286862,
+      "max_level": 8,
+      "mean_shadow_degree": 5.151515151515151,
+      "mean_weight": 0.9967702294018619,
+      "num_nodes": 33,
+      "step": 105,
+      "weight_std": 0.03299835703423526
+    },
+    {
+      "active_edges": 98,
+      "k1": 0.10403180209286862,
+      "max_level": 8,
+      "mean_shadow_degree": 5.151515151515151,
+      "mean_weight": 0.9967702294018619,
+      "num_nodes": 33,
+      "step": 106,
+      "weight_std": 0.03299835703423526
+    },
+    {
+      "active_edges": 98,
+      "k1": 0.10403180209286862,
+      "max_level": 8,
+      "mean_shadow_degree": 5.151515151515151,
+      "mean_weight": 0.9967702294018619,
+      "num_nodes": 33,
+      "step": 107,
+      "weight_std": 0.03299835703423526
+    },
+    {
+      "active_edges": 99,
+      "k1": 0.10298097580910227,
+      "max_level": 8,
+      "mean_shadow_degree": 5.151515151515151,
+      "mean_weight": 0.996197606343416,
+      "num_nodes": 33,
+      "step": 108,
+      "weight_std": 0.03331706146427635
+    },
+    {
+      "active_edges": 101,
+      "k1": 0.10439662702023611,
+      "max_level": 8,
+      "mean_shadow_degree": 5.117647058823529,
+      "mean_weight": 0.996197606343416,
+      "num_nodes": 34,
+      "step": 109,
+      "weight_std": 0.03298554016787597
+    },
+    {
+      "active_edges": 101,
+      "k1": 0.10439662702023611,
+      "max_level": 8,
+      "mean_shadow_degree": 5.117647058823529,
+      "mean_weight": 0.996197606343416,
+      "num_nodes": 34,
+      "step": 110,
+      "weight_std": 0.03298554016787597
+    },
+    {
+      "active_edges": 101,
+      "k1": 0.10439662702023611,
+      "max_level": 8,
+      "mean_shadow_degree": 5.117647058823529,
+      "mean_weight": 0.996197606343416,
+      "num_nodes": 34,
+      "step": 111,
+      "weight_std": 0.03298554016787597
+    },
+    {
+      "active_edges": 101,
+      "k1": 0.10439662702023611,
+      "max_level": 8,
+      "mean_shadow_degree": 5.117647058823529,
+      "mean_weight": 0.996197606343416,
+      "num_nodes": 34,
+      "step": 112,
+      "weight_std": 0.03298554016787597
+    },
+    {
+      "active_edges": 104,
+      "k1": 0.10044032409402139,
+      "max_level": 8,
+      "mean_shadow_degree": 5.142857142857143,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 35,
+      "step": 113,
+      "weight_std": 0.033410270827897055
+    },
+    {
+      "active_edges": 106,
+      "k1": 0.098085096764196,
+      "max_level": 8,
+      "mean_shadow_degree": 5.111111111111111,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 36,
+      "step": 114,
+      "weight_std": 0.03309357864899665
+    },
+    {
+      "active_edges": 106,
+      "k1": 0.098085096764196,
+      "max_level": 8,
+      "mean_shadow_degree": 5.111111111111111,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 36,
+      "step": 115,
+      "weight_std": 0.03309357864899665
+    },
+    {
+      "active_edges": 106,
+      "k1": 0.098085096764196,
+      "max_level": 8,
+      "mean_shadow_degree": 5.111111111111111,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 36,
+      "step": 116,
+      "weight_std": 0.03309357864899665
+    },
+    {
+      "active_edges": 106,
+      "k1": 0.098085096764196,
+      "max_level": 8,
+      "mean_shadow_degree": 5.111111111111111,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 36,
+      "step": 117,
+      "weight_std": 0.03309357864899665
+    },
+    {
+      "active_edges": 106,
+      "k1": 0.098085096764196,
+      "max_level": 8,
+      "mean_shadow_degree": 5.111111111111111,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 36,
+      "step": 118,
+      "weight_std": 0.03309357864899665
+    },
+    {
+      "active_edges": 106,
+      "k1": 0.098085096764196,
+      "max_level": 8,
+      "mean_shadow_degree": 5.111111111111111,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 36,
+      "step": 119,
+      "weight_std": 0.03309357864899665
+    },
+    {
+      "active_edges": 106,
+      "k1": 0.098085096764196,
+      "max_level": 8,
+      "mean_shadow_degree": 5.111111111111111,
+      "mean_weight": 0.9954370095229456,
+      "num_nodes": 36,
+      "step": 120,
+      "weight_std": 0.03309357864899665
+    }
+  ],
+  "observables_k2_global": [
+    {
+      "region_nodes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "region_size": 4,
+      "return_probabilities": {
+        "1": 0.0,
+        "16": 0.5233333333333333,
+        "2": 0.71,
+        "4": 0.53,
+        "8": 0.49
+      },
+      "sampled_shadow_edges": 3,
+      "spectral_dimension_ds": 0.2866954448901251,
+      "step": 0,
+      "taus": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "volume_growth_dimension_dv": 0.6259799061924656
+    },
+    {
+      "region_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "region_size": 13,
+      "return_probabilities": {
+        "1": 0.0,
+        "16": 0.07333333333333333,
+        "2": 0.18333333333333332,
+        "4": 0.10666666666666667,
+        "8": 0.11666666666666667
+      },
+      "sampled_shadow_edges": 28,
+      "spectral_dimension_ds": 0.7673002535434246,
+      "step": 30,
+      "taus": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "volume_growth_dimension_dv": 0.8930847960834871
+    },
+    {
+      "region_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "region_size": 24,
+      "return_probabilities": {
+        "1": 0.0,
+        "16": 0.03333333333333333,
+        "2": 0.20666666666666667,
+        "4": 0.08333333333333333,
+        "8": 0.05333333333333334
+      },
+      "sampled_shadow_edges": 56,
+      "spectral_dimension_ds": 1.7081321672546528,
+      "step": 60,
+      "taus": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "volume_growth_dimension_dv": 1.4150374992788433
+    },
+    {
+      "region_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "region_size": 29,
+      "return_probabilities": {
+        "1": 0.0,
+        "16": 0.02,
+        "2": 0.20666666666666667,
+        "4": 0.09666666666666666,
+        "8": 0.013333333333333334
+      },
+      "sampled_shadow_edges": 74,
+      "spectral_dimension_ds": 2.593136484824946,
+      "step": 90,
+      "taus": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "volume_growth_dimension_dv": 1.1210305538646208
+    },
+    {
+      "region_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "region_size": 36,
+      "return_probabilities": {
+        "1": 0.0,
+        "16": 0.04,
+        "2": 0.17333333333333334,
+        "4": 0.09,
+        "8": 0.043333333333333335
+      },
+      "sampled_shadow_edges": 92,
+      "spectral_dimension_ds": 1.4801758872564363,
+      "step": 120,
+      "taus": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "volume_growth_dimension_dv": 1.2058089955366402
+    }
+  ]
+}
