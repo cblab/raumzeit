@@ -107,7 +107,7 @@ The effective pruning threshold is density- and calibration-aware:
 
 $$
 w_{\min}^{\mathrm{eff}}(j)
-= w_{\min}\big(1+\lambda_p\,p_j\big)\times\big(1+\alpha_{\mathrm{lift}}\,\max(0,\bar w-(w_{*}+\epsilon_w))\big),
+= w_{\min}\big(1+\lambda_p\,p_j\big)\times\big(1+\alpha_{\mathrm{lift}}\,\max(0,\bar w-(w_{\star}+\epsilon_w))\big),
 $$
 
 where $p_j=\max(0,(k_j^{\mathrm{in}}-k_{\mathrm{target}})/k_{\mathrm{target}})$ and the second factor is active only when weight calibration is enabled.
@@ -129,8 +129,8 @@ where $T_{ij}$ is triangle support, $H_{ij}$ is two-hop coverage gain, $D_j$ is 
 Weight calibration in `v8a_fast` contributes centering and excess penalties:
 
 $$
-\Gamma_e^{\mathrm{center}} \propto \max(0,\bar w - w_{*})\max(0,w_e - w_{*}),\qquad
-\Gamma_e^{\mathrm{excess}} \propto \max(0,w_e - (w_{*} + \epsilon_w)).
+\Gamma_e^{\mathrm{center}} \propto \max(0,\bar w - w_{\star})\max(0,w_e - w_{\star}),\qquad
+\Gamma_e^{\mathrm{excess}} \propto \max(0,w_e - (w_{\star} + \epsilon_w)).
 $$
 
 For `v9a_fast`, mesoscale ball coherence adds
