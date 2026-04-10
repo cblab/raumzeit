@@ -20,5 +20,18 @@ def save_json(path: str | Path, payload: Any) -> None:
 
 
 def load_json(path: str | Path) -> Any:
-    with Path(path).expanduser().resolve().open("r", encoding="utf-8") as handle:
-        return json.load(handle)
+    in_path = Path(path).expanduser().resolve()
+    try:
+        raw_text = in_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise OSError(f"Failed to read JSON file: {in_path}") from exc
+
+    if not raw_text.strip():
+        raise ValueError(f"JSON file is empty: {in_path}")
+
+    try:
+        return json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"Invalid JSON in file {in_path}: {exc.msg} (line {exc.lineno}, column {exc.colno})"
+        ) from exc
