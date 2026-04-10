@@ -39,7 +39,7 @@ python scripts/run_single.py \
 K2 is sampled from a BFS-defined shadow region and written under
 `observables_k2_global` in each raw run payload.
 
-Set these fields in your config:
+Set these fields in the corresponding model YAML under `configs/`, for example `configs/baseline.yaml`:
 
 ```yaml
 k2_global_every: 10
@@ -58,7 +58,7 @@ K7 keeps anchor seeds fixed across time and measures local geometry in seed-cent
 BFS regions, helping separate sampling heterogeneity from genuine temporal drift.
 Records are stored under `observables_k7` in each raw run payload.
 
-Set these fields in your config:
+Set these fields in the corresponding model YAML under `configs/`, for example `configs/baseline.yaml`:
 
 ```yaml
 k7_every: 20
@@ -132,6 +132,8 @@ and creates K2/K7 figures when corresponding observables exist in the raw payloa
 based on baseline seeds under `results/raw/baseline/`.
 
 ## Config notes
+
+`run_single.py --config configs/baseline.yaml` reads that YAML file directly, and batch execution reads the listed model YAML files from `configs/`.
 
 Model configs are YAML files loaded through `src/config.py`.
 
