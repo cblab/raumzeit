@@ -148,6 +148,54 @@ def _estimate_ds_on_subset(adj: dict[int, list[int]], nodes: list[int], config: 
     return _estimate_spectral_dimension(probs)
 
 
+def _compute_iso_defect(
+    adj: dict[int, list[int]], dist_map: dict[int, int], seed: int
+) -> tuple[float | None, int | None, int | None, bool]:
+    """
+    Compute an anchor-local isotropy defect from branch-descendant imbalance.
+
+    Branches are defined by the first hop from the seed along deterministic BFS.
+    Returns (iso_defect, branch_count, shell_used, iso_valid).
+    """
+    seed_i = int(seed)
+    if seed_i not in dist_map:
+        return None, None, None, False
+
+    first_hop: dict[int, int | None] = {seed_i: None}
+    queue: deque[int] = deque([seed_i])
+
+    while queue:
+        u = queue.popleft()
+        for v in adj.get(u, []):
+            if v in first_hop:
+                continue
+            if u == seed_i:
+                first_hop[int(v)] = int(v)
+            else:
+                first_hop[int(v)] = first_hop.get(u)
+            queue.append(int(v))
+
+    branch_counts: dict[int, int] = {}
+    for node, hop in first_hop.items():
+        if node == seed_i or hop is None:
+            continue
+        branch_counts[int(hop)] = int(branch_counts.get(int(hop), 0) + 1)
+
+    k = int(len(branch_counts))
+    if k < 2:
+        return None, k, 1, False
+
+    counts = np.array([float(c) for c in branch_counts.values()], dtype=np.float64)
+    total = float(np.sum(counts))
+    if total <= 0.0:
+        return None, k, 1, False
+
+    probs = counts / total
+    uniform = 1.0 / float(k)
+    iso_defect = float(0.5 * np.sum(np.abs(probs - uniform)))
+    return iso_defect, k, 1, True
+
+
 def measure_anchor(g: GraphState, anchor: dict, config: dict) -> dict | None:
     """Measure anchor-local fixed-seed geometry. Returns None when invalid."""
     seed = int(anchor.get("seed", -1))
@@ -187,9 +235,9 @@ def measure_anchor(g: GraphState, anchor: dict, config: dict) -> dict | None:
     ds_front = _estimate_ds_on_subset(shadow_adj, front_nodes, config, g.rng)
 
     reachable = len(dist_map)
-    disconnected = len(region_nodes) - reachable
     region_fraction = float(reachable / max(1, g.num_nodes))
     mean_shells = float(np.mean(np.array(list(dist_map.values()), dtype=np.float64)))
+    iso_defect, iso_branch_count, iso_shell_used, iso_valid = _compute_iso_defect(shadow_adj, dist_map, seed)
 
     core_ds = float(ds_core) if ds_core is not None else None
     front_ds = float(ds_front) if ds_front is not None else None
@@ -212,7 +260,10 @@ def measure_anchor(g: GraphState, anchor: dict, config: dict) -> dict | None:
         "ds_mid": float(ds_mid) if ds_mid is not None else None,
         "ds_front": front_ds,
         "g_fc": g_fc,
-        "iso_defect": float(disconnected / max(1, len(region_nodes))),
+        "iso_defect": float(iso_defect) if iso_defect is not None else None,
+        "iso_branch_count": int(iso_branch_count) if iso_branch_count is not None else None,
+        "iso_shell_used": int(iso_shell_used) if iso_shell_used is not None else None,
+        "iso_valid": bool(iso_valid),
         "mean_shells": float(mean_shells),
         "core_max_d": int(max((dist_map[n] for n in core_nodes), default=0)),
         "front_min_d": int(min((dist_map[n] for n in front_nodes), default=0)),

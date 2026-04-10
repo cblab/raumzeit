@@ -14,6 +14,18 @@ import numpy as np
 from src.io_utils import load_json
 
 
+def _as_valid_float(value: object) -> float | None:
+    if value is None:
+        return None
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not np.isfinite(out):
+        return None
+    return out
+
+
 def _plot_baseline_k1(histories: list[tuple[list[int], list[float], str]]) -> None:
     min_len = min(len(k1) for _, k1, _ in histories)
     step_axis = np.array(histories[0][0][:min_len], dtype=np.int32)
@@ -69,11 +81,11 @@ def _aggregate_k7_per_step(obs: list[dict], field: str) -> tuple[list[int], list
     for row in obs:
         if not isinstance(row, dict):
             continue
-        val = row.get(field)
+        val = _as_valid_float(row.get(field))
         if val is None:
             continue
         step = int(row.get("step", 0))
-        per_step.setdefault(step, []).append(float(val))
+        per_step.setdefault(step, []).append(val)
 
     if not per_step:
         return [], []
@@ -170,6 +182,8 @@ def main() -> None:
 
     if k7_vals_iso:
         _plot_k7_series(k7_steps_iso, k7_vals_iso, "K7 anchor-local iso_defect", "fig3b_baseline_k7_iso.png")
+    else:
+        print("Skipped figures/fig3b_baseline_k7_iso.png (no valid K7 iso_defect data).")
 
 
 if __name__ == "__main__":
