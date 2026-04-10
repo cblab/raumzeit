@@ -1,4 +1,112 @@
-inherits: v8.yaml
 name: v8a_fast
-steps: 80
-k2_global_every: 20
+seed: 42
+steps: 200
+max_nodes: 20300
+init_nodes: 16
+m_parents: 4
+w0: 1.0
+w_min: 0.10
+w_max: 3.0
+
+candidate_pool: 64
+target_density: 0.30
+alpha: 1.10
+beta: 0.70
+gamma: 0.35
+
+repulsion_lambda: 0.50
+ancestry_depth: 3
+ancestry_cap: 24
+
+eta: 0.075
+nu: 0.060
+mu: 0.020
+
+inhib_gamma: 0.080
+conc_gamma: 1.20
+prune_lambda: 0.35
+k_target: 4.0
+
+lambda_crowd: 0.060
+sim_threshold: 0.40
+c_target: 0.36
+adaptive_alpha: 3.0
+
+load_beta: 4.0
+load_gamma: 0.060
+load_eps: 1e-9
+
+cross_alpha: 0.035
+cross_sim_threshold: 0.35
+cross_min_cluster_weight: 0.15
+max_shared_neighbor_frac: 0.22
+outflow_beta: 1.4
+genealogical_novelty_beta: 0.8
+
+age_alpha: 0.090
+age_tau: 2500.0
+drift_threshold: 0.40
+plasticity_cap: 0.25
+plasticity_only_on_old: true
+old_edge_age: 1500
+
+edge_update_batch: 80
+node_relax_batch: 32
+
+# V8a-fast ball-integrity
+enable_ball_integrity_contrast: true
+ball_min_node_age: 150
+ball_radius: 2
+ball_alpha: 0.040
+ball_term_cap: 0.12
+ball_w_tri: 0.90
+ball_w_twohop: 0.75
+ball_w_bridge: 0.00
+ball_w_deg: 0.20
+ball_w_shared: -0.40
+
+# V8a-fast weight calibration
+enable_weight_calibration: true
+target_mean_w: 0.60
+weight_center_alpha: 0.060
+excess_weight_alpha: 0.045
+prune_lift_alpha: 0.70
+weight_tol: 0.05
+
+# V9 term disabled in V8a-fast
+enable_v9_ball_coherence: false
+v9_min_node_age: 300
+v9_alpha: 0.035
+v9_term_cap: 0.10
+v9_r_max: 3
+v9_w_r2: 0.55
+v9_w_r3: 0.85
+v9_w_sector: 0.90
+v9_w_front: 0.70
+v9_w_redundant: 0.60
+
+# Diagnostics defaults
+k2_global_every: 2000
+k2_region_size: 1500
+k2_taus: [2, 4, 8, 16]
+k2_walkers: 800
+
+k7_every: 500
+fine_start: 10000
+fine_end: 16000
+fine_every: 250
+num_anchors: 8
+anchor_region_size: 1500
+anchor_min_region: 100
+
+k3_radii: [2, 4, 6]
+k3_num_centers: 10
+k3_num_seeds: 10
+k3_max_depth: 8
+
+k6_taus: [2, 4, 8, 16]
+k6_walkers: 800
+k6_min_start_nodes: 120
+k6_core_frac: 0.50
+k6_mid_frac: 0.30
+k6_front_frac: 0.20
