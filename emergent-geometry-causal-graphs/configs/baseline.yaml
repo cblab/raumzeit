@@ -1,1 +1,15 @@
-# TODO: configuration
+name: baseline
+seed: 42
+steps: 120
+max_nodes: 600
+init_nodes: 4
+w0: 1.0
+w_noise: 0.05
+p_birth: 0.35
+p_link: 0.45
+state_update_fraction: 0.5
+k1_edge_sample: 2048
+k2_global_every: 30
+k2_region_size: 128
+k2_taus: [1, 2, 4, 8, 16]
+k2_walkers: 300

@@ -1,1 +1,6 @@
-# TODO: configuration
+model_configs:
+  - configs/baseline.yaml
+  - configs/v71.yaml
+  - configs/v8.yaml
+  - configs/v8a_fast.yaml
+seeds: [11, 23, 37, 49, 61]
