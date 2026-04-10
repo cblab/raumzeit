@@ -113,6 +113,7 @@ $$
 where $p_j=\max(0,(k_j^{\mathrm{in}}-k_{\mathrm{target}})/k_{\mathrm{target}})$ and the second factor is active only when weight calibration is enabled.
 
 ### 3.5 Variant-specific terms
+
 - **`baseline_ref`**: disables ball-integrity contrast, weight calibration, and V9 coherence terms.
 - **`v8a_fast`**: enables local ball-integrity contrast and weight calibration.
 - **`v9a_fast`**: inherits `v8a_fast` and additionally enables mesoscale ball-coherence.
@@ -120,29 +121,60 @@ where $p_j=\max(0,(k_j^{\mathrm{in}}-k_{\mathrm{target}})/k_{\mathrm{target}})$ 
 For `v8a_fast`, the additional local ball-integrity term is
 
 $$
-\Delta_e^{\mathrm{ball}} = \operatorname{clip}\!\left(\alpha_{\mathrm{ball}}\,[
-\omega_{\triangle}T_{ij}+\omega_{2h}H_{ij}+\omega_{\deg}D_j+\omega_{\mathrm{sh}}S_{ij}
-],\,[-c_{\mathrm{ball}},c_{\mathrm{ball}}]\right),
+\Delta_e^{\mathrm{ball}}
+=
+\min\!\left(
+c_{\mathrm{ball}},
+\max\!\left(
+-c_{\mathrm{ball}},
+\alpha_{\mathrm{ball}}
+\left[
+\omega_{\triangle}T_{ij}
++\omega_{2h}H_{ij}
++\omega_{\deg}D_j
++\omega_{\mathrm{sh}}S_{ij}
+\right]
+\right)
+\right).
 $$
 
-where $T_{ij}$ is triangle support, $H_{ij}$ two-hop coverage gain, $D_j$ degree support, and $S_{ij}$ shared-neighbor overlap.
+where $T_{ij}$ is triangle support, $H_{ij}$ is two-hop coverage gain, $D_j$ is degree support, and $S_{ij}$ is shared-neighbor overlap.
 
-Weight calibration in `v8a_fast` contributes centering/excess penalties:
+Weight calibration in `v8a_fast` contributes centering and excess penalties:
 
 $$
-\Gamma_e^{\mathrm{center}}\propto\max(0,\bar w-w_*)\max(0,w_e-w_*),\qquad
-\Gamma_e^{\mathrm{excess}}\propto\max(0,w_e-(w_*+\epsilon_w)).
+\Gamma_e^{\mathrm{center}}
+\propto
+\max(0,\bar w - w_*)
+\max(0,w_e - w_*),
+\qquad
+\Gamma_e^{\mathrm{excess}}
+\propto
+\max(0,w_e - (w_* + \epsilon_w)).
 $$
 
 For `v9a_fast`, mesoscale ball coherence adds
 
 $$
-\Delta_e^{\mathrm{v9}}=
-\operatorname{clip}\!\left(\alpha_{\mathrm{v9}}[
-\omega_{r2}N_{r2}+\omega_{r3}N_{r3}+\omega_{\mathrm{sec}}B_{\mathrm{sec}}-\omega_{\mathrm{red}}R_{\mathrm{inner}}+\omega_{\mathrm{front}}F_{\mathrm{thin}}N_{r3}],\,[-c_{\mathrm{v9}},c_{\mathrm{v9}}]\right),
+\Delta_e^{\mathrm{v9}}
+=
+\min\!\left(
+c_{\mathrm{v9}},
+\max\!\left(
+-c_{\mathrm{v9}},
+\alpha_{\mathrm{v9}}
+\left[
+\omega_{r2}N_{r2}
++\omega_{r3}N_{r3}
++\omega_{\mathrm{sec}}B_{\mathrm{sec}}
+-\omega_{\mathrm{red}}R_{\mathrm{inner}}
++\omega_{\mathrm{front}}F_{\mathrm{thin}}N_{r3}
+\right]
+\right)
+\right).
 $$
 
-combining novelty at radius-2/3, sector balancing, inner redundancy suppression, and thin-front support.
+This term combines novelty at radius 2 and 3, sector balancing, inner redundancy suppression, and thin-front support.
 
 ## 4. Diagnostics framework
 We use K1, K2, K4, K5, and K7.
