@@ -1,0 +1,73 @@
+{
+  "canonical_scope": [
+    "baseline_ref",
+    "v8a_fast",
+    "v9a_fast"
+  ],
+  "models": {
+    "baseline_ref": {
+      "raw_runs_present": "yes",
+      "summary_present": "yes",
+      "k1_present": "yes",
+      "k2_present": "yes",
+      "k7_present": "yes",
+      "k4_present": "yes",
+      "k5_present": "yes",
+      "figures_present": [
+        "reference_k1_trajectory.png",
+        "reference_k2_ds_comparison.png",
+        "reference_k2_dv_comparison.png",
+        "reference_k7_ds_global_comparison.png",
+        "reference_k7_iso_defect_comparison.png",
+        "reference_k7_g_fc_comparison.png"
+      ],
+      "evidence_status": "complete"
+    },
+    "v8a_fast": {
+      "raw_runs_present": "yes",
+      "summary_present": "yes",
+      "k1_present": "yes",
+      "k2_present": "yes",
+      "k7_present": "yes",
+      "k4_present": "yes",
+      "k5_present": "yes",
+      "figures_present": [
+        "reference_k1_trajectory.png",
+        "reference_k2_ds_comparison.png",
+        "reference_k2_dv_comparison.png",
+        "reference_k7_ds_global_comparison.png",
+        "reference_k7_iso_defect_comparison.png",
+        "reference_k7_g_fc_comparison.png"
+      ],
+      "evidence_status": "complete"
+    },
+    "v9a_fast": {
+      "raw_runs_present": "yes",
+      "summary_present": "yes",
+      "k1_present": "yes",
+      "k2_present": "yes",
+      "k7_present": "yes",
+      "k4_present": "yes",
+      "k5_present": "yes",
+      "figures_present": [
+        "reference_k1_trajectory.png",
+        "reference_k2_ds_comparison.png",
+        "reference_k2_dv_comparison.png",
+        "reference_k7_ds_global_comparison.png",
+        "reference_k7_iso_defect_comparison.png",
+        "reference_k7_g_fc_comparison.png"
+      ],
+      "evidence_status": "complete"
+    }
+  },
+  "repo": {
+    "canonical_scope": [
+      "baseline_ref",
+      "v8a_fast",
+      "v9a_fast"
+    ],
+    "reference_table_present": "yes",
+    "reference_figures_present": "yes",
+    "recommended_manuscript_status": "results-ready"
+  }
+}
