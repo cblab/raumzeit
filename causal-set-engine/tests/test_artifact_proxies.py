@@ -1,5 +1,5 @@
 from causal_set_engine.core.causal_set import CausalSet
-from causal_set_engine.experiments.artifact_proxies import (
+from causal_set_engine.diagnostics.artifact_proxies import (
     age_layering_stratification_proxy,
     birth_order_dominance_proxy,
 )

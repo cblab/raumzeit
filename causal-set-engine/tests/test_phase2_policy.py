@@ -1,6 +1,6 @@
 """Deterministic tests for strict phase-2a policy gate."""
 
-from causal_set_engine.experiments.decision_metrics import DiagnosticQuality
+from causal_set_engine.evaluation.scoring import DiagnosticQuality
 from causal_set_engine.experiments.phase2_policy import Phase2GateInput, evaluate_phase2_gate
 
 

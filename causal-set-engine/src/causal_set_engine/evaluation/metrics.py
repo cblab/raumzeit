@@ -9,7 +9,7 @@ from causal_set_engine.diagnostics.basic import (
     relation_density,
     sampled_interval_statistics,
 )
-from causal_set_engine.experiments.decision_metrics import (
+from causal_set_engine.evaluation.scoring import (
     PairQuality,
     interval_overlap_fraction,
     mean_difference,

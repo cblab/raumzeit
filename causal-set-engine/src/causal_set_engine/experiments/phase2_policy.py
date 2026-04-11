@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from causal_set_engine.experiments.decision_metrics import DiagnosticQuality
+from causal_set_engine.evaluation.scoring import DiagnosticQuality
 
 
 @dataclass(frozen=True)

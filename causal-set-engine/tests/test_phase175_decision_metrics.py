@@ -1,6 +1,6 @@
 """Deterministic tests for phase-1.75 decision utilities."""
 
-from causal_set_engine.experiments.decision_metrics import (
+from causal_set_engine.evaluation.scoring import (
     PairQuality,
     aggregate_diagnostic_quality,
     build_combined_score,

@@ -5,7 +5,7 @@ from causal_set_engine.diagnostics.basic import (
     longest_chain_length,
     sampled_interval_statistics,
 )
-from causal_set_engine.experiments.decision_metrics import standardized_effect_size
+from causal_set_engine.evaluation.scoring import standardized_effect_size
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 from causal_set_engine.generators.random_poset import generate_random_poset
 
