@@ -3,7 +3,7 @@
 ## Abstract
 We test a narrow hypothesis: whether a specific class of local, causal, edge-based update rules on growing directed graphs can stabilize robust macroscopic geometry. The contribution is not a claim of emergent spacetime. The contribution is a maintained modular engine, a canonical three-model ablation (`baseline_ref`, `v8a_fast`, `v9a_fast`), a reproducible diagnostics stack (K1, K2, K4, K5, K7), and a disciplined negative result.
 
-Geometry is measured rather than assumed. The workflow is fixed to config → batch → raw outputs → summary tables → figures → commit hash. In the current repository state, available canonical summaries provide direct quantitative support for `baseline_ref`/`baseline` and `v8a_fast` on final K1, active-edge count, and final node count, while the designated `reference_table.json`/`.csv` artifacts and canonical `v9a_fast` summary outputs are not present. Accordingly, the negative conclusion is bounded: the available evidence shows no robust macroscopic isotropic stabilization, and `v8a_fast` shifts local structural statistics without establishing a new asymptotic geometry class. `v9a_fast` remains part of canonical scope, but in this checkout its evaluation is evidence-limited rather than numerically resolved.
+Geometry is measured rather than assumed. This manuscript is bound to the committed evidence package under `paper/`: fixed run hash (`hash/results_and_figures_generation.txt`), canonical summary tables (`results/summary/reference_table.json`/`.csv`), per-model summaries, and committed comparison figures. Across that fixed bundle, `v8a_fast` and `v9a_fast` produce local structural and transport retuning relative to `baseline_ref` (K1/K2/K4/K5/K7), but neither produces robust macroscopic isotropic stabilization: K7 isotropy defect remains high in all three models, and K7 front-core transport splitting remains unstable in sign and magnitude.
 
 ## 1. Introduction
 This paper asks one focused question: **can this specific local causal mechanism class stabilize robust macroscopic geometry, as measured from graph dynamics alone?**
@@ -181,25 +181,27 @@ This paper is bound to the modular reproducibility chain:
 Reproducibility procedure is documented in `REPRODUCIBILITY.md`.
 
 ## 6. Results
-This section stays within the canonical three-model ablation (`baseline_ref`, `v8a_fast`, `v9a_fast`) and is restricted to evidence that is present in this checkout.
+This section is bound to the committed fixed evidence bundle under `paper/`: `results/summary/reference_table.json` (and matching per-model summaries), committed figures in `paper/figures/`, and the fixed run hash in `paper/hash/results_and_figures_generation.txt`.
 
-### 6.1 `baseline_ref`: reference regime from available summaries
-The available summary artifact for the baseline mechanism is `results/summary/baseline_summary.json` (model label `baseline`). Across 6 runs, final K1 is $0.1027\pm0.0218$ (mean±std), with $120.17$ active edges and $39.33$ nodes at the final recorded step. This establishes the reference regime as a sparse adaptive graph with moderate seed variability rather than collapse or explosive densification.
+### 6.1 Three-model structural trajectory (K1 and final graph size)
+From the reference table, final K1 increases modestly across the canonical sequence: `baseline_ref` $0.7072\pm0.0103$, `v8a_fast` $0.7089\pm0.0084$, `v9a_fast` $0.7112\pm0.0082$ (mean±std; 5 runs each). Final active-edge count shifts from $46612.6\pm78.2$ to $47633.4\pm14.2$ and then $47629.2\pm10.7$, while final node count remains fixed at $12016$ for all three models.
 
-Global diffusion/volume estimates can be extracted from the last K2-global record in available baseline raw runs (`results/raw/baseline/seed_*.json`): $d_s\approx1.99\pm0.26$ and $d_v\approx1.31\pm0.19$ (6/6 runs finite). These values indicate nontrivial diffusion geometry, but by themselves do not establish robust isotropic macroscopic closure; notably, no canonical aggregated K7 isotropy table is available in this checkout.
+Figure `paper/figures/reference_k1_trajectory.png` should be read as a structural trajectory rather than a phase transition plot: the variants tighten dispersion and slightly raise K1, but they remain in the same dense large-$N$ regime. Mechanistically, this is consistent with local edge-rule retuning that improves stability around a similar attractor, not a global reorganization into a distinct macroscopic geometry class.
 
-### 6.2 `v8a_fast`: what changes relative to baseline, and what does not
-For `v8a_fast`, the available summary (`results/summary/v8a_fast_summary.json`) reports final K1 $0.1013\pm0.0174$, active edges $105.0$, and nodes $35.2$ over 5 runs. Relative to baseline summary values, the dominant shift is structural sparsification (fewer active edges and fewer retained nodes), while mean K1 remains close.
+### 6.2 K2 comparison: diffusion and volume scaling shift, but mixed
+K2 spectral and volume estimates are model-sensitive but not monotonic in one direction. Final $d_s$ decreases across models (`baseline_ref`: $3.6069\pm0.5180$, `v8a_fast`: $3.3731\pm0.3909$, `v9a_fast`: $3.0902\pm0.4517$), while final $d_v$ increases from baseline to v9 (`baseline_ref`: $3.7284\pm0.3855$, `v8a_fast`: $4.3233\pm0.6255$, `v9a_fast`: $4.5884\pm0.8971$).
 
-The last-step K2-global values from available `v8a_fast` raw runs give $d_s\approx1.92\pm0.11$ and $d_v\approx1.18\pm0.14$ (5/5 runs finite), again in a similar diffusion-geometric band to baseline. Taken conservatively, the available evidence supports a local/structural retuning (including reduced variance in K1 and lower final size) rather than a clear asymptotic geometry-class transition.
+Figure `paper/figures/reference_k2_ds_comparison.png` shows the downward $d_s$ shift, and `paper/figures/reference_k2_dv_comparison.png` shows the upward $d_v$ shift. Taken together, these plots indicate a mixed geometric response: transport and growth exponents decouple under local rule changes, which is evidence of retuning, but not evidence of robust isotropic macroscopic closure.
 
-### 6.3 `v9a_fast`: canonical in scope, unresolved in this checkout
-`v9a_fast` remains part of canonical scope by config and batch definition (`configs/v9a_fast.yaml`, `configs/paper_batch_ref.yaml`). However, this checkout does not contain `results/summary/reference_table.json`, `results/summary/reference_table.csv`, a `v9a_fast` summary JSON, `results/raw/v9a_fast/` runs, or canonical comparison figures for the three-model reference set.
+### 6.3 K7 fixed-anchor evidence: local retuning persists, macroscopic isotropy does not
+K7 fixed-anchor metrics remain the key falsification signal. Mean K7 isotropy defect is high for all three models (`baseline_ref`: $0.9209\pm0.0404$, `v8a_fast`: $0.9455\pm0.0592$, `v9a_fast`: $0.9280\pm0.0655$), so no model reaches low-defect isotropic behavior.
 
-Therefore, no quantitative incremental claim over `v8a_fast` is made here. The correct status is evidence-limited: the additional mesoscale-coherence mechanism is specified, but its canonical outcome is not resolved by the currently available artifacts.
+Figure `paper/figures/reference_k7_iso_defect_comparison.png` makes this explicit: variants move the defect value, but not into an isotropic regime. In parallel, K7 front-core transport split $g_{fc}$ changes sign and magnitude (`baseline_ref`: $+0.119\pm0.235$, `v8a_fast`: $-0.089\pm0.303$, `v9a_fast`: $-0.221\pm0.221$), shown in `paper/figures/reference_k7_g_fc_comparison.png`. Mechanistically, that sign drift indicates persistent directional transport asymmetry anchored to local structure rather than convergence to a stable isotropic macrostate. K7 global exponents (`paper/figures/reference_k7_ds_global_comparison.png`) stay in a nearby band (~3.4-3.6), reinforcing that the failure mode is anisotropy persistence, not loss of all geometric organization.
 
-### 6.4 Evidence policy in the present repository state
-The designated canonical tables are `results/summary/reference_table.json` and `.csv`, but they are absent in this checkout. Reported numbers in this section are therefore taken only from available per-model summaries and raw final/last-step diagnostics. Missing canonical aggregates (especially K7 and full three-model reference tables) are treated as unresolved, not inferred.
+### 6.4 K4/K5 support: local efficiency and shell organization improve
+K4/K5 metrics provide supporting local improvements. Relative to baseline, both variants reduce incoming concentration (Herfindahl: $0.2592 \rightarrow 0.2519 \rightarrow 0.2512$) and cluster dominance ($0.5118 \rightarrow 0.5063 \rightarrow 0.5018$). `v9a_fast` also improves sampled global efficiency ($0.2061 \rightarrow 0.2062 \rightarrow 0.2142$) and lowers sampled path length ($5.137 \rightarrow 5.145 \rightarrow 4.987$). On K5, front thickness and shell entropy increase ($0.877 \rightarrow 0.936 \rightarrow 0.963$, $1.186 \rightarrow 1.306 \rightarrow 1.336$), indicating broader, more distributed shell fronts.
+
+These K4/K5 shifts are meaningful local gains, but they do not overturn the K7 isotropy result. The combined evidence is therefore: local organization improves; macroscopic isotropic stabilization still fails.
 
 ## 7. Interpretation
 The evidence supports a narrow negative conclusion: this local causal edge-dynamics line can self-organize transport and ball-like local structure but does not robustly stabilize macroscopic isotropic geometry.
@@ -223,12 +225,19 @@ A useful description is an **anisotropic diffusion-geometric patch medium**: the
 **Discrete graph-geometric diagnostics and curvature.** Discrete curvature literature develops operational geometric probes on networks, including comparative studies of curvature discretizations and convergence links between Ollivier curvature on random geometric graphs and manifold Ricci curvature (Samal et al., 2018; van der Hoorn et al., 2023). We align with this diagnostics-first philosophy: geometry is measured via operational statistics rather than assumed. However, our diagnostics stack (K1/K2/K4/K5/K7) is used to falsify stability claims for a specific mechanism lineage, not to assert a universal geometric no-go theorem. Accordingly, this manuscript does **not** refute graph-based or pregeometric emergence programs in general; it provides a reproducible falsification result for one narrower local causal edge-dynamics lineage under the canonical three-model protocol.
 
 ## 10. Conclusion
-Within the canonical modular engine and canonical three-model scope (`baseline_ref`, `v8a_fast`, `v9a_fast`), the currently available repository evidence is sufficient to reject robust macroscopic isotropic stabilization for the baseline→`v8a_fast` slice, but insufficient to numerically resolve the `v9a_fast` increment in this checkout.
+Within the canonical modular engine and canonical three-model scope (`baseline_ref`, `v8a_fast`, `v9a_fast`), the committed fixed evidence bundle supports a consistent negative result: local retuning occurs, but robust macroscopic isotropic stabilization is not achieved.
 
-What is supported is reproducible local structural organization and transport retuning in available runs; what is not yet supported here is a complete canonical three-model quantitative closure. Future progress likely requires stronger nonlocal consistency constraints, higher-order relational structure, and a completed canonical evidence bundle (`reference_table.*`, `v9a_fast` raw/summary, and three-model comparison figures).
+Across the reference summaries and committed figures, K1/K2/K4/K5 show measurable structural and transport adjustments, including lower concentration and stronger local efficiency in `v9a_fast`. However, K7 isotropy defect remains high across all models and K7 front-core transport splitting remains sign-unstable, so no canonical variant establishes a stable isotropic macrostate. Future progress likely requires stronger nonlocal consistency constraints or higher-order relational mechanisms beyond this local edge-update class.
 
 ## 11. Reproducibility note
-Authoritative execution path:
+This manuscript is explicitly tied to the committed fixed evidence bundle under `paper/`:
+
+- fixed run/figure generation hash: `paper/hash/results_and_figures_generation.txt` = `75208cf390c1196b9a0bbb9aff5f50d45b6f727e`
+- canonical aggregate table: `paper/results/summary/reference_table.json` (and `.csv`)
+- per-model summaries: `paper/results/summary/baseline_ref_summary.json`, `v8a_fast_summary.json`, `v9a_fast_summary.json`
+- committed figures used in Results: `paper/figures/reference_k1_trajectory.png`, `reference_k2_ds_comparison.png`, `reference_k2_dv_comparison.png`, `reference_k7_iso_defect_comparison.png`, `reference_k7_g_fc_comparison.png`, `reference_k7_ds_global_comparison.png`
+
+Regeneration workflow remains:
 
 ```bash
 python scripts/run_batch.py --config configs/paper_batch_ref.yaml
@@ -237,4 +246,4 @@ python scripts/make_reference_figures.py
 git rev-parse HEAD
 ```
 
-Use the resulting raw outputs, canonical reference tables, figures, and commit hash as the manuscript provenance bundle.
+Interpretive claims in this manuscript are bound to the committed artifacts above, not to uncommitted local outputs.
