@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "causal-set-engine"
+version = "0.1.0"
+description = "Phase-1 causal set calibration engine scaffold"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Causal Set Team"}]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
