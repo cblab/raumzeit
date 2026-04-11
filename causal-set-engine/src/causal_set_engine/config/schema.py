@@ -88,3 +88,15 @@ class ArtifactAwareScanConfig:
     bias_strength_grid: tuple[float, ...] = (0.0, 0.5, 1.0)
     age_bias_mode: Literal["older", "newer"] = "older"
 
+
+@dataclass(frozen=True)
+class MyrheimMeyerEvaluationConfig:
+    """Typed config for `run_myrheim_meyer_evaluation`."""
+
+    dimensions: tuple[int, ...] = (2, 3, 4)
+    n_values: tuple[int, ...] = (40, 80, 120)
+    runs: int = 8
+    seed_start: int = 100
+    interval_samples: int = 50
+    null_p: float = 0.2
+    null_edge_density: float = 0.2

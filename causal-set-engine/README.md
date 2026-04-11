@@ -29,6 +29,8 @@ causal-set calibrate --dimension 3 --n-values 60,80,100 --runs 8 --seed-start 10
 causal-set evaluate-growth --n-values 60,80 --runs 8 --seed-start 100 --growth-link-probability 0.2
 
 causal-set scan-artifacts --n-values 60,80 --runs 8 --seed-start 100 --link-density-grid 0.16,0.22,0.28 --bias-strength-grid 0.0,0.5,1.0
+
+causal-set evaluate-myrheim --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --null-p 0.2 --null-edge-density 0.2
 ```
 
 This is the preferred interface for researchers on Linux, macOS, and Windows.
@@ -42,6 +44,7 @@ python -m causal_set_engine.cli run --n 50 --seed 7
 python -m causal_set_engine.cli calibrate --n-values 60,80 --runs 8
 python -m causal_set_engine.cli evaluate-growth --n-values 60,80 --runs 8
 python -m causal_set_engine.cli scan-artifacts --n-values 60,80 --runs 8
+python -m causal_set_engine.cli evaluate-myrheim --dimensions 2,3,4 --n-values 40,80 --runs 8
 ```
 
 An additional package-level fallback is also supported:

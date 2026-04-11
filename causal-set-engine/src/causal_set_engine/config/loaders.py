@@ -12,6 +12,7 @@ from causal_set_engine.config.schema import (
     BatchCalibrationConfig,
     DiagnosticDemoConfig,
     GrowthFamilyProbeConfig,
+    MyrheimMeyerEvaluationConfig,
     parse_csv_floats,
     parse_csv_ints,
 )
@@ -162,3 +163,35 @@ def load_artifact_aware_scan_config(
         age_bias_mode=str(values["age_bias_mode"]),
     )
 
+
+def load_myrheim_meyer_evaluation_config(
+    args: argparse.Namespace,
+    argv: list[str],
+) -> MyrheimMeyerEvaluationConfig:
+    values = _merged_values(args, argv)
+
+    dimensions_input = values["dimensions"]
+    dimensions = (
+        parse_csv_ints(dimensions_input)
+        if isinstance(dimensions_input, str)
+        else tuple(int(value) for value in dimensions_input)
+    )
+    if any(dimension not in {2, 3, 4} for dimension in dimensions):
+        raise ValueError("dimensions must be chosen from {2, 3, 4}")
+
+    n_values_input = values["n_values"]
+    n_values = (
+        parse_csv_ints(n_values_input)
+        if isinstance(n_values_input, str)
+        else tuple(int(value) for value in n_values_input)
+    )
+
+    return MyrheimMeyerEvaluationConfig(
+        dimensions=dimensions,
+        n_values=n_values,
+        runs=int(values["runs"]),
+        seed_start=int(values["seed_start"]),
+        interval_samples=int(values["interval_samples"]),
+        null_p=float(values["null_p"]),
+        null_edge_density=float(values["null_edge_density"]),
+    )

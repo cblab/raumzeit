@@ -5,9 +5,10 @@ from __future__ import annotations
 import argparse
 
 from causal_set_engine.config.loaders import (
+    load_artifact_aware_scan_config,
     load_batch_calibration_config,
     load_growth_family_probe_config,
-    load_artifact_aware_scan_config,
+    load_myrheim_meyer_evaluation_config,
 )
 
 
@@ -82,3 +83,21 @@ def test_artifact_aware_scan_loader_cli_values_override_config_file(tmp_path) ->
     assert loaded.runs == 8
     assert loaded.age_bias_mode == "older"
     assert loaded.link_density_grid == (0.5,)
+
+
+def test_myrheim_meyer_loader_parses_dimensions_and_sizes() -> None:
+    args = argparse.Namespace(
+        config=None,
+        dimensions="2,3,4",
+        n_values="40,80",
+        runs=7,
+        seed_start=100,
+        interval_samples=12,
+        null_p=0.2,
+        null_edge_density=0.22,
+    )
+
+    loaded = load_myrheim_meyer_evaluation_config(args, [])
+    assert loaded.dimensions == (2, 3, 4)
+    assert loaded.n_values == (40, 80)
+    assert loaded.runs == 7

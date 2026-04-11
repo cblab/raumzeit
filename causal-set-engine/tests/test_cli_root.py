@@ -58,6 +58,21 @@ def test_root_cli_dispatches_scan_artifacts(monkeypatch: pytest.MonkeyPatch) -> 
     assert captured["argv"] == ["--runs", "6"]
 
 
+def test_root_cli_dispatches_evaluate_myrheim(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_main(argv: list[str] | None = None) -> None:
+        captured["argv"] = argv
+
+    monkeypatch.setattr(
+        "causal_set_engine.experiments.run_myrheim_meyer_evaluation.main",
+        fake_main,
+    )
+    cli.main(["evaluate-myrheim", "--runs", "5"])
+
+    assert captured["argv"] == ["--runs", "5"]
+
+
 def test_root_cli_requires_subcommand() -> None:
     with pytest.raises(SystemExit):
         cli.main([])
