@@ -13,13 +13,13 @@ from dataclasses import dataclass
 from causal_set_engine.core.causal_set import CausalSet
 from causal_set_engine.evaluation.metrics import DEFAULT_METRICS, MetricRow, pair_quality_rows, run_once
 from causal_set_engine.evaluation.sampling import batch_rows, edge_count_from_density
-from causal_set_engine.experiments.artifact_proxies import compute_artifact_proxies
+from causal_set_engine.diagnostics.artifact_proxies import compute_artifact_proxies
 from causal_set_engine.experiments.phase2_policy import Phase2GateDecision, Phase2GateInput, evaluate_phase2_gate
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 from causal_set_engine.generators.null_models import generate_fixed_edge_count_poset
 from causal_set_engine.generators.phase2_minimal_growth import generate_age_biased_growth_causal_set
 from causal_set_engine.generators.random_poset import generate_random_poset
-from causal_set_engine.experiments.decision_metrics import aggregate_diagnostic_quality, build_combined_score
+from causal_set_engine.evaluation.scoring import aggregate_diagnostic_quality, build_combined_score
 
 
 METRICS: tuple[str, ...] = DEFAULT_METRICS

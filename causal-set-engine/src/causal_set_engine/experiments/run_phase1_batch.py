@@ -15,7 +15,7 @@ from causal_set_engine.evaluation.metrics import (
     run_once,
 )
 from causal_set_engine.evaluation.sampling import batch_rows, edge_count_from_density
-from causal_set_engine.experiments.decision_metrics import (
+from causal_set_engine.evaluation.scoring import (
     PairQuality,
     aggregate_diagnostic_quality,
     build_combined_score,
