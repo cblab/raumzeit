@@ -8,20 +8,17 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from causal_set_engine.core.causal_set import CausalSet
-from causal_set_engine.diagnostics.basic import (
-    estimate_dimension_chain_height,
-    longest_chain_length,
-    relation_density,
-    sampled_interval_statistics,
+from causal_set_engine.evaluation.metrics import (
+    DEFAULT_METRICS,
+    MetricRow,
+    pair_quality_rows,
+    run_once,
 )
+from causal_set_engine.evaluation.sampling import batch_rows, edge_count_from_density
 from causal_set_engine.experiments.decision_metrics import (
     PairQuality,
     aggregate_diagnostic_quality,
     build_combined_score,
-    interval_overlap_fraction,
-    mean_difference,
-    sign_consistency_fraction,
-    standardized_effect_size,
 )
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 from causal_set_engine.generators.minkowski_3d import generate_minkowski_3d
@@ -30,13 +27,7 @@ from causal_set_engine.generators.null_models import generate_fixed_edge_count_p
 from causal_set_engine.generators.random_poset import generate_random_poset
 
 
-MetricRow = dict[str, float]
-METRICS: tuple[str, ...] = (
-    "dimension_estimate",
-    "longest_chain_length",
-    "interval_mean",
-    "relation_density",
-)
+METRICS: tuple[str, ...] = DEFAULT_METRICS
 
 
 @dataclass(frozen=True)
@@ -71,19 +62,11 @@ def _parse_n_values(n_text: str | None, fallback_n: int) -> list[int]:
 
 
 def _run_once(cset: CausalSet, interval_samples: int, seed: int) -> MetricRow:
-    interval_stats = sampled_interval_statistics(cset, pairs=interval_samples, seed=seed)
-    return {
-        "relation_density": relation_density(cset),
-        "longest_chain_length": float(longest_chain_length(cset)),
-        "dimension_estimate": estimate_dimension_chain_height(cset),
-        "interval_mean": float(interval_stats["mean"] or 0.0),
-        "interval_median": float(interval_stats["median"] or 0.0),
-    }
+    return run_once(cset, interval_samples, seed)
 
 
 def _edge_count_from_density(n: int, density: float) -> int:
-    max_forward_edges = n * (n - 1) // 2
-    return int(round(density * max_forward_edges))
+    return edge_count_from_density(n, density)
 
 
 def _minkowski_generator(dimension: int) -> Callable[[int, int], CausalSet]:
@@ -103,10 +86,7 @@ def _batch_rows(
     seed_start: int,
     interval_samples: int,
 ) -> list[MetricRow]:
-    rows: list[MetricRow] = []
-    for seed in range(seed_start, seed_start + runs):
-        rows.append(_run_once(run_fn(n, seed), interval_samples, seed))
-    return rows
+    return batch_rows(run_fn, n, runs, seed_start, interval_samples)
 
 
 def _print_model_row(summary: ModelSummary) -> None:
@@ -128,25 +108,13 @@ def _pair_quality_rows(
     null_rows_by_n: dict[int, list[MetricRow]],
     null_model_name: str,
 ) -> list[PairQuality]:
-    rows: list[PairQuality] = []
-    for n in n_values:
-        mk_rows = mk_rows_by_n[n]
-        null_rows = null_rows_by_n[n]
-        for metric in METRICS:
-            mk_values = [row[metric] for row in mk_rows]
-            null_values = [row[metric] for row in null_rows]
-            rows.append(
-                PairQuality(
-                    metric=metric,
-                    n=n,
-                    null_model=null_model_name,
-                    mean_difference=mean_difference(mk_values, null_values),
-                    effect_size=standardized_effect_size(mk_values, null_values),
-                    interval_overlap=interval_overlap_fraction(mk_values, null_values),
-                    sign_consistency=sign_consistency_fraction(mk_values, null_values),
-                )
-            )
-    return rows
+    return pair_quality_rows(
+        n_values=n_values,
+        mk_rows_by_n=mk_rows_by_n,
+        null_rows_by_n=null_rows_by_n,
+        null_model_name=null_model_name,
+        metrics=METRICS,
+    )
 
 
 def main() -> None:

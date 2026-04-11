@@ -11,14 +11,18 @@ import statistics
 from dataclasses import dataclass
 
 from causal_set_engine.core.causal_set import CausalSet
+from causal_set_engine.evaluation.metrics import DEFAULT_METRICS, MetricRow, pair_quality_rows, run_once
+from causal_set_engine.evaluation.sampling import batch_rows, edge_count_from_density
 from causal_set_engine.experiments.artifact_proxies import compute_artifact_proxies
 from causal_set_engine.experiments.phase2_policy import Phase2GateDecision, Phase2GateInput, evaluate_phase2_gate
-from causal_set_engine.experiments.phase2a_probe import METRICS, MetricRow, _batch_rows, _edge_count_from_density, _pair_quality_rows, _run_once
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 from causal_set_engine.generators.null_models import generate_fixed_edge_count_poset
 from causal_set_engine.generators.phase2_minimal_growth import generate_age_biased_growth_causal_set
 from causal_set_engine.generators.random_poset import generate_random_poset
 from causal_set_engine.experiments.decision_metrics import aggregate_diagnostic_quality, build_combined_score
+
+
+METRICS: tuple[str, ...] = DEFAULT_METRICS
 
 
 @dataclass(frozen=True)
@@ -141,16 +145,16 @@ def evaluate_age_biased_phase2c_scan(
     fixed_by_n: dict[int, list[MetricRow]] = {}
 
     for n in n_values:
-        mk_by_n[n] = _batch_rows(lambda n_val, seed: generate_minkowski_2d(n=n_val, seed=seed)[0], n, runs, seed_start, interval_samples)
-        random_by_n[n] = _batch_rows(
+        mk_by_n[n] = batch_rows(lambda n_val, seed: generate_minkowski_2d(n=n_val, seed=seed)[0], n, runs, seed_start, interval_samples)
+        random_by_n[n] = batch_rows(
             lambda n_val, seed: generate_random_poset(n=n_val, relation_probability=null_p, seed=seed),
             n,
             runs,
             seed_start,
             interval_samples,
         )
-        fixed_edge_count = _edge_count_from_density(n, null_edge_density)
-        fixed_by_n[n] = _batch_rows(
+        fixed_edge_count = edge_count_from_density(n, null_edge_density)
+        fixed_by_n[n] = batch_rows(
             lambda n_val, seed: generate_fixed_edge_count_poset(n=n_val, edge_count=fixed_edge_count, seed=seed),
             n,
             runs,
@@ -158,8 +162,22 @@ def evaluate_age_biased_phase2c_scan(
             interval_samples,
         )
 
-    pair_quality = _pair_quality_rows(n_values, mk_by_n, random_by_n, "random-poset")
-    pair_quality.extend(_pair_quality_rows(n_values, mk_by_n, fixed_by_n, "fixed-edge-poset"))
+    pair_quality = pair_quality_rows(
+        n_values=n_values,
+        mk_rows_by_n=mk_by_n,
+        null_rows_by_n=random_by_n,
+        null_model_name="random-poset",
+        metrics=METRICS,
+    )
+    pair_quality.extend(
+        pair_quality_rows(
+            n_values=n_values,
+            mk_rows_by_n=mk_by_n,
+            null_rows_by_n=fixed_by_n,
+            null_model_name="fixed-edge-poset",
+            metrics=METRICS,
+        )
+    )
     ranked = aggregate_diagnostic_quality(pair_quality)
     gate = evaluate_phase2_gate(
         Phase2GateInput(
@@ -203,7 +221,7 @@ def evaluate_age_biased_phase2c_scan(
                     age_bias_strength=setting.bias_strength,
                     seed=seed,
                 )
-                run_rows.append(_run_once(cset, interval_samples, seed))
+                run_rows.append(run_once(cset, interval_samples, seed))
                 proxies = compute_artifact_proxies(cset)
                 proxy_birth_values.append(proxies.birth_order_dominance)
                 proxy_layer_values.append(proxies.age_layering_stratification)
