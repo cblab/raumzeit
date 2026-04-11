@@ -7,11 +7,12 @@ Treat this package as a function-centric engine with explicit engine/research bo
 - Treat `core`, `generators`, `diagnostics`, `evaluation`, `policies`, and `config` as reusable engine layers.
 - Treat `experiments` as reference-study orchestration on top of engine APIs.
 - Use canonical function-centric names in docs and user-facing text (diagnostic demo, batch calibration, growth family probe, artifact-aware scan, policy gate).
+- Treat `causal-set` with subcommands (`run`, `calibrate`, `evaluate-growth`, `scan-artifacts`) as the canonical researcher-facing CLI surface.
 
 ## Hard constraints
 
 - Preserve behavior unless the task explicitly asks for behavior changes.
-- Preserve existing canonical CLI contracts and defaults; additive flags are preferred over breaking changes.
+- Preserve canonical CLI contracts and defaults for the `causal-set` root command; additive flags are preferred over breaking changes.
 - Do **not** add new dynamics families unless explicitly requested.
 - Do **not** expand scientific scope or claims during architecture/refactor tasks.
 - Keep implementations explicit, testable, and lightweight (plain Python + dataclasses/functions).

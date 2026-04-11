@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 
 from causal_set_engine.config.loaders import load_diagnostic_demo_config
 from causal_set_engine.diagnostics.basic import (
@@ -18,7 +19,7 @@ from causal_set_engine.diagnostics.basic import (
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
     """Generate a 2D Minkowski causal set and print summary diagnostics."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -35,8 +36,9 @@ def main() -> None:
         default=30,
         help="number of related pairs sampled for interval statistics",
     )
-    args = parser.parse_args()
-    config = load_diagnostic_demo_config(args, sys.argv[1:])
+    args = parser.parse_args(argv)
+    raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
+    config = load_diagnostic_demo_config(args, raw_cli_args)
 
     cset, events = generate_minkowski_2d(n=config.n, seed=config.seed)
 

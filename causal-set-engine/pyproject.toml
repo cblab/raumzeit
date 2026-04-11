@@ -13,6 +13,7 @@ dependencies = []
 
 
 [project.scripts]
+causal-set = "causal_set_engine.cli:main"
 causal-set-diagnostic-demo = "causal_set_engine.experiments.run_diagnostic_demo:main"
 causal-set-batch-calibration = "causal_set_engine.experiments.run_batch_calibration:main"
 causal-set-growth-family-probe = "causal_set_engine.experiments.run_growth_family_probe:main"

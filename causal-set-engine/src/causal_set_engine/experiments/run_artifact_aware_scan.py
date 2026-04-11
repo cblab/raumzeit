@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from collections.abc import Sequence
 
 from causal_set_engine.config.loaders import load_artifact_aware_scan_config
 from causal_set_engine.experiments.artifact_aware_scan import evaluate_age_biased_scan
@@ -16,7 +17,7 @@ def _parse_n_values(n_values: tuple[int, ...]) -> list[int]:
     return values
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -33,8 +34,9 @@ def main() -> None:
     parser.add_argument("--link-density-grid", type=str, default="0.16,0.22,0.28")
     parser.add_argument("--bias-strength-grid", type=str, default="0.0,0.5,1.0")
     parser.add_argument("--age-bias-mode", choices=("older", "newer"), default="older")
-    args = parser.parse_args()
-    config = load_artifact_aware_scan_config(args, sys.argv[1:])
+    args = parser.parse_args(argv)
+    raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
+    config = load_artifact_aware_scan_config(args, raw_cli_args)
 
     result = evaluate_age_biased_scan(
         n_values=_parse_n_values(config.n_values),
