@@ -12,6 +12,7 @@ def test_run_once_exposes_default_metric_fields() -> None:
 
     for metric in DEFAULT_METRICS:
         assert metric in row
+    assert "myrheim_meyer_dimension" in row
     assert "interval_median" in row
 
 

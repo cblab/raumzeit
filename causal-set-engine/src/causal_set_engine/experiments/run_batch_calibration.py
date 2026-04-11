@@ -98,6 +98,8 @@ def _print_model_row(summary: ModelSummary) -> None:
         f"{summary.model_name:<17}"
         f"{stats['dimension_estimate_mean']:.3f}±{stats['dimension_estimate_stdev']:.3f} "
         f"[{stats['dimension_estimate_min']:.3f},{stats['dimension_estimate_max']:.3f}]   "
+        f"{stats['myrheim_meyer_dimension_mean']:.3f}±{stats['myrheim_meyer_dimension_stdev']:.3f} "
+        f"[{stats['myrheim_meyer_dimension_min']:.3f},{stats['myrheim_meyer_dimension_max']:.3f}]   "
         f"{stats['relation_density_mean']:.3f}±{stats['relation_density_stdev']:.3f}   "
         f"{stats['longest_chain_length_mean']:.2f}±{stats['longest_chain_length_stdev']:.2f} "
         f"[{stats['longest_chain_length_min']:.0f},{stats['longest_chain_length_max']:.0f}]   "
@@ -181,7 +183,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         )
     )
     print(
-        "model            dim_est(mean±sd)[min,max]     rel_density(mean±sd)   "
+        "model            dim_est(mean±sd)[min,max]     mm_dim(mean±sd)[min,max]     rel_density(mean±sd)   "
         "chain_len(mean±sd)[min,max]   interval_mean(mean±sd)"
     )
 

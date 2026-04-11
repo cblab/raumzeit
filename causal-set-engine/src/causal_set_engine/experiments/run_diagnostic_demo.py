@@ -17,6 +17,7 @@ from causal_set_engine.diagnostics.basic import (
     sampled_interval_statistics,
 )
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
+from causal_set_engine.observables.cst import estimate_myrheim_meyer_dimension
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -49,6 +50,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         "relation_density": relation_density(cset),
         "longest_chain_length": longest_chain_length(cset),
         "estimated_dimension_chain_height": estimate_dimension_chain_height(cset),
+        "estimated_dimension_myrheim_meyer": estimate_myrheim_meyer_dimension(cset),
         "interval_statistics": sampled_interval_statistics(
             cset, pairs=config.interval_samples, seed=config.seed
         ),
