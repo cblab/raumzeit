@@ -260,3 +260,17 @@ git rev-parse HEAD
 ```
 
 Interpretive claims in this manuscript are bound to the committed artifacts above, not to uncommitted local outputs.
+
+## References
+
+1. Surya, S. (2019). *The Causal Set Approach to Quantum Gravity*. Living Reviews in Relativity, 22(1), 5. https://doi.org/10.1007/s41114-019-0023-1
+
+2. Konopka, T., Markopoulou, F., & Severini, S. (2008). *Quantum Graphity: A Model of Emergent Locality*. Physical Review D, 77, 104029. https://doi.org/10.1103/PhysRevD.77.104029
+
+3. Bianconi, G., & Rahmede, C. (2016). *Network Geometry with Flavor: From Complexity to Quantum Geometry*. Physical Review E, 93, 032315. https://doi.org/10.1103/PhysRevE.93.032315
+
+4. Mulder, D., & Bianconi, G. (2018). *Network Geometry and Complexity*. Journal of Statistical Physics, 173, 783–805. https://doi.org/10.1007/s10955-018-2115-9
+
+5. Samal, A., Sreejith, R. P., Gu, J., Liu, S., Saucan, E., & Jost, J. (2018). *Comparative Analysis of Two Discretizations of Ricci Curvature for Complex Networks*. Scientific Reports, 8, 8650. https://doi.org/10.1038/s41598-018-27001-3
+
+6. van der Hoorn, P., Lippner, G., Trugenberger, C., & Krioukov, D. (2023). *Ollivier Curvature of Random Geometric Graphs Converges to Ricci Curvature of Their Riemannian Manifolds*. Discrete & Computational Geometry, 70, 671–712. https://doi.org/10.1007/s00454-023-00507-y
