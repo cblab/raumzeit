@@ -1,6 +1,6 @@
-"""Package entrypoint: run the diagnostic demo."""
+"""Package entrypoint for the canonical researcher workflow CLI."""
 
-from causal_set_engine.experiments.run_diagnostic_demo import main
+from causal_set_engine.cli import main
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ import argparse
 import statistics
 import sys
 from collections.abc import Callable
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 from causal_set_engine.core.causal_set import CausalSet
@@ -119,7 +120,7 @@ def _pair_quality_rows(
     )
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -155,8 +156,9 @@ def main() -> None:
         default=50,
         help="number of related pairs sampled for interval statistics",
     )
-    args = parser.parse_args()
-    config = load_batch_calibration_config(args, sys.argv[1:])
+    args = parser.parse_args(argv)
+    raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
+    config = load_batch_calibration_config(args, raw_cli_args)
 
     n_values = _parse_n_values(config.n_values_text, config.n)
     minkowski_gen = _minkowski_generator(config.dimension)

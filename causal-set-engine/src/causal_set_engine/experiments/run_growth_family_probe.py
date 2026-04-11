@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from collections.abc import Sequence
 
 from causal_set_engine.config.loaders import load_growth_family_probe_config
 from causal_set_engine.experiments.growth_family_probe import (
@@ -19,7 +20,7 @@ def _parse_n_values(n_values: tuple[int, ...]) -> list[int]:
     return values
 
 
-def main() -> None:
+def main(argv: Sequence[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--config",
@@ -43,8 +44,9 @@ def main() -> None:
         default="bernoulli-forward",
         help="bernoulli-forward|sparse-forward|age-biased-forward|window-forward|all",
     )
-    args = parser.parse_args()
-    config = load_growth_family_probe_config(args, sys.argv[1:])
+    args = parser.parse_args(argv)
+    raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
+    config = load_growth_family_probe_config(args, raw_cli_args)
 
     if config.dynamics_family == "all":
         result = evaluate_growth_family_comparison(
