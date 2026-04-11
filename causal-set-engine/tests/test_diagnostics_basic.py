@@ -1,4 +1,4 @@
-"""Tests for phase-1 diagnostics."""
+"""Tests for basic diagnostics."""
 
 from causal_set_engine.core.causal_set import CausalSet
 from causal_set_engine.diagnostics.basic import (

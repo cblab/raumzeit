@@ -1,4 +1,4 @@
-"""Conservative phase-1.75 decision utilities for discriminator quality."""
+"""Conservative decision utilities for discriminator quality."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""3D Minkowski sprinkling generator for phase-1.5 robustness checks."""
+"""3D Minkowski sprinkling generator for robustness checks."""
 
 from __future__ import annotations
 

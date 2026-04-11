@@ -1,4 +1,4 @@
-"""Tests for typed config schemas/loaders introduced in stage 6."""
+"""Tests for typed config schemas/loaders."""
 
 from __future__ import annotations
 

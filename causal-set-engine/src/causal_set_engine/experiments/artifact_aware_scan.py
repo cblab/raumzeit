@@ -1,7 +1,7 @@
-"""Phase-2c controlled mechanism scan for age-biased-forward dynamics.
+"""Artifact-aware controlled mechanism scan for age-biased-forward dynamics.
 
-This scan is falsification-first: it preserves the strict phase-2 gate derived from
-phase-1.75 discriminators, then tests a small auditable parameter grid while reporting
+This scan is falsification-first: it preserves a strict policy gate derived from
+discriminator quality metrics, then tests a small auditable parameter grid while reporting
 artifact proxies alongside score behavior.
 """
 
@@ -14,10 +14,10 @@ from causal_set_engine.core.causal_set import CausalSet
 from causal_set_engine.evaluation.metrics import DEFAULT_METRICS, MetricRow, pair_quality_rows, run_once
 from causal_set_engine.evaluation.sampling import batch_rows, edge_count_from_density
 from causal_set_engine.diagnostics.artifact_proxies import compute_artifact_proxies
-from causal_set_engine.policies.policy_gate import Phase2GateDecision, Phase2GateInput, evaluate_phase2_gate
+from causal_set_engine.policies.policy_gate import PolicyGateDecision, PolicyGateInput, evaluate_policy_gate
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 from causal_set_engine.generators.null_models import generate_fixed_edge_count_poset
-from causal_set_engine.generators.phase2_minimal_growth import generate_age_biased_growth_causal_set
+from causal_set_engine.generators.growth_family import generate_age_biased_growth_causal_set
 from causal_set_engine.generators.random_poset import generate_random_poset
 from causal_set_engine.evaluation.scoring import aggregate_diagnostic_quality, build_combined_score
 
@@ -47,7 +47,7 @@ class AgeBiasedScanRow:
 
 @dataclass(frozen=True)
 class ArtifactAwareScanResult:
-    gate_decision: Phase2GateDecision
+    gate_decision: PolicyGateDecision
     settings: tuple[AgeBiasedScanSetting, ...]
     rows: tuple[AgeBiasedScanRow, ...]
 
@@ -179,8 +179,8 @@ def evaluate_age_biased_scan(
         )
     )
     ranked = aggregate_diagnostic_quality(pair_quality)
-    gate = evaluate_phase2_gate(
-        Phase2GateInput(
+    gate = evaluate_policy_gate(
+        PolicyGateInput(
             ranked_diagnostics=ranked,
             null_model_count=2,
             seeds_per_model=runs,

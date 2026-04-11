@@ -1,6 +1,6 @@
-"""Explicit, conservative phase-2a evaluation gate policy.
+"""Explicit, conservative evaluation gate policy.
 
-This module keeps phase-2a decision logic narrow and auditable:
+This module keeps decision logic narrow and auditable:
 - fixed thresholds only
 - no hidden tuning
 - deterministic pass/fail criteria
@@ -14,8 +14,8 @@ from causal_set_engine.evaluation.scoring import DiagnosticQuality
 
 
 @dataclass(frozen=True)
-class Phase2GateThresholds:
-    """Fixed thresholds for opening phase-2a dynamics evaluation."""
+class PolicyGateThresholds:
+    """Fixed thresholds for opening dynamics evaluation."""
 
     # Primary diagnostic minimums.
     min_usefulness_score: float = 0.70
@@ -34,7 +34,7 @@ class Phase2GateThresholds:
 
 
 @dataclass(frozen=True)
-class Phase2GateInput:
+class PolicyGateInput:
     """Observed calibration evidence needed to evaluate candidate dynamics."""
 
     ranked_diagnostics: list[DiagnosticQuality]
@@ -44,7 +44,7 @@ class Phase2GateInput:
 
 
 @dataclass(frozen=True)
-class Phase2GateDecision:
+class PolicyGateDecision:
     """Go/no-go decision and transparent reason list."""
 
     go: bool
@@ -52,8 +52,8 @@ class Phase2GateDecision:
     failures: tuple[str, ...]
 
 
-def _is_primary(diagnostic: DiagnosticQuality, thresholds: Phase2GateThresholds) -> bool:
-    """Whether one diagnostic is primary enough for phase-2 evaluation."""
+def _is_primary(diagnostic: DiagnosticQuality, thresholds: PolicyGateThresholds) -> bool:
+    """Whether one diagnostic is primary enough for evaluation."""
 
     return (
         diagnostic.usefulness_score >= thresholds.min_usefulness_score
@@ -64,11 +64,11 @@ def _is_primary(diagnostic: DiagnosticQuality, thresholds: Phase2GateThresholds)
     )
 
 
-def evaluate_phase2_gate(
-    gate_input: Phase2GateInput,
-    thresholds: Phase2GateThresholds | None = None,
-) -> Phase2GateDecision:
-    """Apply explicit phase-2a go/no-go criteria.
+def evaluate_policy_gate(
+    gate_input: PolicyGateInput,
+    thresholds: PolicyGateThresholds | None = None,
+) -> PolicyGateDecision:
+    """Apply explicit go/no-go criteria.
 
     Go only if:
     1) enough diagnostics qualify as primary;
@@ -76,7 +76,7 @@ def evaluate_phase2_gate(
        seeds, and size trends.
     """
 
-    threshold_values = thresholds or Phase2GateThresholds()
+    threshold_values = thresholds or PolicyGateThresholds()
 
     primary = [
         row.metric
@@ -96,7 +96,7 @@ def evaluate_phase2_gate(
     if gate_input.n_values_count < threshold_values.min_n_values:
         failures.append("insufficient-size-trend-coverage")
 
-    return Phase2GateDecision(
+    return PolicyGateDecision(
         go=not failures,
         primary_metrics=tuple(primary),
         failures=tuple(failures),

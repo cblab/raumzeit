@@ -1,4 +1,4 @@
-"""Additional conservative null models for phase-1.5 robustness checks."""
+"""Additional conservative null models for robustness checks."""
 
 from __future__ import annotations
 

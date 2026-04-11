@@ -1,4 +1,4 @@
-"""2D Minkowski sprinkling generator for phase-1 calibration."""
+"""2D Minkowski sprinkling generator for diagnostic calibration."""
 
 from __future__ import annotations
 

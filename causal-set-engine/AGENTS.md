@@ -19,7 +19,7 @@ Treat this package as a function-centric engine with explicit engine/research bo
 
 ## Current priorities
 
-1. Keep engine modules phase-agnostic and reusable.
+1. Keep engine modules function-centric and reusable.
 2. Keep research interpretation inside `experiments/` and docs.
 3. Continue reducing cross-layer coupling.
 4. Maintain auditability: deterministic defaults, explicit thresholds, transparent metric math.

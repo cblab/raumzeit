@@ -1,6 +1,6 @@
-"""Tests for phase-2 primitive growth sandbox validity."""
+"""Tests for growth-family generator validity."""
 
-from causal_set_engine.generators.phase2_minimal_growth import (
+from causal_set_engine.generators.growth_family import (
     generate_age_biased_growth_causal_set,
     generate_minimal_growth_causal_set,
     generate_sparse_forward_growth_causal_set,

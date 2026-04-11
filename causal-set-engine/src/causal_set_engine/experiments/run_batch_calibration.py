@@ -264,7 +264,7 @@ def main() -> None:
 
     print(
         "\nlimitations: rankings are heuristic and calibration-only; thresholds are explicit and fixed "
-        "for phase-1.75 conservatism, not theory claims or fitted decision boundaries."
+        "for conservative diagnostics, not theory claims or fitted decision boundaries."
     )
 
 

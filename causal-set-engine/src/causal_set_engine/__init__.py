@@ -1,4 +1,4 @@
-"""Phase-1 causal set calibration engine package."""
+"""Function-centric causal set calibration engine package."""
 
 from causal_set_engine.core.causal_set import CausalSet
 

@@ -1,4 +1,4 @@
-"""Lightweight fixed-seed size trend checks for phase-1.75."""
+"""Lightweight fixed-seed size trend checks."""
 
 from causal_set_engine.diagnostics.basic import (
     estimate_dimension_chain_height,

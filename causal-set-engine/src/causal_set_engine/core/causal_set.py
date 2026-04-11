@@ -1,4 +1,4 @@
-"""Core causal set data structure for phase-1 calibration experiments."""
+"""Core causal set data structure for calibration experiments."""
 
 from __future__ import annotations
 

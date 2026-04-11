@@ -1,4 +1,4 @@
-"""Lightweight deterministic phase-1.5 robustness checks."""
+"""Lightweight deterministic robustness checks."""
 
 from causal_set_engine.diagnostics.basic import (
     estimate_dimension_chain_height,
