@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 
+from causal_set_engine.config.loaders import load_phase1_demo_config
 from causal_set_engine.diagnostics.basic import (
     estimate_dimension_chain_height,
     longest_chain_length,
@@ -19,6 +21,12 @@ from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 def main() -> None:
     """Generate a 2D Minkowski causal set and print summary diagnostics."""
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--config",
+        type=str,
+        default=None,
+        help="optional path to JSON/TOML/YAML config file (CLI flags override file values)",
+    )
     parser.add_argument("--n", type=int, default=50, help="number of sprinkled events")
     parser.add_argument("--seed", type=int, default=7, help="random seed")
     parser.add_argument(
@@ -28,8 +36,9 @@ def main() -> None:
         help="number of related pairs sampled for interval statistics",
     )
     args = parser.parse_args()
+    config = load_phase1_demo_config(args, sys.argv[1:])
 
-    cset, events = generate_minkowski_2d(n=args.n, seed=args.seed)
+    cset, events = generate_minkowski_2d(n=config.n, seed=config.seed)
 
     summary = {
         "n_events": len(events),
@@ -39,7 +48,7 @@ def main() -> None:
         "longest_chain_length": longest_chain_length(cset),
         "estimated_dimension_chain_height": estimate_dimension_chain_height(cset),
         "interval_statistics": sampled_interval_statistics(
-            cset, pairs=args.interval_samples, seed=args.seed
+            cset, pairs=config.interval_samples, seed=config.seed
         ),
     }
     print(json.dumps(summary, indent=2, sort_keys=True))

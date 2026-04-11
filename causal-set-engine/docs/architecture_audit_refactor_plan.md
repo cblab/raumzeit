@@ -3,6 +3,21 @@
 Date: 2026-04-11
 Scope: current `causal-set-engine` package, with phase-2 dynamics work treated as requirements discovery.
 
+## Refactor status snapshot (updated after Stage 7 implementation)
+
+- ✅ Stage 1 complete: shared evaluation helpers (`evaluation.metrics`, `evaluation.sampling`) are in place and used.
+- ✅ Stage 2 complete: decision/scoring math lives in `evaluation.scoring` with compatibility shims.
+- ✅ Stage 3 complete: artifact proxies are in `diagnostics.artifact_proxies` with compatibility re-export.
+- ✅ Stage 4 complete: phase-2 gate policy is in `policies.phase2_gate` with compatibility path retained.
+- ✅ Stage 5 complete: experiment modules are orchestration-focused with reduced cross-experiment coupling.
+- ✅ Stage 6 complete: typed run config dataclasses and lightweight loaders added under `config/`; CLI defaults preserved with optional `--config` support.
+- ✅ Stage 7 complete: README/AGENTS/plan documentation aligned to current architecture and boundaries.
+
+### Remaining open work
+
+- No additional refactor stage is currently open in this plan.
+- **Next required step:** run a fresh post-Stage-7 architecture audit and publish a new audit document; keep this file as the active historical plan reference until that new audit is complete.
+
 ## A) Concise architecture audit
 
 ### What is already well separated
@@ -155,11 +170,11 @@ causal_set_engine/
    - Ensure experiment modules only do assembly: choose generators, call evaluation/scoring, format results.
    - Remove cross-experiment internal imports (e.g., `phase2c_scan` importing private helpers from `phase2a_probe`).
 
-6. **Stage 6: Add config dataclasses and loader.**
+6. **Stage 6: Add config dataclasses and loader.** ✅ complete
    - Keep existing CLI args; optionally allow `--config` parity path.
    - Map YAML to typed config for reproducibility and stable defaults.
 
-7. **Stage 7: Documentation hardening.**
+7. **Stage 7: Documentation hardening.** ✅ complete
    - Add architecture map to README and “research vs engine” boundary table.
    - Explicitly mark phase modules as reference studies built on engine APIs.
 

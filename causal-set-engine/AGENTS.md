@@ -2,12 +2,24 @@
 
 ## Scope policy
 
-This package is limited to **phase-1 calibration architecture**.
+This package is in a **post-Stage-5 refactor state** with explicit engine/research boundaries.
+
+- Treat `core`, `generators`, `diagnostics`, `evaluation`, `policies`, and `config` as reusable engine layers.
+- Treat `experiments` as reference-study orchestration on top of engine APIs.
 
 ## Hard constraints
 
-- Keep phase 1 narrow and testable.
-- Do **not** add custom growth dynamics until phase-1 calibration is validated.
+- Preserve behavior unless the task explicitly asks for behavior changes.
+- Preserve existing CLI contracts and defaults; additive flags are preferred over breaking changes.
+- Do **not** add new dynamics families unless explicitly requested.
+- Do **not** expand scientific scope or claims during architecture/refactor tasks.
+- Keep implementations explicit, testable, and lightweight (plain Python + dataclasses/functions).
 - Any new functionality must include or update automated tests.
-- Prefer small, explicit, pure-Python implementations.
-- Avoid adding external dependencies unless clearly justified.
+
+## Current priorities
+
+1. Keep engine modules phase-agnostic and reusable.
+2. Keep research interpretation and phase-specific wording inside `experiments/` and docs.
+3. Continue reducing cross-layer coupling (especially experiments importing private helpers from each other).
+4. Maintain auditability: deterministic defaults, explicit thresholds, transparent metric math.
+5. Keep refactor-plan docs accurate until the next fresh architecture audit is run.
