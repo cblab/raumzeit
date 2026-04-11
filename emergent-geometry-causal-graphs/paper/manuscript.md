@@ -186,17 +186,29 @@ This section is bound to the committed fixed evidence bundle under `paper/`: `re
 ### 6.1 Three-model structural trajectory (K1 and graph scale bookkeeping)
 From the reference table, final K1 increases modestly across the canonical sequence: `baseline_ref` $0.7072\pm0.0103$, `v8a_fast` $0.7089\pm0.0084$, `v9a_fast` $0.7112\pm0.0082$ (mean±std; 5 runs each). Final active-edge count shifts from $46612.6\pm78.2$ to $47633.4\pm14.2$ and then $47629.2\pm10.7$, while final node count remains fixed at $12016$ for all three models.
 
-Figure `paper/figures/reference_k1_trajectory.png` should be read as a structural trajectory rather than a phase-transition plot: the variants tighten dispersion and slightly raise K1 while remaining in the same large-$N$ sparse regime with similar mean connectivity. Mechanistically, this is consistent with local edge-rule retuning that improves stability around a similar attractor, not a global reorganization into a distinct macroscopic geometry class.
+![**Figure 1.** K1 structural trajectory across canonical models (`baseline_ref`, `v8a_fast`, `v9a_fast`) over matched horizons and seeds. The progression is a modest structural tightening/upshift rather than a phase transition.](figures/reference_k1_trajectory.png){ width=88% }
+
+Figure 1 should be read as a structural trajectory rather than a phase-transition plot: the variants tighten dispersion and slightly raise K1 while remaining in the same large-$N$ sparse regime with similar mean connectivity. Mechanistically, this is consistent with local edge-rule retuning that improves stability around a similar attractor, not a global reorganization into a distinct macroscopic geometry class.
 
 ### 6.2 K2 comparison: diffusion and volume scaling shift, but mixed
 K2 spectral and volume estimates are model-sensitive but not monotonic in one direction. Final $d_s$ decreases across models (`baseline_ref`: $3.6069\pm0.5180$, `v8a_fast`: $3.3731\pm0.3909$, `v9a_fast`: $3.0902\pm0.4517$), while final $d_v$ increases from baseline to v9 (`baseline_ref`: $3.7284\pm0.3855$, `v8a_fast`: $4.3233\pm0.6255$, `v9a_fast`: $4.5884\pm0.8971$).
 
-Figure `paper/figures/reference_k2_ds_comparison.png` shows the downward $d_s$ shift, and `paper/figures/reference_k2_dv_comparison.png` shows the upward $d_v$ shift. Taken together, these plots indicate a mixed geometric response: transport and growth exponents decouple under local rule changes, which is evidence of retuning, but not of robust isotropic macroscopic closure.
+![**Figure 2.** K2 spectral-dimension comparison ($d_s$) across canonical models. The dominant shift is downward from `baseline_ref` to `v9a_fast`.](figures/reference_k2_ds_comparison.png){ width=82% }
+
+![**Figure 3.** K2 volume-growth comparison ($d_v$) across canonical models. The dominant shift is upward from `baseline_ref` to `v9a_fast`.](figures/reference_k2_dv_comparison.png){ width=82% }
+
+Figures 2 and 3 show a decoupled K2 response: $d_s$ shifts downward while $d_v$ shifts upward. Taken together, these plots indicate a mixed geometric response: transport and growth exponents decouple under local rule changes, which is evidence of retuning, but not of robust isotropic macroscopic closure.
 
 ### 6.3 K7 fixed-anchor evidence: local retuning persists, macroscopic isotropy does not
 K7 fixed-anchor metrics remain the key falsification signal. Mean K7 isotropy defect is high for all three models (`baseline_ref`: $0.9209\pm0.0404$, `v8a_fast`: $0.9455\pm0.0592$, `v9a_fast`: $0.9280\pm0.0655$), so no model reaches low-defect isotropic behavior.
 
-Figure `paper/figures/reference_k7_iso_defect_comparison.png` makes this explicit: variants move the defect value, but not into an isotropic regime. In parallel, K7 front-core transport split $g_{fc}$ changes sign and magnitude (`baseline_ref`: $+0.119\pm0.235$, `v8a_fast`: $-0.089\pm0.303$, `v9a_fast`: $-0.221\pm0.221$), shown in `paper/figures/reference_k7_g_fc_comparison.png`. Mechanistically, that sign drift indicates persistent directional transport asymmetry anchored to local structure rather than convergence to a stable isotropic macrostate. K7 global exponents in `paper/figures/reference_k7_ds_global_comparison.png` stay in a nearby band (~3.4-3.6), reinforcing that the failure mode is anisotropy persistence, not loss of all geometric organization.
+![**Figure 4.** K7 fixed-anchor isotropy defect comparison. All three models remain in a high-defect regime, so isotropic closure is not achieved.](figures/reference_k7_iso_defect_comparison.png){ width=82% }
+
+![**Figure 5.** K7 front-core transport split ($g_{fc}$) comparison. Sign and magnitude are unstable across variants, indicating persistent anisotropic transport asymmetry.](figures/reference_k7_g_fc_comparison.png){ width=82% }
+
+![**Figure 6.** K7 global spectral-dimension comparison. Exponents remain in a similar band despite strong isotropy-defect persistence.](figures/reference_k7_ds_global_comparison.png){ width=82% }
+
+Figure 4 makes this explicit: variants move the defect value, but not into an isotropic regime. In parallel, Figure 5 shows that K7 front-core transport split $g_{fc}$ changes sign and magnitude (`baseline_ref`: $+0.119\pm0.235$, `v8a_fast`: $-0.089\pm0.303$, `v9a_fast`: $-0.221\pm0.221$). Mechanistically, that sign drift indicates persistent directional transport asymmetry anchored to local structure rather than convergence to a stable isotropic macrostate. Figure 6 shows K7 global exponents staying in a nearby band (~3.4-3.6), reinforcing that the failure mode is anisotropy persistence, not loss of all geometric organization.
 The divergence between global K2 shifts and fixed-anchor K7 behavior is itself informative: local patch retuning does not translate into macroscopic isotropic closure.
 
 ### 6.4 K4/K5 support: local efficiency and shell organization improve
