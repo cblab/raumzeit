@@ -53,3 +53,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
 
     parser.error(f"unknown command: {args.command}")
+
+
+if __name__ == "__main__":
+    main()

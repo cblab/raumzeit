@@ -30,7 +30,26 @@ causal-set evaluate-growth --n-values 60,80 --runs 8 --seed-start 100 --growth-l
 causal-set scan-artifacts --n-values 60,80 --runs 8 --seed-start 100 --link-density-grid 0.16,0.22,0.28 --bias-strength-grid 0.0,0.5,1.0
 ```
 
-Legacy separate entrypoints are still available as compatibility wrappers, but the `causal-set ...` root workflow is the canonical interface.
+This is the preferred interface for researchers on Linux, macOS, and Windows.
+
+### Cross-platform module fallbacks
+
+If the console script is not available in your shell, use Python module invocation:
+
+```bash
+python -m causal_set_engine.cli run --n 50 --seed 7
+python -m causal_set_engine.cli calibrate --n-values 60,80 --runs 8
+python -m causal_set_engine.cli evaluate-growth --n-values 60,80 --runs 8
+python -m causal_set_engine.cli scan-artifacts --n-values 60,80 --runs 8
+```
+
+An additional package-level fallback is also supported:
+
+```bash
+python -m causal_set_engine run --n 50 --seed 7
+```
+
+Legacy separate workflow modules remain available internally for compatibility, but the canonical researcher workflow is `causal-set <subcommand> ...`.
 
 ## Functional boundaries
 
