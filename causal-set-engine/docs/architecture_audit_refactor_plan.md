@@ -8,7 +8,7 @@ Scope: current `causal-set-engine` package, with phase-2 dynamics work treated a
 - ✅ Stage 1 complete: shared evaluation helpers (`evaluation.metrics`, `evaluation.sampling`) are in place and used.
 - ✅ Stage 2 complete: decision/scoring math lives in `evaluation.scoring` with compatibility shims.
 - ✅ Stage 3 complete: artifact proxies are in `diagnostics.artifact_proxies` with compatibility re-export.
-- ✅ Stage 4 complete: phase-2 gate policy is in `policies.phase2_gate` with compatibility path retained.
+- ✅ Stage 4 complete: phase-2 gate policy is in `policies.policy_gate` (with `policies.phase2_gate` compatibility alias) with compatibility path retained.
 - ✅ Stage 5 complete: experiment modules are orchestration-focused with reduced cross-experiment coupling.
 - ✅ Stage 6 complete: typed run config dataclasses and lightweight loaders added under `config/`; CLI defaults preserved with optional `--config` support.
 - ✅ Stage 7 complete: README/AGENTS/plan documentation aligned to current architecture and boundaries.
@@ -35,12 +35,12 @@ Scope: current `causal-set-engine` package, with phase-2 dynamics work treated a
    Effect sizes, overlap, trend checks, and aggregate scoring are grouped in `experiments/decision_metrics.py`.
 
 5. **CLI entrypoints are thin wrappers.**
-   `run_phase*` scripts mostly orchestrate calls instead of encoding large frameworks.
+   `run_*` scripts (diagnostic demo, batch calibration, growth family probe, artifact-aware scan) mostly orchestrate calls instead of encoding large frameworks.
 
 ### What is entangled
 
 1. **Engine-level metric extraction is duplicated in experiment modules.**
-   `_run_once`, `_batch_rows`, `_pair_quality_rows`, and edge-density helpers are redefined and reused across `run_phase1_batch.py`, `phase2a_probe.py`, and `phase2c_scan.py`.
+   `_run_once`, `_batch_rows`, `_pair_quality_rows`, and edge-density helpers are redefined and reused across `run_batch_calibration.py`, `growth_family_probe.py`, and `artifact_aware_scan.py`.
 
 2. **Research policy and general evaluation machinery are co-located.**
    Reusable evaluation primitives (metric rows, batch loops) live in `experiments/` beside phase-specific go/no-go policy and naming.
@@ -49,7 +49,7 @@ Scope: current `causal-set-engine` package, with phase-2 dynamics work treated a
    `experiments/artifact_proxies.py` currently acts like a diagnostics submodule.
 
 4. **Family-specific assumptions leak into shared flow.**
-   `phase2c_scan.py` imports internal helpers from `phase2a_probe.py` and is tightly coupled to the age-biased family and the fixed metric tuple.
+   `artifact_aware_scan.py` previously imported internal helpers from `growth_family_probe.py` and is tightly coupled to the age-biased family and the fixed metric tuple.
 
 5. **Naming and package boundaries center “phase” workflows rather than engine primitives.**
    The package structure privileges chronological study phases over stable architectural seams.
@@ -95,12 +95,12 @@ causal_set_engine/
     scoring.py                    # NEW: move/generalize decision_metrics math here
 
   policies/
-    phase2_gate.py                # MOVED from experiments/phase2_policy.py (name kept stable via shim)
+    policy_gate.py                # MOVED from experiments/phase2_policy.py (phase2_gate kept as shim)
 
   experiments/
-    phase1_batch.py               # refactored orchestration only
-    phase2a_probe.py              # refactored orchestration only
-    phase2c_scan.py               # refactored orchestration only
+    run_batch_calibration.py      # refactored orchestration only
+    growth_family_probe.py        # refactored orchestration only
+    artifact_aware_scan.py        # refactored orchestration only
     reporting.py                  # NEW: table/console formatting helpers
 
   config/
@@ -150,7 +150,7 @@ causal_set_engine/
 1. **Stage 1: Consolidate duplicated evaluation helpers (highest leverage).**
    - Add `evaluation/metrics.py` with `MetricRow`, `DEFAULT_METRICS`, `run_once`.
    - Add `evaluation/sampling.py` with `batch_rows`, `edge_count_from_density`.
-   - Update `run_phase1_batch.py`, `phase2a_probe.py`, `phase2c_scan.py` to import these helpers.
+   - Update `run_batch_calibration.py`, `growth_family_probe.py`, `artifact_aware_scan.py` to import these helpers.
    - Keep old helper names as temporary wrappers for one release to reduce churn.
 
 2. **Stage 2: Move decision math to engine-level evaluation namespace.**
@@ -163,12 +163,12 @@ causal_set_engine/
    - Add compatibility re-export module in old path.
 
 4. **Stage 4: Introduce explicit policy package.**
-   - Move `experiments/phase2_policy.py` -> `policies/phase2_gate.py`.
+   - Move `experiments/phase2_policy.py` -> `policies/policy_gate.py` (keep `phase2_gate.py` shim).
    - Keep legacy import shim.
 
 5. **Stage 5: Isolate experiment orchestration from shared engine layers.**
    - Ensure experiment modules only do assembly: choose generators, call evaluation/scoring, format results.
-   - Remove cross-experiment internal imports (e.g., `phase2c_scan` importing private helpers from `phase2a_probe`).
+   - Remove cross-experiment internal imports (e.g., artifact-aware scan importing private helpers from growth-family probe).
 
 6. **Stage 6: Add config dataclasses and loader.** ✅ complete
    - Keep existing CLI args; optionally allow `--config` parity path.

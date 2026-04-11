@@ -1,10 +1,10 @@
 """Schema regression test for phase-2c age-biased scan."""
 
-from causal_set_engine.experiments.phase2c_scan import evaluate_age_biased_phase2c_scan
+from causal_set_engine.experiments.artifact_aware_scan import evaluate_age_biased_scan
 
 
-def test_phase2c_scan_output_schema_is_stable() -> None:
-    result = evaluate_age_biased_phase2c_scan(
+def test_artifact_aware_scan_output_schema_is_stable() -> None:
+    result = evaluate_age_biased_scan(
         n_values=[20, 24],
         runs=3,
         seed_start=11,

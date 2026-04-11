@@ -1,9 +1,9 @@
 """Legacy compatibility shim for phase-2 gate policy.
 
-Prefer importing from ``causal_set_engine.policies.phase2_gate``.
+Prefer importing from ``causal_set_engine.policies.policy_gate``.
 """
 
-from causal_set_engine.policies.phase2_gate import (
+from causal_set_engine.policies.policy_gate import (
     Phase2GateDecision,
     Phase2GateInput,
     Phase2GateThresholds,
