@@ -1,8 +1,8 @@
-# causal-set-engine (Phase 1 → 1.5)
+# causal-set-engine (Phase 1 → 1.75)
 
 This folder contains a **minimal Python package scaffold** for phase-1 calibration and phase-1.5 robustness testing of causal set tooling.
 
-## Phase-1.5 goal
+## Phase-1.75 goal
 
 Keep the architecture conservative, testable, and dynamics-free while improving calibration robustness for:
 
@@ -13,7 +13,7 @@ Keep the architecture conservative, testable, and dynamics-free while improving 
 
 ## Hard non-goals (still explicit)
 
-Phase 1.5 intentionally does **not** include:
+Phase 1.75 intentionally does **not** include:
 
 - custom causal-set growth dynamics,
 - curvature/gravity layers,
@@ -46,10 +46,10 @@ python -m causal_set_engine.experiments.run_phase1_demo --n 50 --seed 7 --interv
 python -m causal_set_engine --n 50 --seed 7 --interval-samples 30
 ```
 
-Batch phase-1.5 robustness comparison:
+Batch phase-1.75 robustness comparison (including size sweep and conservative ranking):
 
 ```bash
-causal-set-batch --dimension 3 --n 80 --runs 8 --seed-start 100 --null-p 0.2 --null-edge-density 0.2 --interval-samples 50
+causal-set-batch --dimension 3 --n-values 60,80,100 --runs 8 --seed-start 100 --null-p 0.2 --null-edge-density 0.2 --interval-samples 50
 # equivalent:
 python -m causal_set_engine.experiments.run_phase1_batch --dimension 4 --n 100 --runs 12 --seed-start 300 --null-p 0.2 --null-edge-density 0.25 --interval-samples 60
 ```
@@ -78,4 +78,6 @@ python -m causal_set_engine.experiments.run_phase1_batch --dimension 4 --n 100 -
   - Useful for comparing interval-size distributions compactly.
   - Limitation: sample-count dependent; different pair-sampling choices can change conclusions.
 
-All phase-1.5 separability output is empirical for the chosen batch settings, not a proof of manifold-likeness.
+Phase-1.75 adds explicit conservative decision metrics (effect size, overlap proxy, sign consistency, size-trend consistency) plus a transparent linear combined score.
+
+All phase-1.75 outputs remain empirical for the chosen batch settings and fixed heuristics; they are calibration evidence, not proofs of manifold-likeness.

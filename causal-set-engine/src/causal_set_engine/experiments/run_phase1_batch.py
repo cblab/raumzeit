@@ -1,4 +1,4 @@
-"""Run compact phase-1.5 calibration robustness comparisons."""
+"""Run compact phase-1.75 calibration and conservative discriminator ranking."""
 
 from __future__ import annotations
 
@@ -14,6 +14,15 @@ from causal_set_engine.diagnostics.basic import (
     relation_density,
     sampled_interval_statistics,
 )
+from causal_set_engine.experiments.decision_metrics import (
+    PairQuality,
+    aggregate_diagnostic_quality,
+    build_combined_score,
+    interval_overlap_fraction,
+    mean_difference,
+    sign_consistency_fraction,
+    standardized_effect_size,
+)
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 from causal_set_engine.generators.minkowski_3d import generate_minkowski_3d
 from causal_set_engine.generators.minkowski_4d import generate_minkowski_4d
@@ -22,6 +31,12 @@ from causal_set_engine.generators.random_poset import generate_random_poset
 
 
 MetricRow = dict[str, float]
+METRICS: tuple[str, ...] = (
+    "dimension_estimate",
+    "longest_chain_length",
+    "interval_mean",
+    "relation_density",
+)
 
 
 @dataclass(frozen=True)
@@ -41,6 +56,18 @@ class ModelSummary:
             summary[f"{key}_min"] = min(values)
             summary[f"{key}_max"] = max(values)
         return summary
+
+
+def _parse_n_values(n_text: str | None, fallback_n: int) -> list[int]:
+    if not n_text:
+        return [fallback_n]
+    raw_values = [token.strip() for token in n_text.split(",") if token.strip()]
+    if not raw_values:
+        return [fallback_n]
+    values = sorted({int(token) for token in raw_values})
+    if any(value <= 1 for value in values):
+        raise ValueError("all N values must be integers > 1")
+    return values
 
 
 def _run_once(cset: CausalSet, interval_samples: int, seed: int) -> MetricRow:
@@ -82,53 +109,6 @@ def _batch_rows(
     return rows
 
 
-def _separation_fraction(target: str, a_rows: list[MetricRow], b_rows: list[MetricRow]) -> float:
-    a_values = [row[target] for row in a_rows]
-    b_values = [row[target] for row in b_rows]
-    separated = 0
-    total = min(len(a_values), len(b_values))
-    for i in range(total):
-        if a_values[i] != b_values[i]:
-            separated += 1
-    return separated / total if total else 0.0
-
-
-def _separable_text(
-    minkowski: ModelSummary,
-    null_model: ModelSummary,
-) -> str:
-    mk = minkowski.describe()
-    nm = null_model.describe()
-
-    dim_clear = (
-        mk["dimension_estimate_min"] > nm["dimension_estimate_max"]
-        or nm["dimension_estimate_min"] > mk["dimension_estimate_max"]
-    )
-    chain_clear = (
-        mk["longest_chain_length_min"] > nm["longest_chain_length_max"]
-        or nm["longest_chain_length_min"] > mk["longest_chain_length_max"]
-    )
-    interval_clear = (
-        mk["interval_mean_min"] > nm["interval_mean_max"]
-        or nm["interval_mean_min"] > mk["interval_mean_max"]
-    )
-
-    dim_sep = _separation_fraction("dimension_estimate", minkowski.rows, null_model.rows)
-    chain_sep = _separation_fraction("longest_chain_length", minkowski.rows, null_model.rows)
-    interval_sep = _separation_fraction("interval_mean", minkowski.rows, null_model.rows)
-
-    dim_shift = mk["dimension_estimate_mean"] - nm["dimension_estimate_mean"]
-    chain_shift = mk["longest_chain_length_mean"] - nm["longest_chain_length_mean"]
-    interval_shift = mk["interval_mean_mean"] - nm["interval_mean_mean"]
-
-    return (
-        f"vs {null_model.model_name}: "
-        f"dim({'clear' if dim_clear else 'overlap'}, Δmean={dim_shift:+.2f}, sep={dim_sep:.2f}) "
-        f"chain({'clear' if chain_clear else 'overlap'}, Δmean={chain_shift:+.2f}, sep={chain_sep:.2f}) "
-        f"interval({'clear' if interval_clear else 'overlap'}, Δmean={interval_shift:+.2f}, sep={interval_sep:.2f})"
-    )
-
-
 def _print_model_row(summary: ModelSummary) -> None:
     stats = summary.describe()
     print(
@@ -142,10 +122,43 @@ def _print_model_row(summary: ModelSummary) -> None:
     )
 
 
+def _pair_quality_rows(
+    n_values: list[int],
+    mk_rows_by_n: dict[int, list[MetricRow]],
+    null_rows_by_n: dict[int, list[MetricRow]],
+    null_model_name: str,
+) -> list[PairQuality]:
+    rows: list[PairQuality] = []
+    for n in n_values:
+        mk_rows = mk_rows_by_n[n]
+        null_rows = null_rows_by_n[n]
+        for metric in METRICS:
+            mk_values = [row[metric] for row in mk_rows]
+            null_values = [row[metric] for row in null_rows]
+            rows.append(
+                PairQuality(
+                    metric=metric,
+                    n=n,
+                    null_model=null_model_name,
+                    mean_difference=mean_difference(mk_values, null_values),
+                    effect_size=standardized_effect_size(mk_values, null_values),
+                    interval_overlap=interval_overlap_fraction(mk_values, null_values),
+                    sign_consistency=sign_consistency_fraction(mk_values, null_values),
+                )
+            )
+    return rows
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dimension", type=int, default=2, choices=[2, 3, 4])
     parser.add_argument("--n", type=int, default=80, help="number of elements per run")
+    parser.add_argument(
+        "--n-values",
+        type=str,
+        default=None,
+        help="comma-separated size sweep (e.g., 60,80,100); overrides --n when provided",
+    )
     parser.add_argument("--runs", type=int, default=8, help="number of seeds per model")
     parser.add_argument("--seed-start", type=int, default=100)
     parser.add_argument(
@@ -168,45 +181,20 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    n_values = _parse_n_values(args.n_values, args.n)
     minkowski_gen = _minkowski_generator(args.dimension)
 
-    minkowski_summary = ModelSummary(
-        model_name=f"minkowski{args.dimension}d",
-        rows=_batch_rows(minkowski_gen, args.n, args.runs, args.seed_start, args.interval_samples),
-    )
-    random_summary = ModelSummary(
-        model_name="random-poset",
-        rows=_batch_rows(
-            lambda n, seed: generate_random_poset(n=n, relation_probability=args.null_p, seed=seed),
-            args.n,
-            args.runs,
-            args.seed_start,
-            args.interval_samples,
-        ),
-    )
-    fixed_edge_count = _edge_count_from_density(args.n, args.null_edge_density)
-    fixed_edge_summary = ModelSummary(
-        model_name="fixed-edge-poset",
-        rows=_batch_rows(
-            lambda n, seed: generate_fixed_edge_count_poset(
-                n=n,
-                edge_count=fixed_edge_count,
-                seed=seed,
-            ),
-            args.n,
-            args.runs,
-            args.seed_start,
-            args.interval_samples,
-        ),
-    )
+    mk_by_n: dict[int, list[MetricRow]] = {}
+    random_by_n: dict[int, list[MetricRow]] = {}
+    fixed_by_n: dict[int, list[MetricRow]] = {}
 
-    print("phase-1.5 robustness batch")
+    print("phase-1.75 robustness batch")
     print(
         " ".join(
             [
                 f"dimension={args.dimension}",
                 f"runs={args.runs}",
-                f"n={args.n}",
+                f"n_values={n_values}",
                 f"seed_start={args.seed_start}",
                 f"null_p={args.null_p}",
                 f"null_edge_density={args.null_edge_density}",
@@ -217,16 +205,83 @@ def main() -> None:
         "model            dim_est(mean±sd)[min,max]     rel_density(mean±sd)   "
         "chain_len(mean±sd)[min,max]   interval_mean(mean±sd)"
     )
-    _print_model_row(minkowski_summary)
-    _print_model_row(random_summary)
-    _print_model_row(fixed_edge_summary)
 
-    print("\nseparability summary")
-    print(_separable_text(minkowski_summary, random_summary))
-    print(_separable_text(minkowski_summary, fixed_edge_summary))
+    for n in n_values:
+        mk_by_n[n] = _batch_rows(minkowski_gen, n, args.runs, args.seed_start, args.interval_samples)
+        random_by_n[n] = _batch_rows(
+            lambda n_val, seed: generate_random_poset(n=n_val, relation_probability=args.null_p, seed=seed),
+            n,
+            args.runs,
+            args.seed_start,
+            args.interval_samples,
+        )
+        fixed_edge_count = _edge_count_from_density(n, args.null_edge_density)
+        fixed_by_n[n] = _batch_rows(
+            lambda n_val, seed: generate_fixed_edge_count_poset(
+                n=n_val,
+                edge_count=fixed_edge_count,
+                seed=seed,
+            ),
+            n,
+            args.runs,
+            args.seed_start,
+            args.interval_samples,
+        )
+
+        print(f"\nN={n}")
+        _print_model_row(ModelSummary(model_name=f"minkowski{args.dimension}d", rows=mk_by_n[n]))
+        _print_model_row(ModelSummary(model_name="random-poset", rows=random_by_n[n]))
+        _print_model_row(ModelSummary(model_name="fixed-edge-poset", rows=fixed_by_n[n]))
+
+    pair_quality = _pair_quality_rows(n_values, mk_by_n, random_by_n, "random-poset")
+    pair_quality.extend(_pair_quality_rows(n_values, mk_by_n, fixed_by_n, "fixed-edge-poset"))
+    ranked = aggregate_diagnostic_quality(pair_quality)
+
+    print("\nconservative discriminator ranking")
     print(
-        "note: separability uses only empirical run-level overlap/dominance in this batch; "
-        "it is not a proof of manifold-likeness."
+        "metric                band                    score   |effect|  interval_sep sign_cons trend "
+        "(weights: effect=0.35, overlap=0.25, sign=0.20, trend=0.20)"
+    )
+    for row in ranked:
+        print(
+            f"{row.metric:<21}{row.band:<24}{row.usefulness_score:.3f}   "
+            f"{row.effect_size_abs:.3f}     {row.interval_separation:.3f}       "
+            f"{row.sign_consistency:.3f}    {row.trend_consistency:.3f}"
+        )
+
+    combined = build_combined_score(METRICS, mk_by_n, random_by_n, fixed_by_n)
+    single_best_min_effect = max(
+        min(
+            abs(item.effect_size)
+            for item in pair_quality
+            if item.metric == metric_name
+        )
+        for metric_name in METRICS
+    )
+    combined_min_effect = min(abs(combined.mk_vs_random_effect), abs(combined.mk_vs_fixed_effect))
+
+    print("\ncombined manifold-likeness score (linear, diagnostics-only)")
+    print(
+        f"metrics={combined.metric_names} orientation={combined.orientation} "
+        f"means: mk={combined.minkowski_mean:+.3f}, random={combined.random_mean:+.3f}, "
+        f"fixed={combined.fixed_edge_mean:+.3f}"
+    )
+    print(
+        f"combined_effects: mk-vs-random={combined.mk_vs_random_effect:+.3f}, "
+        f"mk-vs-fixed={combined.mk_vs_fixed_effect:+.3f}"
+    )
+    print(
+        f"robustness check: combined_worst_case_effect={combined_min_effect:.3f}, "
+        f"best_single_worst_case_effect={single_best_min_effect:.3f}"
+    )
+    if combined_min_effect > single_best_min_effect:
+        print("assessment: combined score improves conservative worst-case separation.")
+    else:
+        print("assessment: combined score does not beat best single metric in worst-case separation.")
+
+    print(
+        "\nlimitations: rankings are heuristic and calibration-only; thresholds are explicit and fixed "
+        "for phase-1.75 conservatism, not theory claims or fitted decision boundaries."
     )
 
 
