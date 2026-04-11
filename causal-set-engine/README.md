@@ -1,6 +1,6 @@
-# causal-set-engine (Phase 1 → 1.75)
+# causal-set-engine (Phase 1.75 → narrow Phase 2a probe)
 
-This folder contains a **minimal Python package scaffold** for phase-1 calibration and phase-1.5 robustness testing of causal set tooling.
+This folder contains a **minimal Python package scaffold** for phase-1.75 calibration plus a tightly-scoped phase-2a probing path.
 
 ## Phase-1.75 goal
 
@@ -13,13 +13,14 @@ Keep the architecture conservative, testable, and dynamics-free while improving 
 
 ## Hard non-goals (still explicit)
 
-Phase 1.75 intentionally does **not** include:
+Phase 2a probing intentionally does **not** include:
 
-- custom causal-set growth dynamics,
+- multiple custom growth-dynamics families,
 - curvature/gravity layers,
 - speculative theory claims,
 - heavy plotting stacks,
-- performance-oriented rewrites.
+- performance-oriented rewrites,
+- rich local optimization heuristics from earlier graph-engine lineages.
 
 ## Local development workflow
 
@@ -53,6 +54,32 @@ causal-set-batch --dimension 3 --n-values 60,80,100 --runs 8 --seed-start 100 --
 # equivalent:
 python -m causal_set_engine.experiments.run_phase1_batch --dimension 4 --n 100 --runs 12 --seed-start 300 --null-p 0.2 --null-edge-density 0.25 --interval-samples 60
 ```
+
+Strict phase-2a gate + minimal dynamics sandbox probe:
+
+```bash
+causal-set-phase2a-probe --n-values 60,80 --runs 8 --seed-start 100 --growth-link-probability 0.2
+# equivalent:
+python -m causal_set_engine.experiments.run_phase2a_probe --n-values 60,80 --runs 8 --seed-start 100
+```
+
+## Phase-2a evaluation policy (explicit thresholds)
+
+`causal_set_engine.experiments.phase2_policy` defines fixed GO/NO-GO criteria with no hidden tuning:
+
+- Primary diagnostic minimums:
+  - usefulness score `>= 0.70`
+  - absolute effect size `>= 0.90`
+  - interval separation `>= 0.60`
+  - sign consistency `>= 0.75`
+  - trend consistency `>= 0.65`
+- Robustness coverage minimums:
+  - at least `1` primary diagnostic
+  - at least `2` null models
+  - at least `6` seeds per model
+  - at least `2` N values in trend sweep
+
+This gate determines whether candidate dynamics should be evaluated at all in phase 2a.
 
 ## Null models used in phase-1.5
 
