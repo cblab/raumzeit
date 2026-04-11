@@ -9,6 +9,7 @@ from causal_set_engine.diagnostics.basic import (
     relation_density,
     sampled_interval_statistics,
 )
+from causal_set_engine.observables.cst import estimate_myrheim_meyer_dimension
 from causal_set_engine.evaluation.scoring import (
     PairQuality,
     interval_overlap_fraction,
@@ -33,6 +34,7 @@ def run_once(cset: CausalSet, interval_samples: int, seed: int) -> MetricRow:
         "relation_density": relation_density(cset),
         "longest_chain_length": float(longest_chain_length(cset)),
         "dimension_estimate": estimate_dimension_chain_height(cset),
+        "myrheim_meyer_dimension": estimate_myrheim_meyer_dimension(cset),
         "interval_mean": float(interval_stats["mean"] or 0.0),
         "interval_median": float(interval_stats["median"] or 0.0),
     }
