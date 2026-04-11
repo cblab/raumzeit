@@ -63,6 +63,14 @@ causal-set-phase2a-probe --n-values 60,80 --runs 8 --seed-start 100 --growth-lin
 python -m causal_set_engine.experiments.run_phase2a_probe --n-values 60,80 --runs 8 --seed-start 100
 ```
 
+Phase-2c controlled age-biased-forward scan (small explicit grid + artifact proxies):
+
+```bash
+causal-set-phase2c-scan --n-values 60,80 --runs 8 --seed-start 100 --link-density-grid 0.16,0.22,0.28 --bias-strength-grid 0.0,0.5,1.0
+# equivalent:
+python -m causal_set_engine.experiments.run_phase2c_scan --n-values 60,80 --runs 8 --seed-start 100
+```
+
 ## Phase-2a evaluation policy (explicit thresholds)
 
 `causal_set_engine.experiments.phase2_policy` defines fixed GO/NO-GO criteria with no hidden tuning:
@@ -80,6 +88,13 @@ python -m causal_set_engine.experiments.run_phase2a_probe --n-values 60,80 --run
   - at least `2` N values in trend sweep
 
 This gate determines whether candidate dynamics should be evaluated at all in phase 2a.
+
+Phase-2c reuses this exact gate and workflow, then scans only `age-biased-forward` over an explicit grid:
+
+- `link_density` (direct Bernoulli scale, serves as simple density control),
+- `bias_strength` in `[0,1]` with interpolation
+  - `0`: no age bias contribution (uniform),
+  - `1`: full configured age bias (`older` or `newer`).
 
 ## Null models used in phase-1.5
 
@@ -106,5 +121,17 @@ This gate determines whether candidate dynamics should be evaluated at all in ph
   - Limitation: sample-count dependent; different pair-sampling choices can change conclusions.
 
 Phase-1.75 adds explicit conservative decision metrics (effect size, overlap proxy, sign consistency, size-trend consistency) plus a transparent linear combined score.
+
+Phase-2c adds explicit artifact proxies:
+
+- Birth-order dominance proxy
+  - `olderness(i) = 1 - i/(N-1)`, `out_degree(i) = |direct_future(i)|`
+  - `proxy = max(0, corr(olderness, out_degree))`
+  - Larger values indicate stronger domination by early births.
+
+- Age-layering / stratification proxy
+  - Bin birth indices into 4 age layers, count direct-edge frequencies by `(source_layer, target_layer)`.
+  - `proxy = 1 - H/H_max` using normalized Shannon entropy over active channels.
+  - Larger values indicate stronger concentration in narrow layer channels.
 
 All phase-1.75 outputs remain empirical for the chosen batch settings and fixed heuristics; they are calibration evidence, not proofs of manifold-likeness.
