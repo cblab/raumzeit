@@ -1,9 +1,10 @@
 # Local Causal Edge Dynamics Fail to Stabilize Macroscopic Isotropic Geometry: A Canonical 3-Model Falsification Study
+Christian Blab
 
 ## Abstract
 We test a narrow hypothesis: whether a specific class of local, causal, edge-based update rules on growing directed graphs can stabilize macroscopic isotropic geometry. The contribution is not a claim of emergent spacetime. The contribution is a maintained modular engine, a canonical three-model ablation (`baseline_ref`, `v8a_fast`, `v9a_fast`), a reproducible diagnostics stack (K1, K2, K4, K5, K7), and a disciplined negative result.
 
-Geometry is measured rather than assumed. This manuscript is bound to the committed evidence package under `paper/`: fixed run hash (`hash/results_and_figures_generation.txt`), canonical summary tables (`results/summary/reference_table.json`/`.csv`), per-model summaries, and committed comparison figures. Across that fixed bundle, `v8a_fast` and `v9a_fast` produce local structural and transport retuning relative to `baseline_ref` (K1/K2/K4/K5/K7), but neither produces robust macroscopic isotropic stabilization: K7 isotropy defect remains high in all three models, and K7 front-core transport splitting remains unstable in sign and magnitude.
+Geometry is measured rather than assumed. This manuscript is bound to the committed evidence package under `paper/`: fixed run hash (`hash/results_and_figures_generation.txt`), canonical summary table (`results/summary/reference_table.json`), per-model summaries, and committed comparison figures. Across that fixed bundle, `v8a_fast` and `v9a_fast` produce local structural and transport retuning relative to `baseline_ref` (K1/K2/K4/K5/K7), but neither produces robust macroscopic isotropic stabilization: K7 isotropy defect remains high in all three models, and K7 front-core transport splitting remains unstable in sign and magnitude.
 
 ## 1. Introduction
 This paper asks one focused question: **can this specific local causal mechanism class stabilize robust macroscopic geometry, as measured from graph dynamics alone?**
@@ -174,7 +175,7 @@ This paper is bound to the modular reproducibility chain:
 1. **Config layer:** `baseline_ref`, `v8a_fast`, `v9a_fast` YAMLs.
 2. **Batch layer:** `configs/paper_batch_ref.yaml` over fixed seeds.
 3. **Raw outputs:** `results/raw/{model}/seed_{seed}.json`.
-4. **Summary tables:** `results/summary/reference_table.json` and `.csv`.
+4. **Summary tables:** `results/summary/reference_table.json`.
 5. **Figures:** `scripts/make_reference_figures.py`.
 6. **Provenance:** record `git rev-parse HEAD` with results.
 
@@ -246,9 +247,11 @@ Across the reference summaries and committed figures, K1/K2/K4/K5 show measurabl
 This manuscript is explicitly tied to the committed fixed evidence bundle under `paper/`:
 
 - fixed run/figure generation hash: `paper/hash/results_and_figures_generation.txt` = `75208cf390c1196b9a0bbb9aff5f50d45b6f727e`
-- canonical aggregate table: `paper/results/summary/reference_table.json` (and `.csv`)
+- canonical aggregate table: `paper/results/summary/reference_table.json`
 - per-model summaries: `paper/results/summary/baseline_ref_summary.json`, `v8a_fast_summary.json`, `v9a_fast_summary.json`
 - committed figures used in Results: `paper/figures/reference_k1_trajectory.png`, `reference_k2_ds_comparison.png`, `reference_k2_dv_comparison.png`, `reference_k7_iso_defect_comparison.png`, `reference_k7_g_fc_comparison.png`, `reference_k7_ds_global_comparison.png`
+
+Code and committed paper artifacts are in the GitHub repository `cblab/raumzeit`, under `emergent-geometry-causal-graphs/`.
 
 Regeneration workflow remains:
 
@@ -258,6 +261,9 @@ python scripts/summarize_results.py
 python scripts/make_reference_figures.py
 git rev-parse HEAD
 ```
+
+## Code and data availability
+Code, committed paper artifacts, and the fixed-evidence bundle are available in the GitHub repository `cblab/raumzeit`, with the relevant project under `emergent-geometry-causal-graphs/`. This manuscript is tied to the committed fixed evidence bundle identified in the reproducibility note above.
 
 Interpretive claims in this manuscript are bound to the committed artifacts above, not to uncommitted local outputs.
 
