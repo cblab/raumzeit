@@ -88,9 +88,3 @@ class ArtifactAwareScanConfig:
     bias_strength_grid: tuple[float, ...] = (0.0, 0.5, 1.0)
     age_bias_mode: Literal["older", "newer"] = "older"
 
-
-# Legacy aliases retained for backward compatibility.
-Phase1DemoConfig = DiagnosticDemoConfig
-Phase1BatchConfig = BatchCalibrationConfig
-Phase2aProbeConfig = GrowthFamilyProbeConfig
-Phase2cScanConfig = ArtifactAwareScanConfig

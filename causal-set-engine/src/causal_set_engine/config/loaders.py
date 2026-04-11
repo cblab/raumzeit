@@ -162,9 +162,3 @@ def load_artifact_aware_scan_config(
         age_bias_mode=str(values["age_bias_mode"]),
     )
 
-
-# Legacy loader aliases retained for compatibility.
-load_phase1_demo_config = load_diagnostic_demo_config
-load_phase1_batch_config = load_batch_calibration_config
-load_phase2a_probe_config = load_growth_family_probe_config
-load_phase2c_scan_config = load_artifact_aware_scan_config

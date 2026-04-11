@@ -280,8 +280,3 @@ def evaluate_age_biased_scan(
         )
 
     return ArtifactAwareScanResult(gate_decision=gate, settings=settings, rows=tuple(rows))
-
-
-# Legacy aliases for compatibility.
-Phase2CScanResult = ArtifactAwareScanResult
-evaluate_age_biased_phase2c_scan = evaluate_age_biased_scan

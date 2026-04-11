@@ -11,7 +11,7 @@ from causal_set_engine.config.loaders import (
 )
 
 
-def test_phase2a_loader_maps_csv_to_typed_tuple() -> None:
+def test_growth_family_probe_loader_maps_csv_to_typed_tuple() -> None:
     args = argparse.Namespace(
         config=None,
         n_values="60,80",
@@ -33,7 +33,7 @@ def test_phase2a_loader_maps_csv_to_typed_tuple() -> None:
     assert config.dynamics_family == "all"
 
 
-def test_phase1_batch_loader_config_file_applies_when_flag_not_provided(tmp_path) -> None:
+def test_batch_calibration_loader_config_file_applies_when_flag_not_provided(tmp_path) -> None:
     config_file = tmp_path / "batch_config.json"
     config_file.write_text('{"dimension": 4, "n": 110, "runs": 12, "n_values": "90,110"}')
 
@@ -57,7 +57,7 @@ def test_phase1_batch_loader_config_file_applies_when_flag_not_provided(tmp_path
     assert loaded.n_values_text == "90,110"
 
 
-def test_phase2c_loader_cli_values_override_config_file(tmp_path) -> None:
+def test_artifact_aware_scan_loader_cli_values_override_config_file(tmp_path) -> None:
     config_file = tmp_path / "scan_config.json"
     config_file.write_text('{"runs": 99, "link_density_grid": [0.5], "age_bias_mode": "newer"}')
 

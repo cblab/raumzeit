@@ -448,12 +448,3 @@ def evaluate_growth_family_comparison(
         gate_decision=gate,
         family_rows=tuple(rows),
     )
-
-
-# Legacy result-type aliases for compatibility.
-Phase2ProbeResult = GrowthFamilyProbeResult
-Phase2FamilyComparisonResult = GrowthFamilyComparisonResult
-
-# Legacy callable aliases for compatibility.
-evaluate_minimal_growth_probe = evaluate_growth_family_probe
-evaluate_phase2_family_comparison = evaluate_growth_family_comparison
