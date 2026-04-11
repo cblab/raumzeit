@@ -115,6 +115,7 @@ def generate_age_biased_growth_causal_set(
     age_bias: str,
     seed: int,
     initial_chain_length: int = 1,
+    age_bias_strength: float = 1.0,
 ) -> CausalSet:
     """Generate with explicit age preference for link targets.
 
@@ -129,6 +130,8 @@ def generate_age_biased_growth_causal_set(
         raise ValueError("age_bias must be 'older' or 'newer'")
     if initial_chain_length < 1 or initial_chain_length > n:
         raise ValueError("initial_chain_length must be in [1, n]")
+    if not 0.0 <= age_bias_strength <= 1.0:
+        raise ValueError("age_bias_strength must be in [0, 1]")
 
     rng = random.Random(seed)
     cset = CausalSet()
@@ -143,9 +146,10 @@ def generate_age_biased_growth_causal_set(
         denom = float(max(1, new_element))
         for older in range(new_element):
             if age_bias == "older":
-                age_scale = float(new_element - older) / denom
+                raw_scale = float(new_element - older) / denom
             else:
-                age_scale = float(older + 1) / denom
+                raw_scale = float(older + 1) / denom
+            age_scale = (1.0 - age_bias_strength) + (age_bias_strength * raw_scale)
             if rng.random() < (link_probability * age_scale):
                 cset.add_relation(older, new_element)
 
@@ -202,7 +206,7 @@ PRIMITIVE_DYNAMICS_FAMILIES: tuple[PrimitiveDynamicsFamily, ...] = (
     ),
     PrimitiveDynamicsFamily(
         name="age-biased-forward",
-        parameters=("link_probability", "age_bias"),
+        parameters=("link_probability", "age_bias", "age_bias_strength"),
         mechanism="Fixed Bernoulli links are scaled by an explicit older/newer preference factor.",
         anticipated_artifact_risk="Can create strong age-layering artifacts and chain-height distortions.",
     ),
