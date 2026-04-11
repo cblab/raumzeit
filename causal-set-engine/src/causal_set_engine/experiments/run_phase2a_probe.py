@@ -1,10 +1,13 @@
-"""Run strict phase-2a gate check and minimal dynamics sandbox probe."""
+"""Run strict phase-2 gate check and primitive dynamics comparison probe."""
 
 from __future__ import annotations
 
 import argparse
 
-from causal_set_engine.experiments.phase2a_probe import evaluate_minimal_growth_probe
+from causal_set_engine.experiments.phase2a_probe import (
+    evaluate_minimal_growth_probe,
+    evaluate_phase2_family_comparison,
+)
 
 
 def _parse_n_values(n_text: str) -> list[int]:
@@ -23,7 +26,45 @@ def main() -> None:
     parser.add_argument("--null-p", type=float, default=0.2)
     parser.add_argument("--null-edge-density", type=float, default=0.2)
     parser.add_argument("--growth-link-probability", type=float, default=0.2)
+    parser.add_argument("--sparse-base-link-probability", type=float, default=0.25)
+    parser.add_argument("--age-bias-mode", choices=("older", "newer"), default="older")
+    parser.add_argument("--lookback-window", type=int, default=8)
+    parser.add_argument(
+        "--dynamics-family",
+        type=str,
+        default="bernoulli-forward",
+        help="bernoulli-forward|sparse-forward|age-biased-forward|window-forward|all",
+    )
     args = parser.parse_args()
+
+    if args.dynamics_family == "all":
+        result = evaluate_phase2_family_comparison(
+            n_values=_parse_n_values(args.n_values),
+            runs=args.runs,
+            seed_start=args.seed_start,
+            interval_samples=args.interval_samples,
+            null_p=args.null_p,
+            null_edge_density=args.null_edge_density,
+            growth_link_probability=args.growth_link_probability,
+            sparse_base_link_probability=args.sparse_base_link_probability,
+            age_bias_mode=args.age_bias_mode,
+            lookback_window=args.lookback_window,
+        )
+
+        print("phase-2 gate:", "GO" if result.gate_decision.go else "NO-GO")
+        print("primary diagnostics:", result.gate_decision.primary_metrics)
+        print("gate failures:", result.gate_decision.failures)
+        print("comparison matrix:")
+        print(
+            "family | gate | primary-performance | vs-minkowski | vs-nulls | N-trend | mean-score | artifact-warning"
+        )
+        for row in result.family_rows:
+            print(
+                f"{row.family_name} | {row.gate_decision} | {row.primary_diagnostic_performance} | "
+                f"{row.relative_to_minkowski} | {row.relative_to_nulls} | {row.n_trend_behavior} | "
+                f"{row.mean_score:+.3f} | {row.artifact_risk}"
+            )
+        return
 
     result = evaluate_minimal_growth_probe(
         n_values=_parse_n_values(args.n_values),
