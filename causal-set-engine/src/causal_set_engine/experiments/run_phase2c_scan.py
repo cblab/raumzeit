@@ -5,7 +5,13 @@ from __future__ import annotations
 import argparse
 
 from causal_set_engine.experiments.phase2c_scan import evaluate_age_biased_phase2c_scan
-from causal_set_engine.experiments.run_phase2a_probe import _parse_n_values
+
+
+def _parse_n_values(n_text: str) -> list[int]:
+    values = sorted({int(token.strip()) for token in n_text.split(",") if token.strip()})
+    if any(value <= 1 for value in values):
+        raise ValueError("all N values must be integers > 1")
+    return values
 
 
 def _parse_grid(text: str) -> tuple[float, ...]:

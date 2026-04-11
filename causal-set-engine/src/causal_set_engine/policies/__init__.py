@@ -1,7 +1,4 @@
-"""Legacy compatibility shim for phase-2 gate policy.
-
-Prefer importing from ``causal_set_engine.policies.phase2_gate``.
-"""
+"""Policy modules for explicit decision gates."""
 
 from causal_set_engine.policies.phase2_gate import (
     Phase2GateDecision,
