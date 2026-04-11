@@ -26,6 +26,8 @@ The **canonical scientific scope** of this manuscript is exactly:
 - `v8a_fast` (`configs/v8a_fast.yaml`)
 - `v9a_fast` (`configs/v9a_fast.yaml`)
 
+These canonical model identities are fixed mechanism labels; the committed paper evidence bundle is a separate fixed-output artifact produced via the paper-grade batch definition below.
+
 Canonical batch definition:
 
 - `configs/paper_batch_ref.yaml`
@@ -58,6 +60,8 @@ and novelty
 $$
 N_i = \frac{1}{1+k_i^{\text{out}}}.
 $$
+
+Here $C_i$ is the candidate-parent local state-coherence score (state compatibility with the current local context), i.e., the same local coherence signal used by this parent-selection mechanism.
 
 Parents are selected sequentially with genealogical repulsion using ancestry-signature Jaccard overlap
 
@@ -269,6 +273,8 @@ Code, committed paper artifacts, and the fixed-evidence bundle are available in 
 Interpretive claims in this manuscript are bound to the committed artifacts above, not to uncommitted local outputs.
 
 ## References
+
+For this Markdown/PDF manuscript version, references are provided as the explicit list below; `paper/references.bib` is retained in-repo for bibliography-source compatibility and provenance.
 
 1. Surya, S. (2019). *The Causal Set Approach to Quantum Gravity*. Living Reviews in Relativity, 22(1), 5. https://doi.org/10.1007/s41114-019-0023-1
 
