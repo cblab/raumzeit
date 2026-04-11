@@ -1,4 +1,4 @@
-# Local Causal Edge Dynamics Fail to Stabilize Macroscopic Isotropic Geometry: A Canonical 3-Model Falsification Study
+# Local Causal Edge Dynamics Fail to Stabilize Macroscopic Isotropic Geometry: A Canonical 3-Model Boundary Test
 Christian Blab
 
 ## Abstract
@@ -9,7 +9,7 @@ Geometry is measured rather than assumed. This manuscript is bound to the commit
 ## 1. Introduction
 This paper asks one focused question: **can this specific local causal mechanism class stabilize robust macroscopic geometry, as measured from graph dynamics alone?**
 
-The study is falsification-driven. We do not assume an ambient manifold, target metric, or pre-imposed geometric law. We evaluate whether geometry-like behavior appears and remains stable under growth. If it does not, we report the boundary of the mechanism rather than reinterpret failure as success.
+The study is boundary-test-driven. We do not assume an ambient manifold, target metric, or pre-imposed geometric law. We evaluate whether geometry-like behavior appears and remains stable under growth. If it does not, we report a bounded negative result for this local edge-based mechanism lineage rather than reinterpret failure as success.
 
 Accordingly, geometry is operationalized through diagnostics: diffusion scaling, volume-growth scaling, concentration/efficiency/path structure, shell/front organization, and fixed-anchor isotropy and transport splits. These observables are designed to separate local structural improvements from true macroscopic geometric stabilization.
 
@@ -165,7 +165,7 @@ V(r)\sim r^{d_v}.
 $$
 
 ### 4.2 K7 isotropy concept and naming clarification
-K7 includes anchor-local isotropy defect, diffusion splits (core/mid/front), and causal-front proxies. Isotropy defect is estimated from branch-imbalance statistics around sampled centers (coefficient-of-variation style radial imbalance).
+K7 includes anchor-local isotropy defect, diffusion splits (core/mid/front), and causal-front proxies. Isotropy defect is estimated from branch-imbalance statistics around sampled centers (coefficient-of-variation style radial imbalance): `iso_defect = 0` corresponds to perfect branch balance, and larger values indicate stronger directional imbalance (anisotropy). It should be read as an operational imbalance magnitude, not as a probability-like bounded 0-1 score.
 
 **Naming clarification:** K7 is a diagnostics family label. It is not “Version 7.” Historical `v7`/`v71` model names are separate and non-canonical for this manuscript.
 
@@ -201,7 +201,7 @@ K2 spectral and volume estimates are model-sensitive but not monotonic in one di
 Figures 2 and 3 show a decoupled K2 response: $d_s$ shifts downward while $d_v$ shifts upward. Taken together, these plots indicate a mixed geometric response: transport and growth exponents decouple under local rule changes, which is evidence of retuning, but not of robust isotropic macroscopic closure.
 
 ### 6.3 K7 fixed-anchor evidence: local retuning persists, macroscopic isotropy does not
-K7 fixed-anchor metrics remain the key falsification signal. Mean K7 isotropy defect is high for all three models (`baseline_ref`: $0.9209\pm0.0404$, `v8a_fast`: $0.9455\pm0.0592$, `v9a_fast`: $0.9280\pm0.0655$), so no model reaches low-defect isotropic behavior.
+K7 fixed-anchor metrics remain the key boundary signal. In this study, successful macroscopic stabilization would have required a low K7 isotropy defect together with stable transport-sign structure (no persistent front/core sign flips) and no strong $d_s$/$d_v$ decoupling, while remaining in a nontrivial structural regime. Mean K7 isotropy defect is high for all three models (`baseline_ref`: $0.9209\pm0.0404$, `v8a_fast`: $0.9455\pm0.0592$, `v9a_fast`: $0.9280\pm0.0655$), so no model reaches low-defect isotropic behavior.
 
 ![**Figure 4.** K7 fixed-anchor isotropy defect comparison. All three models remain in a high-defect regime, so isotropic closure is not achieved.](figures/reference_k7_iso_defect_comparison.png)
 
@@ -224,22 +224,23 @@ A useful description is an **anisotropic diffusion-geometric patch medium**: the
 
 ## 8. Limitations
 - The mechanism class is heuristic and local by construction.
-- Simulations are finite in size, horizon, and seed count.
+- Simulations are finite in size, horizon, and seed count (5 runs per model): sufficient for mean/std comparisons and the qualitative negative conclusion, but underpowered for strong fine-grained ranking claims between `v8a_fast` and `v9a_fast`.
 - Canonical scope is intentionally narrow (three models only).
 - This is not a universal no-go theorem for emergence of geometry.
+- Fixed-anchor diagnostics substantially reduce region-resampling ambiguity, but anchor neighborhoods still evolve as the graph grows, so K7 should be read as a strong operational control rather than a metaphysical guarantee of scale-invariant local identity.
 - Diagnostics are strong operational proxies, not metaphysical proof.
 
 ## 9. Related work
 **Causal-set and discrete-causality programs.** Causal-set research studies whether spacetime structure can be recovered from fundamentally discrete causal order, with continuum behavior emerging only in suitable limits (Surya, 2019). This paper overlaps at the level of causal/discrete motivation and the use of graph-like relational data. It differs in objective and claim strength: we do not test a full quantum-gravity reconstruction program, and we do not infer continuum recovery. We test a narrower algorithmic question about one local edge-update lineage in a growing directed graph engine.
 
-**Dynamical graph models of emergent locality.** Quantum Graphity and related dynamical-graph approaches ask when locality and geometry-like phases can emerge from graph dynamics (Konopka, Markopoulou, and Severini, 2008). Our setup is closest to this tradition because locality must be induced by endogenous graph evolution rather than imposed geometry. The key difference is evidential posture: instead of proposing a new positive phase claim, we run a canonical three-model ablation and report a bounded negative result when macroscopic isotropic stabilization is not observed.
+**Dynamical graph models of emergent locality.** Quantum Graphity and related dynamical-graph approaches ask when locality and geometry-like phases can emerge from graph dynamics (Konopka, Markopoulou, and Severini, 2008). Our setup is closest to this tradition because locality must be induced by endogenous graph evolution rather than imposed geometry. The key difference is evidential posture: instead of proposing a new positive phase claim, we run a canonical three-model ablation and report a bounded negative result for this local mechanism lineage when macroscopic isotropic stabilization is not observed.
 
 **Higher-order and simplicial network geometry.** Network Geometry with Flavor and subsequent network-geometry work construct higher-order combinatorial structures (simplicial complexes and related growth rules) to study emergent geometric organization and complexity (Bianconi and Rahmede, 2016; Mulder and Bianconi, 2018). Our models are edge-centric and pairwise, so these papers are better viewed as adjacent alternatives than direct baselines. This comparison clarifies scope: our negative finding concerns a local edge-based mechanism class and does not rule out higher-order generative mechanisms.
 
-**Discrete graph-geometric diagnostics and curvature.** Discrete curvature literature develops operational geometric probes on networks, including comparative studies of curvature discretizations and convergence links between Ollivier curvature on random geometric graphs and manifold Ricci curvature (Samal et al., 2018; van der Hoorn et al., 2023). We align with this diagnostics-first philosophy: geometry is measured via operational statistics rather than assumed. However, our diagnostics stack (K1/K2/K4/K5/K7) is used to falsify stability claims for a specific mechanism lineage, not to assert a universal geometric no-go theorem. Accordingly, this manuscript does **not** refute graph-based or pregeometric emergence programs in general; it provides a reproducible falsification result for one narrower local causal edge-dynamics lineage under the canonical three-model protocol.
+**Discrete graph-geometric diagnostics and curvature.** Discrete curvature literature develops operational geometric probes on networks, including comparative studies of curvature discretizations and convergence links between Ollivier curvature on random geometric graphs and manifold Ricci curvature (Samal et al., 2018; van der Hoorn et al., 2023). We align with this diagnostics-first philosophy: geometry is measured via operational statistics rather than assumed. However, our diagnostics stack (K1/K2/K4/K5/K7) is used to test and bound stability claims for a specific mechanism lineage, not to assert a universal geometric no-go theorem. Accordingly, this manuscript does **not** refute graph-based or pregeometric emergence programs in general; it provides a reproducible bounded negative result for one narrower local causal edge-dynamics lineage under the canonical three-model protocol.
 
 ## 10. Conclusion
-Within the canonical modular engine and canonical three-model scope (`baseline_ref`, `v8a_fast`, `v9a_fast`), the committed fixed evidence bundle supports a consistent negative result: local retuning occurs, but macroscopic isotropic stabilization is not achieved.
+Within the canonical modular engine and canonical three-model scope (`baseline_ref`, `v8a_fast`, `v9a_fast`), the committed fixed evidence bundle supports a consistent bounded negative result: local retuning occurs, but macroscopic isotropic stabilization is not achieved for this tested local edge-based lineage.
 
 Across the reference summaries and committed figures, K1/K2/K4/K5 show measurable structural and transport adjustments, including lower concentration and stronger local efficiency in `v9a_fast`. However, K7 isotropy defect remains high across all models and K7 front-core transport splitting remains sign-unstable, so no canonical variant establishes a stable isotropic macrostate. Future progress likely requires stronger nonlocal consistency constraints or higher-order relational mechanisms beyond this local edge-update class.
 
