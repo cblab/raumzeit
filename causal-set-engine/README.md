@@ -30,6 +30,6 @@ causal-set-artifact-aware-scan --n-values 60,80 --runs 8 --seed-start 100 --link
 
 ## Functional boundaries
 
-- Engine modules (`core`, `generators`, `diagnostics`, `evaluation`, `policies`, `config`) are reusable and phase-agnostic.
+- Engine modules (`core`, `generators`, `diagnostics`, `evaluation`, `policies`, `config`) are reusable and function-centric.
 - `experiments` modules assemble concrete study flows, invoke policy decisions, and return auditable result structures.
 - Policy thresholds are explicit in `policies/policy_gate.py`; scoring and metric math are centralized in `evaluation/`.

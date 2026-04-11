@@ -1,4 +1,4 @@
-"""Deterministic tests for phase-1.75 decision utilities."""
+"""Deterministic tests for decision/scoring utilities."""
 
 from causal_set_engine.evaluation.scoring import (
     PairQuality,

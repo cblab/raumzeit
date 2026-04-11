@@ -1,4 +1,4 @@
-"""Tests for shared evaluation helper modules added in Stage 1."""
+"""Tests for shared evaluation helper modules."""
 
 from causal_set_engine.evaluation.metrics import DEFAULT_METRICS, pair_quality_rows, run_once
 from causal_set_engine.evaluation.sampling import batch_rows, edge_count_from_density

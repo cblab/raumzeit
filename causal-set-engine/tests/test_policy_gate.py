@@ -1,10 +1,10 @@
-"""Deterministic tests for strict phase-2a policy gate."""
+"""Deterministic tests for the policy gate."""
 
 from causal_set_engine.evaluation.scoring import DiagnosticQuality
-from causal_set_engine.policies.policy_gate import Phase2GateInput, evaluate_phase2_gate
+from causal_set_engine.policies.policy_gate import PolicyGateInput, evaluate_policy_gate
 
 
-def test_phase2_gate_go_with_primary_diagnostic_and_robust_coverage() -> None:
+def test_policy_gate_go_with_primary_diagnostic_and_robust_coverage() -> None:
     ranked = [
         DiagnosticQuality(
             metric="dimension_estimate",
@@ -18,8 +18,8 @@ def test_phase2_gate_go_with_primary_diagnostic_and_robust_coverage() -> None:
         )
     ]
 
-    decision = evaluate_phase2_gate(
-        Phase2GateInput(
+    decision = evaluate_policy_gate(
+        PolicyGateInput(
             ranked_diagnostics=ranked,
             null_model_count=2,
             seeds_per_model=8,
@@ -32,7 +32,7 @@ def test_phase2_gate_go_with_primary_diagnostic_and_robust_coverage() -> None:
     assert decision.failures == ()
 
 
-def test_phase2_gate_no_go_when_coverage_or_quality_is_missing() -> None:
+def test_policy_gate_no_go_when_coverage_or_quality_is_missing() -> None:
     ranked = [
         DiagnosticQuality(
             metric="interval_mean",
@@ -46,8 +46,8 @@ def test_phase2_gate_no_go_when_coverage_or_quality_is_missing() -> None:
         )
     ]
 
-    decision = evaluate_phase2_gate(
-        Phase2GateInput(
+    decision = evaluate_policy_gate(
+        PolicyGateInput(
             ranked_diagnostics=ranked,
             null_model_count=1,
             seeds_per_model=4,

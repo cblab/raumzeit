@@ -1,4 +1,4 @@
-"""Minimal causal-set growth sandbox for phase-2 probing.
+"""Minimal causal-set growth sandbox for growth-family probing.
 
 Primitive rule families:
 - bernoulli-forward: fixed forward-link probability baseline.

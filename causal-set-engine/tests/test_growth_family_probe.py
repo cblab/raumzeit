@@ -1,4 +1,4 @@
-"""Regression-style test for phase-2a probe output shape."""
+"""Regression-style test for growth-family probe output shape."""
 
 from causal_set_engine.experiments.growth_family_probe import (
     evaluate_growth_family_comparison,
@@ -39,7 +39,7 @@ def test_growth_family_probe_output_schema_is_stable() -> None:
     }
 
 
-def test_phase2b_family_comparison_schema_is_stable() -> None:
+def test_growth_family_comparison_schema_is_stable() -> None:
     result = evaluate_growth_family_comparison(
         n_values=[20, 24],
         runs=3,

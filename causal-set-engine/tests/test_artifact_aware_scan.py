@@ -1,4 +1,4 @@
-"""Schema regression test for phase-2c age-biased scan."""
+"""Schema regression test for artifact-aware age-biased scan."""
 
 from causal_set_engine.experiments.artifact_aware_scan import evaluate_age_biased_scan
 

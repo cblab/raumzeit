@@ -1,4 +1,4 @@
-"""Phase-2 probing wired through strict phase-1.75 discriminators."""
+"""Growth-family probing wired through strict discriminator metrics."""
 
 from __future__ import annotations
 
@@ -20,14 +20,14 @@ from causal_set_engine.evaluation.scoring import (
     build_combined_score,
 )
 from causal_set_engine.policies.policy_gate import (
-    Phase2GateDecision,
-    Phase2GateInput,
-    evaluate_phase2_gate,
+    PolicyGateDecision,
+    PolicyGateInput,
+    evaluate_policy_gate,
 )
 from causal_set_engine.generators.minkowski_2d import generate_minkowski_2d
 from causal_set_engine.generators.null_models import generate_fixed_edge_count_poset
-from causal_set_engine.generators.phase2_minimal_growth import generate_minimal_growth_causal_set
-from causal_set_engine.generators.phase2_minimal_growth import (
+from causal_set_engine.generators.growth_family import generate_minimal_growth_causal_set
+from causal_set_engine.generators.growth_family import (
     PRIMITIVE_DYNAMICS_FAMILIES,
     PrimitiveDynamicsFamily,
     generate_age_biased_growth_causal_set,
@@ -42,9 +42,9 @@ METRICS: tuple[str, ...] = DEFAULT_METRICS
 
 @dataclass(frozen=True)
 class GrowthFamilyProbeResult:
-    """Compact and testable result schema for phase-2a probing."""
+    """Compact and testable result schema for growth-family probing."""
 
-    gate_decision: Phase2GateDecision
+    gate_decision: PolicyGateDecision
     diagnostic_bands: tuple[tuple[str, str], ...]
     combined_min_effect: float
     best_single_worst_case_effect: float
@@ -72,7 +72,7 @@ class FamilyComparisonRow:
 
 @dataclass(frozen=True)
 class GrowthFamilyComparisonResult:
-    gate_decision: Phase2GateDecision
+    gate_decision: PolicyGateDecision
     family_rows: tuple[FamilyComparisonRow, ...]
 
 
@@ -179,9 +179,9 @@ def evaluate_growth_family_probe(
     null_edge_density: float = 0.2,
     growth_link_probability: float = 0.2,
 ) -> GrowthFamilyProbeResult:
-    """Run phase-2a probe with conservative claims.
+    """Run growth-family probe with conservative claims.
 
-    The gate is built from phase-1.75 discriminator quality only.
+    The gate is built from discriminator quality only.
     Minimal growth is then scored against Minkowski and null baselines.
     """
 
@@ -213,8 +213,8 @@ def evaluate_growth_family_probe(
     pair_quality.extend(_pair_quality_rows(n_values, mk_by_n, fixed_by_n, "fixed-edge-poset"))
     ranked = aggregate_diagnostic_quality(pair_quality)
 
-    gate = evaluate_phase2_gate(
-        Phase2GateInput(
+    gate = evaluate_policy_gate(
+        PolicyGateInput(
             ranked_diagnostics=ranked,
             null_model_count=2,
             seeds_per_model=runs,
@@ -324,8 +324,8 @@ def evaluate_growth_family_comparison(
     pair_quality = _pair_quality_rows(n_values, mk_by_n, random_by_n, "random-poset")
     pair_quality.extend(_pair_quality_rows(n_values, mk_by_n, fixed_by_n, "fixed-edge-poset"))
     ranked = aggregate_diagnostic_quality(pair_quality)
-    gate = evaluate_phase2_gate(
-        Phase2GateInput(
+    gate = evaluate_policy_gate(
+        PolicyGateInput(
             ranked_diagnostics=ranked,
             null_model_count=2,
             seeds_per_model=runs,

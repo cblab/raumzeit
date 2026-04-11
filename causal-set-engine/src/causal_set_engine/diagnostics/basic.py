@@ -1,6 +1,6 @@
-"""Basic diagnostics for phase-1 causal set calibration.
+"""Basic diagnostics for causal set calibration.
 
-These diagnostics stay deliberately simple for phase 1:
+These diagnostics stay deliberately simple for the diagnostic demo and reusable checks:
 - they operate on finite causal sets with pure-Python algorithms,
 - they avoid introducing new dynamics or theory layers,
 - they provide first-pass reconstruction/calibration signals.
@@ -181,7 +181,7 @@ def sampled_interval_statistics(
 def estimate_dimension_chain_height(cset: CausalSet) -> float:
     """Estimate an effective dimension from chain-height scaling.
 
-    Phase-1 estimator (explicitly approximate):
+    Approximate estimator (explicitly approximate):
     assumes longest-chain growth approximately follows ``L ~ N^(1/d_eff)``;
     therefore ``d_eff ~= log(N) / log(L)``.
 
