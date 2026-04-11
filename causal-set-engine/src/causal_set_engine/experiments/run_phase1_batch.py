@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import argparse
 import statistics
+import sys
 from collections.abc import Callable
 from dataclasses import dataclass
 
 from causal_set_engine.core.causal_set import CausalSet
+from causal_set_engine.config.loaders import load_phase1_batch_config
 from causal_set_engine.evaluation.metrics import (
     DEFAULT_METRICS,
     MetricRow,
@@ -119,6 +121,12 @@ def _pair_quality_rows(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--config",
+        type=str,
+        default=None,
+        help="optional path to JSON/TOML/YAML config file (CLI flags override file values)",
+    )
     parser.add_argument("--dimension", type=int, default=2, choices=[2, 3, 4])
     parser.add_argument("--n", type=int, default=80, help="number of elements per run")
     parser.add_argument(
@@ -148,9 +156,10 @@ def main() -> None:
         help="number of related pairs sampled for interval statistics",
     )
     args = parser.parse_args()
+    config = load_phase1_batch_config(args, sys.argv[1:])
 
-    n_values = _parse_n_values(args.n_values, args.n)
-    minkowski_gen = _minkowski_generator(args.dimension)
+    n_values = _parse_n_values(config.n_values_text, config.n)
+    minkowski_gen = _minkowski_generator(config.dimension)
 
     mk_by_n: dict[int, list[MetricRow]] = {}
     random_by_n: dict[int, list[MetricRow]] = {}
@@ -160,12 +169,12 @@ def main() -> None:
     print(
         " ".join(
             [
-                f"dimension={args.dimension}",
-                f"runs={args.runs}",
+                f"dimension={config.dimension}",
+                f"runs={config.runs}",
                 f"n_values={n_values}",
-                f"seed_start={args.seed_start}",
-                f"null_p={args.null_p}",
-                f"null_edge_density={args.null_edge_density}",
+                f"seed_start={config.seed_start}",
+                f"null_p={config.null_p}",
+                f"null_edge_density={config.null_edge_density}",
             ]
         )
     )
@@ -175,15 +184,21 @@ def main() -> None:
     )
 
     for n in n_values:
-        mk_by_n[n] = _batch_rows(minkowski_gen, n, args.runs, args.seed_start, args.interval_samples)
-        random_by_n[n] = _batch_rows(
-            lambda n_val, seed: generate_random_poset(n=n_val, relation_probability=args.null_p, seed=seed),
-            n,
-            args.runs,
-            args.seed_start,
-            args.interval_samples,
+        mk_by_n[n] = _batch_rows(
+            minkowski_gen, n, config.runs, config.seed_start, config.interval_samples
         )
-        fixed_edge_count = _edge_count_from_density(n, args.null_edge_density)
+        random_by_n[n] = _batch_rows(
+            lambda n_val, seed: generate_random_poset(
+                n=n_val,
+                relation_probability=config.null_p,
+                seed=seed,
+            ),
+            n,
+            config.runs,
+            config.seed_start,
+            config.interval_samples,
+        )
+        fixed_edge_count = _edge_count_from_density(n, config.null_edge_density)
         fixed_by_n[n] = _batch_rows(
             lambda n_val, seed: generate_fixed_edge_count_poset(
                 n=n_val,
@@ -191,13 +206,13 @@ def main() -> None:
                 seed=seed,
             ),
             n,
-            args.runs,
-            args.seed_start,
-            args.interval_samples,
+            config.runs,
+            config.seed_start,
+            config.interval_samples,
         )
 
         print(f"\nN={n}")
-        _print_model_row(ModelSummary(model_name=f"minkowski{args.dimension}d", rows=mk_by_n[n]))
+        _print_model_row(ModelSummary(model_name=f"minkowski{config.dimension}d", rows=mk_by_n[n]))
         _print_model_row(ModelSummary(model_name="random-poset", rows=random_by_n[n]))
         _print_model_row(ModelSummary(model_name="fixed-edge-poset", rows=fixed_by_n[n]))
 

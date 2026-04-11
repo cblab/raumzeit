@@ -3,26 +3,27 @@
 from __future__ import annotations
 
 import argparse
+import sys
 
+from causal_set_engine.config.loaders import load_phase2c_scan_config
 from causal_set_engine.experiments.phase2c_scan import evaluate_age_biased_phase2c_scan
 
 
-def _parse_n_values(n_text: str) -> list[int]:
-    values = sorted({int(token.strip()) for token in n_text.split(",") if token.strip()})
+def _parse_n_values(n_values: tuple[int, ...]) -> list[int]:
+    values = sorted(set(n_values))
     if any(value <= 1 for value in values):
         raise ValueError("all N values must be integers > 1")
     return values
 
 
-def _parse_grid(text: str) -> tuple[float, ...]:
-    values = tuple(float(token.strip()) for token in text.split(",") if token.strip())
-    if not values:
-        raise ValueError("grid cannot be empty")
-    return values
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--config",
+        type=str,
+        default=None,
+        help="optional path to JSON/TOML/YAML config file (CLI flags override file values)",
+    )
     parser.add_argument("--n-values", type=str, default="60,80")
     parser.add_argument("--runs", type=int, default=8)
     parser.add_argument("--seed-start", type=int, default=100)
@@ -33,17 +34,18 @@ def main() -> None:
     parser.add_argument("--bias-strength-grid", type=str, default="0.0,0.5,1.0")
     parser.add_argument("--age-bias-mode", choices=("older", "newer"), default="older")
     args = parser.parse_args()
+    config = load_phase2c_scan_config(args, sys.argv[1:])
 
     result = evaluate_age_biased_phase2c_scan(
-        n_values=_parse_n_values(args.n_values),
-        runs=args.runs,
-        seed_start=args.seed_start,
-        interval_samples=args.interval_samples,
-        null_p=args.null_p,
-        null_edge_density=args.null_edge_density,
-        link_density_grid=_parse_grid(args.link_density_grid),
-        bias_strength_grid=_parse_grid(args.bias_strength_grid),
-        age_bias_mode=args.age_bias_mode,
+        n_values=_parse_n_values(config.n_values),
+        runs=config.runs,
+        seed_start=config.seed_start,
+        interval_samples=config.interval_samples,
+        null_p=config.null_p,
+        null_edge_density=config.null_edge_density,
+        link_density_grid=config.link_density_grid,
+        bias_strength_grid=config.bias_strength_grid,
+        age_bias_mode=config.age_bias_mode,
     )
 
     print("phase-2 gate:", "GO" if result.gate_decision.go else "NO-GO")
