@@ -1,6 +1,11 @@
-"""Tests for phase-2a minimal growth sandbox validity."""
+"""Tests for phase-2 primitive growth sandbox validity."""
 
-from causal_set_engine.generators.phase2_minimal_growth import generate_minimal_growth_causal_set
+from causal_set_engine.generators.phase2_minimal_growth import (
+    generate_age_biased_growth_causal_set,
+    generate_minimal_growth_causal_set,
+    generate_sparse_forward_growth_causal_set,
+    generate_window_forward_growth_causal_set,
+)
 
 
 def test_minimal_growth_generates_valid_causal_set_for_multiple_seeds() -> None:
@@ -34,3 +39,29 @@ def test_minimal_growth_rejects_invalid_inputs() -> None:
         assert False, "expected ValueError for initial_chain_length"
     except ValueError:
         pass
+
+
+def test_all_primitive_families_generate_valid_causal_sets() -> None:
+    for seed in (2, 3, 4):
+        sparse = generate_sparse_forward_growth_causal_set(
+            n=25,
+            base_link_probability=0.4,
+            seed=seed,
+        )
+        older = generate_age_biased_growth_causal_set(
+            n=25,
+            link_probability=0.3,
+            age_bias="older",
+            seed=seed,
+        )
+        window = generate_window_forward_growth_causal_set(
+            n=25,
+            link_probability=0.3,
+            lookback_window=6,
+            seed=seed,
+        )
+
+        for cset in (sparse, older, window):
+            assert cset.cardinality() == 25
+            assert cset.validate_acyclic()
+            assert cset.validate_transitive()
