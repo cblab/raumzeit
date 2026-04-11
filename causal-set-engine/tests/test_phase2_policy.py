@@ -2,6 +2,10 @@
 
 from causal_set_engine.evaluation.scoring import DiagnosticQuality
 from causal_set_engine.experiments.phase2_policy import Phase2GateInput, evaluate_phase2_gate
+from causal_set_engine.policies.phase2_gate import (
+    Phase2GateInput as Phase2GateInputNew,
+    evaluate_phase2_gate as evaluate_phase2_gate_new,
+)
 
 
 def test_phase2_gate_go_with_primary_diagnostic_and_robust_coverage() -> None:
@@ -63,3 +67,37 @@ def test_phase2_gate_no_go_when_coverage_or_quality_is_missing() -> None:
         "insufficient-seed-coverage",
         "insufficient-size-trend-coverage",
     }
+
+
+def test_phase2_policy_legacy_shim_matches_policies_module() -> None:
+    ranked = [
+        DiagnosticQuality(
+            metric="interval_mean",
+            mean_difference_abs=0.2,
+            effect_size_abs=0.4,
+            interval_separation=0.2,
+            sign_consistency=0.6,
+            trend_consistency=0.5,
+            usefulness_score=0.3,
+            band="exploratory signal",
+        )
+    ]
+
+    legacy = evaluate_phase2_gate(
+        Phase2GateInput(
+            ranked_diagnostics=ranked,
+            null_model_count=1,
+            seeds_per_model=4,
+            n_values_count=1,
+        )
+    )
+    new = evaluate_phase2_gate_new(
+        Phase2GateInputNew(
+            ranked_diagnostics=ranked,
+            null_model_count=1,
+            seeds_per_model=4,
+            n_values_count=1,
+        )
+    )
+
+    assert legacy == new

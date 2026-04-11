@@ -19,7 +19,7 @@ from causal_set_engine.evaluation.scoring import (
     aggregate_diagnostic_quality,
     build_combined_score,
 )
-from causal_set_engine.experiments.phase2_policy import (
+from causal_set_engine.policies.phase2_gate import (
     Phase2GateDecision,
     Phase2GateInput,
     evaluate_phase2_gate,
