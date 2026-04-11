@@ -15,6 +15,7 @@ dependencies = []
 [project.scripts]
 causal-set-demo = "causal_set_engine.experiments.run_phase1_demo:main"
 causal-set-batch = "causal_set_engine.experiments.run_phase1_batch:main"
+causal-set-phase2a-probe = "causal_set_engine.experiments.run_phase2a_probe:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
