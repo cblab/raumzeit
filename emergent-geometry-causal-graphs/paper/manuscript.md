@@ -1,4 +1,4 @@
-# Local Causal Edge Dynamics Fail to Stabilize Robust Macroscopic Geometry: A Canonical 3-Model Falsification Study
+# Local Causal Edge Dynamics Fail to Stabilize Macroscopic Isotropic Geometry: A Canonical 3-Model Falsification Study
 
 ## Abstract
 We test a narrow hypothesis: whether a specific class of local, causal, edge-based update rules on growing directed graphs can stabilize macroscopic isotropic geometry. The contribution is not a claim of emergent spacetime. The contribution is a maintained modular engine, a canonical three-model ablation (`baseline_ref`, `v8a_fast`, `v9a_fast`), a reproducible diagnostics stack (K1, K2, K4, K5, K7), and a disciplined negative result.
