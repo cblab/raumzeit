@@ -1,6 +1,6 @@
 """Policy modules for explicit decision gates."""
 
-from causal_set_engine.policies.phase2_gate import (
+from causal_set_engine.policies.policy_gate import (
     Phase2GateDecision,
     Phase2GateInput,
     Phase2GateThresholds,

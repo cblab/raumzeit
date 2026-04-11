@@ -5,9 +5,9 @@ from __future__ import annotations
 import argparse
 
 from causal_set_engine.config.loaders import (
-    load_phase1_batch_config,
-    load_phase2a_probe_config,
-    load_phase2c_scan_config,
+    load_batch_calibration_config,
+    load_growth_family_probe_config,
+    load_artifact_aware_scan_config,
 )
 
 
@@ -27,7 +27,7 @@ def test_phase2a_loader_maps_csv_to_typed_tuple() -> None:
         dynamics_family="all",
     )
 
-    config = load_phase2a_probe_config(args, [])
+    config = load_growth_family_probe_config(args, [])
 
     assert config.n_values == (60, 80)
     assert config.dynamics_family == "all"
@@ -49,7 +49,7 @@ def test_phase1_batch_loader_config_file_applies_when_flag_not_provided(tmp_path
         interval_samples=50,
     )
 
-    loaded = load_phase1_batch_config(args, ["--config", str(config_file)])
+    loaded = load_batch_calibration_config(args, ["--config", str(config_file)])
 
     assert loaded.dimension == 4
     assert loaded.n == 110
@@ -74,7 +74,7 @@ def test_phase2c_loader_cli_values_override_config_file(tmp_path) -> None:
         age_bias_mode="older",
     )
 
-    loaded = load_phase2c_scan_config(
+    loaded = load_artifact_aware_scan_config(
         args,
         ["--config", str(config_file), "--runs", "8", "--age-bias-mode", "older"],
     )

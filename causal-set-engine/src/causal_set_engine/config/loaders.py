@@ -8,10 +8,10 @@ from pathlib import Path
 from typing import Any
 
 from causal_set_engine.config.schema import (
-    Phase1BatchConfig,
-    Phase1DemoConfig,
-    Phase2aProbeConfig,
-    Phase2cScanConfig,
+    ArtifactAwareScanConfig,
+    BatchCalibrationConfig,
+    DiagnosticDemoConfig,
+    GrowthFamilyProbeConfig,
     parse_csv_floats,
     parse_csv_ints,
 )
@@ -71,21 +71,21 @@ def _merged_values(args: argparse.Namespace, argv: list[str]) -> dict[str, Any]:
     return values
 
 
-def load_phase1_demo_config(args: argparse.Namespace, argv: list[str]) -> Phase1DemoConfig:
+def load_diagnostic_demo_config(args: argparse.Namespace, argv: list[str]) -> DiagnosticDemoConfig:
     values = _merged_values(args, argv)
-    return Phase1DemoConfig(
+    return DiagnosticDemoConfig(
         n=int(values["n"]),
         seed=int(values["seed"]),
         interval_samples=int(values["interval_samples"]),
     )
 
 
-def load_phase1_batch_config(args: argparse.Namespace, argv: list[str]) -> Phase1BatchConfig:
+def load_batch_calibration_config(args: argparse.Namespace, argv: list[str]) -> BatchCalibrationConfig:
     values = _merged_values(args, argv)
     n_values_text = values.get("n_values")
     if isinstance(n_values_text, list):
         n_values_text = ",".join(str(item) for item in n_values_text)
-    return Phase1BatchConfig(
+    return BatchCalibrationConfig(
         dimension=int(values["dimension"]),
         n=int(values["n"]),
         n_values_text=str(n_values_text) if n_values_text is not None else None,
@@ -97,7 +97,10 @@ def load_phase1_batch_config(args: argparse.Namespace, argv: list[str]) -> Phase
     )
 
 
-def load_phase2a_probe_config(args: argparse.Namespace, argv: list[str]) -> Phase2aProbeConfig:
+def load_growth_family_probe_config(
+    args: argparse.Namespace,
+    argv: list[str],
+) -> GrowthFamilyProbeConfig:
     values = _merged_values(args, argv)
     n_values_input = values["n_values"]
     n_values = (
@@ -105,7 +108,7 @@ def load_phase2a_probe_config(args: argparse.Namespace, argv: list[str]) -> Phas
         if isinstance(n_values_input, str)
         else tuple(int(value) for value in n_values_input)
     )
-    return Phase2aProbeConfig(
+    return GrowthFamilyProbeConfig(
         n_values=n_values,
         runs=int(values["runs"]),
         seed_start=int(values["seed_start"]),
@@ -120,7 +123,10 @@ def load_phase2a_probe_config(args: argparse.Namespace, argv: list[str]) -> Phas
     )
 
 
-def load_phase2c_scan_config(args: argparse.Namespace, argv: list[str]) -> Phase2cScanConfig:
+def load_artifact_aware_scan_config(
+    args: argparse.Namespace,
+    argv: list[str],
+) -> ArtifactAwareScanConfig:
     values = _merged_values(args, argv)
 
     n_values_input = values["n_values"]
@@ -144,7 +150,7 @@ def load_phase2c_scan_config(args: argparse.Namespace, argv: list[str]) -> Phase
         else tuple(float(value) for value in bias_strength_input)
     )
 
-    return Phase2cScanConfig(
+    return ArtifactAwareScanConfig(
         n_values=n_values,
         runs=int(values["runs"]),
         seed_start=int(values["seed_start"]),
@@ -155,3 +161,10 @@ def load_phase2c_scan_config(args: argparse.Namespace, argv: list[str]) -> Phase
         bias_strength_grid=bias_strength_grid,
         age_bias_mode=str(values["age_bias_mode"]),
     )
+
+
+# Legacy loader aliases retained for compatibility.
+load_phase1_demo_config = load_diagnostic_demo_config
+load_phase1_batch_config = load_batch_calibration_config
+load_phase2a_probe_config = load_growth_family_probe_config
+load_phase2c_scan_config = load_artifact_aware_scan_config

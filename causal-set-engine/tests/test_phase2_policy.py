@@ -2,7 +2,7 @@
 
 from causal_set_engine.evaluation.scoring import DiagnosticQuality
 from causal_set_engine.experiments.phase2_policy import Phase2GateInput, evaluate_phase2_gate
-from causal_set_engine.policies.phase2_gate import (
+from causal_set_engine.policies.policy_gate import (
     Phase2GateInput as Phase2GateInputNew,
     evaluate_phase2_gate as evaluate_phase2_gate_new,
 )

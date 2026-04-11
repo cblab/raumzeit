@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "causal-set-engine"
 version = "0.1.0"
-description = "Phase-1 causal set calibration engine scaffold"
+description = "Causal set calibration and probe engine scaffold"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Causal Set Team"}]
@@ -13,6 +13,12 @@ dependencies = []
 
 
 [project.scripts]
+causal-set-diagnostic-demo = "causal_set_engine.experiments.run_diagnostic_demo:main"
+causal-set-batch-calibration = "causal_set_engine.experiments.run_batch_calibration:main"
+causal-set-growth-family-probe = "causal_set_engine.experiments.run_growth_family_probe:main"
+causal-set-artifact-aware-scan = "causal_set_engine.experiments.run_artifact_aware_scan:main"
+
+# Legacy CLI aliases retained for compatibility.
 causal-set-demo = "causal_set_engine.experiments.run_phase1_demo:main"
 causal-set-batch = "causal_set_engine.experiments.run_phase1_batch:main"
 causal-set-phase2a-probe = "causal_set_engine.experiments.run_phase2a_probe:main"

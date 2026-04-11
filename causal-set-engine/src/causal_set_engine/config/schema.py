@@ -23,8 +23,8 @@ def parse_csv_floats(text: str) -> tuple[float, ...]:
 
 
 @dataclass(frozen=True)
-class Phase1DemoConfig:
-    """Typed config for `run_phase1_demo`."""
+class DiagnosticDemoConfig:
+    """Typed config for `run_diagnostic_demo`."""
 
     n: int = 50
     seed: int = 7
@@ -33,7 +33,7 @@ class Phase1DemoConfig:
 
 @dataclass(frozen=True)
 class BatchSweepConfig:
-    """Shared batch sweep settings used across phase studies."""
+    """Shared batch sweep settings used across study entrypoints."""
 
     n_values: tuple[int, ...] = (60, 80)
     runs: int = 8
@@ -44,8 +44,8 @@ class BatchSweepConfig:
 
 
 @dataclass(frozen=True)
-class Phase1BatchConfig:
-    """Typed config for `run_phase1_batch`."""
+class BatchCalibrationConfig:
+    """Typed config for `run_batch_calibration`."""
 
     dimension: Literal[2, 3, 4] = 2
     n: int = 80
@@ -58,8 +58,8 @@ class Phase1BatchConfig:
 
 
 @dataclass(frozen=True)
-class Phase2aProbeConfig:
-    """Typed config for `run_phase2a_probe`."""
+class GrowthFamilyProbeConfig:
+    """Typed config for `run_growth_family_probe`."""
 
     n_values: tuple[int, ...] = (60, 80)
     runs: int = 8
@@ -75,8 +75,8 @@ class Phase2aProbeConfig:
 
 
 @dataclass(frozen=True)
-class Phase2cScanConfig:
-    """Typed config for `run_phase2c_scan`."""
+class ArtifactAwareScanConfig:
+    """Typed config for `run_artifact_aware_scan`."""
 
     n_values: tuple[int, ...] = (60, 80)
     runs: int = 8
@@ -87,3 +87,10 @@ class Phase2cScanConfig:
     link_density_grid: tuple[float, ...] = (0.16, 0.22, 0.28)
     bias_strength_grid: tuple[float, ...] = (0.0, 0.5, 1.0)
     age_bias_mode: Literal["older", "newer"] = "older"
+
+
+# Legacy aliases retained for backward compatibility.
+Phase1DemoConfig = DiagnosticDemoConfig
+Phase1BatchConfig = BatchCalibrationConfig
+Phase2aProbeConfig = GrowthFamilyProbeConfig
+Phase2cScanConfig = ArtifactAwareScanConfig
