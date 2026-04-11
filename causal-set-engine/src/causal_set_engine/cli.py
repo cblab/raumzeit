@@ -10,6 +10,7 @@ from causal_set_engine.experiments import (
     run_batch_calibration,
     run_diagnostic_demo,
     run_growth_family_probe,
+    run_myrheim_meyer_evaluation,
 )
 
 
@@ -31,6 +32,10 @@ def build_parser() -> argparse.ArgumentParser:
         "scan-artifacts",
         help="run artifact-aware growth scan workflow",
     )
+    subparsers.add_parser(
+        "evaluate-myrheim",
+        help="run focused Myrheim-Meyer evaluation workflow",
+    )
     return parser
 
 
@@ -50,6 +55,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
     if args.command == "scan-artifacts":
         run_artifact_aware_scan.main(remaining)
+        return
+    if args.command == "evaluate-myrheim":
+        run_myrheim_meyer_evaluation.main(remaining)
         return
 
     parser.error(f"unknown command: {args.command}")

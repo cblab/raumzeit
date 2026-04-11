@@ -18,6 +18,7 @@ causal-set-diagnostic-demo = "causal_set_engine.experiments.run_diagnostic_demo:
 causal-set-batch-calibration = "causal_set_engine.experiments.run_batch_calibration:main"
 causal-set-growth-family-probe = "causal_set_engine.experiments.run_growth_family_probe:main"
 causal-set-artifact-aware-scan = "causal_set_engine.experiments.run_artifact_aware_scan:main"
+causal-set-evaluate-myrheim = "causal_set_engine.experiments.run_myrheim_meyer_evaluation:main"
 
 
 [tool.setuptools.packages.find]
