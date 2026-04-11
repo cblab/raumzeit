@@ -224,6 +224,8 @@ These K4/K5 shifts are meaningful local gains, but they do not overturn the K7 i
 ## 7. Interpretation
 The evidence supports a narrow negative conclusion: this local causal edge-dynamics line can self-organize transport and ball-like local structure but does not robustly stabilize macroscopic isotropic geometry.
 
+This negative result should not be read as the failure of a completely neutral local graph process. The parent-selection stage already encodes local structural priors through density matching, local state coherence, novelty/anti-saturation preference, and genealogical diversification. In that bounded sense, the tested mechanism lineage is already partially geometry-friendly at the local level. The persistence of failed robust macroscopic isotropic stabilization is therefore more informative than a structure-blind baseline failure: within this lineage, local structural intelligence of this kind remains insufficient.
+
 A useful description is an **anisotropic diffusion-geometric patch medium**: the system forms persistent, structured, locally coherent transport patches without converging to a globally isotropic geometric phase.
 
 ## 8. Limitations
