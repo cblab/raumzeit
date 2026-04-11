@@ -1,4 +1,4 @@
-# Local Causal Edge Dynamics Fail to Stabilize Macroscopic Isotropic Geometry: A Canonical 3-Model Boundary Test
+# Limits of Local Causal Edge Dynamics for Stabilizing Macroscopic Isotropic Geometry: A Canonical Three-Model Study
 Christian Blab
 
 ## Abstract
