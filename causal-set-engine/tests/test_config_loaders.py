@@ -11,6 +11,7 @@ from causal_set_engine.config.loaders import (
     load_interval_evaluation_config,
     load_myrheim_meyer_evaluation_config,
     load_midpoint_evaluation_config,
+    load_layer_profile_evaluation_config,
 )
 
 
@@ -139,6 +140,28 @@ def test_midpoint_loader_parses_sampling_controls() -> None:
 
     loaded = load_midpoint_evaluation_config(args, [])
     assert loaded.dimensions == (2, 3, 4)
+    assert loaded.n_values == (40, 80)
+    assert loaded.min_interval_size == 7
+    assert loaded.max_sampled_intervals == 32
+    assert loaded.interval_seed_offset == 2000
+
+
+def test_layer_profile_loader_parses_sampling_controls() -> None:
+    args = argparse.Namespace(
+        config=None,
+        dimensions="2,4",
+        n_values="40,80",
+        runs=5,
+        seed_start=10,
+        null_p=0.15,
+        null_edge_density=0.18,
+        min_interval_size=7,
+        max_sampled_intervals=32,
+        interval_seed_offset=2000,
+    )
+
+    loaded = load_layer_profile_evaluation_config(args, [])
+    assert loaded.dimensions == (2, 4)
     assert loaded.n_values == (40, 80)
     assert loaded.min_interval_size == 7
     assert loaded.max_sampled_intervals == 32

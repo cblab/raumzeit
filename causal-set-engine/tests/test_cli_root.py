@@ -103,6 +103,22 @@ def test_root_cli_dispatches_evaluate_midpoint(monkeypatch: pytest.MonkeyPatch) 
 
     assert captured["argv"] == ["--runs", "5"]
 
+
+
+def test_root_cli_dispatches_evaluate_layers(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_main(argv: list[str] | None = None) -> None:
+        captured["argv"] = argv
+
+    monkeypatch.setattr(
+        "causal_set_engine.experiments.run_layer_evaluation.main",
+        fake_main,
+    )
+    cli.main(["evaluate-layers", "--runs", "5"])
+
+    assert captured["argv"] == ["--runs", "5"]
+
 def test_root_cli_requires_subcommand() -> None:
     with pytest.raises(SystemExit):
         cli.main([])

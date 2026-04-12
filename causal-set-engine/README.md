@@ -35,6 +35,8 @@ causal-set evaluate-myrheim --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --s
 causal-set evaluate-intervals --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --k-max 5 --null-p 0.2 --null-edge-density 0.2
 
 causal-set evaluate-midpoint --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --min-interval-size 8 --max-sampled-intervals 64 --null-p 0.2 --null-edge-density 0.2
+
+causal-set evaluate-layers --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --min-interval-size 8 --max-sampled-intervals 64 --null-p 0.2 --null-edge-density 0.2
 ```
 
 This is the preferred interface for researchers on Linux, macOS, and Windows.
@@ -51,6 +53,7 @@ python -m causal_set_engine.cli scan-artifacts --n-values 60,80 --runs 8
 python -m causal_set_engine.cli evaluate-myrheim --dimensions 2,3,4 --n-values 40,80 --runs 8
 python -m causal_set_engine.cli evaluate-intervals --dimensions 2,3,4 --n-values 40,80 --runs 8 --k-max 5
 python -m causal_set_engine.cli evaluate-midpoint --dimensions 2,3,4 --n-values 40,80 --runs 8 --min-interval-size 8 --max-sampled-intervals 64
+python -m causal_set_engine.cli evaluate-layers --dimensions 2,3,4 --n-values 40,80 --runs 8 --min-interval-size 8 --max-sampled-intervals 64
 ```
 
 An additional package-level fallback is also supported:
@@ -142,3 +145,36 @@ causal-set evaluate-midpoint --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --
 ```
 
 The workflow reports compact answers on: dimensional discrimination (2D/3D/4D), separation from current null baselines, comparison versus Myrheim-Meyer and chain-height proxy, and where results are under-sampled.
+
+
+## Interval layer-profile observable
+
+`causal_set_engine.observables.cst.layer_profiles` adds a structural interval-internal profile:
+
+- for one comparable pair `x ≺ y`, use strict interval elements `I(x, y)` only (endpoints excluded),
+- assign each internal element `z` to layer index `L(z)` by internal predecessor depth from `x`:
+  - `L(z)=0` if no internal predecessor `w` satisfies `x ≺ w ≺ z`,
+  - else `L(z)=1+max(L(w))` over internal predecessors,
+- the profile is a count tuple by occupied layer index, starting at layer `0`.
+
+Summary helpers expose compact shape descriptors (occupied layer count, peak layer size/index, and boundary mass fraction).
+
+How this differs from midpoint scaling and Myrheim-Meyer:
+
+- Myrheim-Meyer is global pair-ordering structure over whole sets,
+- midpoint scaling is interval split-scaling around selected midpoints,
+- layer profiles are interval-internal depth-distribution shapes across sampled intervals.
+
+Limitations:
+
+- small strict intervals can be noisy and frequently under-sampled,
+- profile comparison across intervals with very different heights can be unstable,
+- this workflow is structural only: no curvature claims, no action-based logic.
+
+### Focused layer-profile workflow
+
+```bash
+causal-set evaluate-layers --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --min-interval-size 8 --max-sampled-intervals 64
+```
+
+The workflow reports conservative separation summaries versus current null baselines and compares effect-size strength against midpoint scaling and Myrheim-Meyer without imposing directional dimension assumptions.
