@@ -8,6 +8,7 @@ from causal_set_engine.config.loaders import (
     load_artifact_aware_scan_config,
     load_batch_calibration_config,
     load_growth_family_probe_config,
+    load_interval_evaluation_config,
     load_myrheim_meyer_evaluation_config,
 )
 
@@ -101,3 +102,21 @@ def test_myrheim_meyer_loader_parses_dimensions_and_sizes() -> None:
     assert loaded.dimensions == (2, 3, 4)
     assert loaded.n_values == (40, 80)
     assert loaded.runs == 7
+
+
+def test_interval_loader_parses_dimensions_sizes_and_kmax() -> None:
+    args = argparse.Namespace(
+        config=None,
+        dimensions="2,4",
+        n_values="30,50",
+        runs=3,
+        seed_start=20,
+        null_p=0.25,
+        null_edge_density=0.3,
+        k_max=7,
+    )
+
+    loaded = load_interval_evaluation_config(args, [])
+    assert loaded.dimensions == (2, 4)
+    assert loaded.n_values == (30, 50)
+    assert loaded.k_max == 7

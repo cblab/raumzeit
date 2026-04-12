@@ -100,3 +100,16 @@ class MyrheimMeyerEvaluationConfig:
     interval_samples: int = 50
     null_p: float = 0.2
     null_edge_density: float = 0.2
+
+
+@dataclass(frozen=True)
+class IntervalEvaluationConfig:
+    """Typed config for `run_interval_evaluation`."""
+
+    dimensions: tuple[int, ...] = (2, 3, 4)
+    n_values: tuple[int, ...] = (40, 80, 120)
+    runs: int = 8
+    seed_start: int = 100
+    null_p: float = 0.2
+    null_edge_density: float = 0.2
+    k_max: int = 5
