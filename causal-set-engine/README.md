@@ -33,6 +33,8 @@ causal-set scan-artifacts --n-values 60,80 --runs 8 --seed-start 100 --link-dens
 causal-set evaluate-myrheim --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --null-p 0.2 --null-edge-density 0.2
 
 causal-set evaluate-intervals --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --k-max 5 --null-p 0.2 --null-edge-density 0.2
+
+causal-set evaluate-midpoint --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --min-interval-size 8 --max-sampled-intervals 64 --null-p 0.2 --null-edge-density 0.2
 ```
 
 This is the preferred interface for researchers on Linux, macOS, and Windows.
@@ -48,6 +50,7 @@ python -m causal_set_engine.cli evaluate-growth --n-values 60,80 --runs 8
 python -m causal_set_engine.cli scan-artifacts --n-values 60,80 --runs 8
 python -m causal_set_engine.cli evaluate-myrheim --dimensions 2,3,4 --n-values 40,80 --runs 8
 python -m causal_set_engine.cli evaluate-intervals --dimensions 2,3,4 --n-values 40,80 --runs 8 --k-max 5
+python -m causal_set_engine.cli evaluate-midpoint --dimensions 2,3,4 --n-values 40,80 --runs 8 --min-interval-size 8 --max-sampled-intervals 64
 ```
 
 An additional package-level fallback is also supported:
@@ -105,3 +108,37 @@ causal-set evaluate-intervals --dimensions 2,3,4 --n-values 40,80,120 --runs 8 -
 ```
 
 The workflow reports per-model/per-`N` interval abundance counts and densities by `k`, explicitly highlights `k=0` links, and keeps interpretation restricted to global interval statistics.
+
+
+## Midpoint-scaling observable
+
+`causal_set_engine.observables.cst.midpoint_scaling` adds interval-based midpoint scaling as an explicit CST geometric sensor built directly on the interval toolkit.
+
+- **Midpoint candidate selection**: for each comparable pair `x ≺ y`, choose `z in I(x,y)` minimizing sub-interval asymmetry `||I(x,z)|-|I(z,y)||`, with deterministic tie-breaking.
+- **Primary statistic**: `S = N_xy / ((N_xz + N_zy)/2)` with inclusive counts `N_ab = |I(a,b)| + 2`.
+- **Derived estimate (secondary)**: `d_hat = log2(S)` as a convenience estimate, reported separately from `S`.
+
+Why sampled qualifying intervals (not one privileged interval):
+
+- finite causal sets contain many valid intervals with varying sizes and noise levels,
+- restricting to one hand-picked interval can hide variance and introduce accidental bias,
+- deterministic sampled qualifying intervals provide reproducible coverage while keeping runtime bounded.
+
+How this differs from Myrheim-Meyer:
+
+- Myrheim-Meyer is a **global pair-ordering** observable driven by ordering fraction over the whole set,
+- midpoint scaling is an **interval-localized split** observable that aggregates many sampled intervals and tests sub-interval balance/scaling behavior.
+
+Limitations:
+
+- small intervals are noisy and can be under-sampled when strict size thresholds are high,
+- midpoint-derived dimension estimates are finite-size diagnostics for calibration, not standalone theory claims,
+- this workflow does **not** add local curvature interpretation and does **not** include BD-action logic.
+
+### Focused midpoint workflow
+
+```bash
+causal-set evaluate-midpoint --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --min-interval-size 8 --max-sampled-intervals 64
+```
+
+The workflow reports compact answers on: dimensional discrimination (2D/3D/4D), separation from current null baselines, comparison versus Myrheim-Meyer and chain-height proxy, and where results are under-sampled.

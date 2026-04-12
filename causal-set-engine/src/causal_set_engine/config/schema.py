@@ -113,3 +113,18 @@ class IntervalEvaluationConfig:
     null_p: float = 0.2
     null_edge_density: float = 0.2
     k_max: int = 5
+
+
+@dataclass(frozen=True)
+class MidpointEvaluationConfig:
+    """Typed config for `run_midpoint_evaluation`."""
+
+    dimensions: tuple[int, ...] = (2, 3, 4)
+    n_values: tuple[int, ...] = (40, 80, 120)
+    runs: int = 8
+    seed_start: int = 100
+    null_p: float = 0.2
+    null_edge_density: float = 0.2
+    min_interval_size: int = 8
+    max_sampled_intervals: int = 64
+    interval_seed_offset: int = 10_000

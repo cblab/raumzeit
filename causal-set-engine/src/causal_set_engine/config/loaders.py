@@ -14,6 +14,7 @@ from causal_set_engine.config.schema import (
     GrowthFamilyProbeConfig,
     IntervalEvaluationConfig,
     MyrheimMeyerEvaluationConfig,
+    MidpointEvaluationConfig,
     parse_csv_floats,
     parse_csv_ints,
 )
@@ -228,4 +229,39 @@ def load_interval_evaluation_config(
         null_p=float(values["null_p"]),
         null_edge_density=float(values["null_edge_density"]),
         k_max=int(values["k_max"]),
+    )
+
+
+def load_midpoint_evaluation_config(
+    args: argparse.Namespace,
+    argv: list[str],
+) -> MidpointEvaluationConfig:
+    values = _merged_values(args, argv)
+
+    dimensions_input = values["dimensions"]
+    dimensions = (
+        parse_csv_ints(dimensions_input)
+        if isinstance(dimensions_input, str)
+        else tuple(int(value) for value in dimensions_input)
+    )
+    if any(dimension not in {2, 3, 4} for dimension in dimensions):
+        raise ValueError("dimensions must be chosen from {2, 3, 4}")
+
+    n_values_input = values["n_values"]
+    n_values = (
+        parse_csv_ints(n_values_input)
+        if isinstance(n_values_input, str)
+        else tuple(int(value) for value in n_values_input)
+    )
+
+    return MidpointEvaluationConfig(
+        dimensions=dimensions,
+        n_values=n_values,
+        runs=int(values["runs"]),
+        seed_start=int(values["seed_start"]),
+        null_p=float(values["null_p"]),
+        null_edge_density=float(values["null_edge_density"]),
+        min_interval_size=int(values["min_interval_size"]),
+        max_sampled_intervals=int(values["max_sampled_intervals"]),
+        interval_seed_offset=int(values["interval_seed_offset"]),
     )
