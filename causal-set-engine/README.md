@@ -118,6 +118,35 @@ Current data-shape pressure points exposed by plotting:
 - richer workflow result dataclasses may eventually help plotting ergonomics,
 - profile normalization/aggregation is intentionally deferred and may belong to future evaluation-layer work.
 
+
+## Benchmark instrumentation layer (measurement only)
+
+`causal_set_engine.benchmarks` provides a lightweight runtime measurement layer for the existing interval and observable stack.
+
+What is benchmarked:
+- interval primitives: `interval_elements`, `interval_size`, `is_link`, `compute_interval_abundances`,
+- CST observables: `estimate_myrheim_meyer_dimension`, sampled `compute_midpoint_scaling_statistic`, sampled `compute_layer_profile_summary`,
+- optional workflow-level timing: compact end-to-end calls for Myrheim-Meyer, midpoint, and layer-profile evaluation helpers.
+
+What is not benchmarked:
+- generator construction time (causal sets are pre-built outside timed sections),
+- plotting, dashboarding, or rich reporting infrastructure,
+- any optimized alternative implementations (no caching/native rewrites in this layer).
+
+Run benchmarks:
+
+```bash
+causal-set-benchmark --n-values 40,80,120 --repeats 3 --seeds 100,101,102
+python -m causal_set_engine.benchmarks.run_benchmarks --n-values 30,60 --repeats 2 --skip-workflow-benchmarks
+```
+
+Interpretation guidance (conservative):
+- treat timing means/stdev as empirical behavior for current implementations, not guarantees,
+- treat reported scaling exponents as trend indicators for architecture review, not exact complexity proofs,
+- use workflow-level timing as secondary context; primitive/API-level timings are the primary signal.
+
+The benchmark layer exists to prepare data-informed architecture review and prioritization, not to justify premature optimization.
+
 ## Functional boundaries
 
 - Engine modules (`core`, `generators`, `diagnostics`, `evaluation`, `policies`, `config`) are reusable and function-centric.
