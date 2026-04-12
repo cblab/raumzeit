@@ -13,6 +13,7 @@ from causal_set_engine.experiments import (
     run_myrheim_meyer_evaluation,
     run_interval_evaluation,
     run_midpoint_evaluation,
+    run_layer_evaluation,
 )
 
 
@@ -46,6 +47,10 @@ def build_parser() -> argparse.ArgumentParser:
         "evaluate-midpoint",
         help="run focused midpoint-scaling workflow",
     )
+    subparsers.add_parser(
+        "evaluate-layers",
+        help="run focused interval layer-profile workflow",
+    )
     return parser
 
 
@@ -74,6 +79,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
     if args.command == "evaluate-midpoint":
         run_midpoint_evaluation.main(remaining)
+        return
+    if args.command == "evaluate-layers":
+        run_layer_evaluation.main(remaining)
         return
 
     parser.error(f"unknown command: {args.command}")
