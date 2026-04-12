@@ -11,6 +11,7 @@ from causal_set_engine.experiments import (
     run_diagnostic_demo,
     run_growth_family_probe,
     run_myrheim_meyer_evaluation,
+    run_interval_evaluation,
 )
 
 
@@ -36,6 +37,10 @@ def build_parser() -> argparse.ArgumentParser:
         "evaluate-myrheim",
         help="run focused Myrheim-Meyer evaluation workflow",
     )
+    subparsers.add_parser(
+        "evaluate-intervals",
+        help="run focused global interval-statistics workflow",
+    )
     return parser
 
 
@@ -58,6 +63,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
     if args.command == "evaluate-myrheim":
         run_myrheim_meyer_evaluation.main(remaining)
+        return
+    if args.command == "evaluate-intervals":
+        run_interval_evaluation.main(remaining)
         return
 
     parser.error(f"unknown command: {args.command}")

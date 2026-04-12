@@ -31,6 +31,8 @@ causal-set evaluate-growth --n-values 60,80 --runs 8 --seed-start 100 --growth-l
 causal-set scan-artifacts --n-values 60,80 --runs 8 --seed-start 100 --link-density-grid 0.16,0.22,0.28 --bias-strength-grid 0.0,0.5,1.0
 
 causal-set evaluate-myrheim --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --null-p 0.2 --null-edge-density 0.2
+
+causal-set evaluate-intervals --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --seed-start 100 --k-max 5 --null-p 0.2 --null-edge-density 0.2
 ```
 
 This is the preferred interface for researchers on Linux, macOS, and Windows.
@@ -45,6 +47,7 @@ python -m causal_set_engine.cli calibrate --n-values 60,80 --runs 8
 python -m causal_set_engine.cli evaluate-growth --n-values 60,80 --runs 8
 python -m causal_set_engine.cli scan-artifacts --n-values 60,80 --runs 8
 python -m causal_set_engine.cli evaluate-myrheim --dimensions 2,3,4 --n-values 40,80 --runs 8
+python -m causal_set_engine.cli evaluate-intervals --dimensions 2,3,4 --n-values 40,80 --runs 8 --k-max 5
 ```
 
 An additional package-level fallback is also supported:
@@ -78,3 +81,27 @@ This differs from `diagnostics.basic.estimate_dimension_chain_height`, which is 
 - The estimator is calibrated to Alexandrov-interval-style Minkowski sprinklings; non-interval regions can shift recovered dimensions.
 - Small `N` can produce high variance.
 - Returned values are clipped to the configured bracket when ordering fractions fall outside model range.
+
+## Alexandrov interval toolkit (global CST observables)
+
+`causal_set_engine.observables.cst.intervals` adds the first reusable interval-structure toolkit for global CST analysis:
+
+- **Alexandrov interval**: for comparable elements `x ≺ y`, `I(x, y) = {z | x ≺ z ≺ y}`.
+- **Links**: comparable pairs with empty strict intervals (`|I(x, y)| = 0`), reported as the `k=0` / `N0` interval-abundance bin.
+- **Interval abundances**: histogram counts/densities of `|I(x, y)| = k` over ordered comparable pairs.
+
+Why this matters:
+
+- Global interval abundances are a foundational CST structure signal and an auditable baseline against null models.
+- This layer is intentionally conservative: it provides reusable interval primitives and global statistics only.
+- It is a prerequisite toolkit for later action-based observables (including BD-action studies), which are intentionally out of scope here.
+
+### Focused global interval workflow
+
+Use the new researcher entrypoint to compare Minkowski references against null baselines:
+
+```bash
+causal-set evaluate-intervals --dimensions 2,3,4 --n-values 40,80,120 --runs 8 --k-max 5
+```
+
+The workflow reports per-model/per-`N` interval abundance counts and densities by `k`, explicitly highlights `k=0` links, and keeps interpretation restricted to global interval statistics.
