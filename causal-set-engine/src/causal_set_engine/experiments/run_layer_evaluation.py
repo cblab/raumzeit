@@ -6,9 +6,15 @@ import argparse
 import statistics
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 
 from causal_set_engine.config.loaders import load_layer_profile_evaluation_config
 from causal_set_engine.evaluation.layer_profile_study import evaluate_layer_profiles_study
+from causal_set_engine.visualization.profiles import (
+    write_layer_profile_sample_plots,
+    write_layer_profile_summary_trend_plot,
+)
+from causal_set_engine.visualization.trends import write_layer_profile_metric_trend_plot
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -33,6 +39,19 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--min-interval-size", type=int, default=8)
     parser.add_argument("--max-sampled-intervals", type=int, default=64)
     parser.add_argument("--interval-seed-offset", type=int, default=10_000)
+    parser.add_argument("--plot", action="store_true", help="write static layer-profile plots")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("artifacts/plots/evaluate-layers"),
+        help="directory for optional plot output files",
+    )
+    parser.add_argument(
+        "--max-profile-plots",
+        type=int,
+        default=12,
+        help="maximum number of sampled interval profiles to plot",
+    )
 
     args = parser.parse_args(argv)
     raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
@@ -129,6 +148,23 @@ def main(argv: Sequence[str] | None = None) -> None:
         f"{result.conservative_min_effect_myrheim_meyer:.3f}; "
         f"mean |effect| midpoint/mm = {statistics.fmean(midpoint_abs):.3f}/{statistics.fmean(mm_abs):.3f}."
     )
+
+    if args.plot:
+        trend_dir = args.output_dir
+        generated = [
+            write_layer_profile_metric_trend_plot(result, trend_dir / "layer_occupied_layers_trend.png"),
+            write_layer_profile_summary_trend_plot(result, trend_dir / "layer_boundary_fraction_trend.png"),
+        ]
+        generated.extend(
+            write_layer_profile_sample_plots(
+                result.sampled_profiles,
+                trend_dir / "sampled_profiles",
+                max_plots=args.max_profile_plots,
+            )
+        )
+        print("\nplot outputs:")
+        for path in generated:
+            print(path)
 
 
 if __name__ == "__main__":

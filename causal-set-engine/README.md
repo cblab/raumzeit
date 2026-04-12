@@ -14,6 +14,7 @@ src/causal_set_engine/
   policies/       # explicit GO/NO-GO decision policy
   experiments/    # study orchestration built on engine APIs
   config/         # typed run configs and config-file loaders
+  visualization/  # lightweight static plotting helpers for workflow outputs
 ```
 
 ## Canonical researcher CLI
@@ -63,6 +64,59 @@ python -m causal_set_engine run --n 50 --seed 7
 ```
 
 Legacy separate workflow modules remain available internally for compatibility, but the canonical researcher workflow is `causal-set <subcommand> ...`.
+
+
+## Research visualization layer (lightweight, static)
+
+`causal_set_engine.visualization` adds a small plotting layer for researcher-facing inspection of workflow outputs.
+
+Design constraints:
+- static files only (`matplotlib`, headless-safe Agg backend),
+- no GUI/dashboard/web app,
+- no reimplementation of scientific metrics in plotting modules,
+- plotting remains subordinate to `observables/` + `evaluation/` outputs.
+
+### Available plotting modules
+
+- `visualization/trends.py`
+  - Myrheim-Meyer summary trend plots over `N`
+  - midpoint-derived dimension trend plots over `N`
+  - layer-profile occupied-layer summary trends over `N`
+- `visualization/distributions.py`
+  - interval-abundance grouped bars by `k` for each `N`
+  - supports side-by-side model comparison across Minkowski references and null baselines
+  - can write both count and density views
+- `visualization/profiles.py`
+  - individual sampled interval layer-profile plots (`layer index -> element count`)
+  - compact boundary-fraction summary trend plot
+
+### Workflow integration
+
+Plotting is opt-in via conservative workflow flags:
+
+```bash
+causal-set evaluate-myrheim --plot --output-dir artifacts/plots/evaluate-myrheim
+causal-set evaluate-midpoint --plot --output-dir artifacts/plots/evaluate-midpoint
+causal-set evaluate-intervals --plot --output-dir artifacts/plots/evaluate-intervals
+causal-set evaluate-layers --plot --output-dir artifacts/plots/evaluate-layers --max-profile-plots 12
+```
+
+The same flags work with module invocation on Linux/macOS/Windows:
+
+```bash
+python -m causal_set_engine.cli evaluate-layers --plot --output-dir artifacts/plots/evaluate-layers
+```
+
+Headless note: the plotting helpers force the `Agg` backend, so figure generation works in non-GUI environments (CI, remote shells, WSL, containers).
+
+### Interpretation guidance and current pressure points
+
+Plots are for debugging, exploration, and communication. They are **not** primary scientific evidence by themselves.
+
+Current data-shape pressure points exposed by plotting:
+- layer profiles often have unequal heights, so direct cross-interval shape comparison is limited,
+- richer workflow result dataclasses may eventually help plotting ergonomics,
+- profile normalization/aggregation is intentionally deferred and may belong to future evaluation-layer work.
 
 ## Functional boundaries
 

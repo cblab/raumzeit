@@ -20,6 +20,7 @@ def test_layer_profile_evaluation_schema_and_rows_present() -> None:
     assert result.conservative_min_effect_layers >= 0.0
     assert result.conservative_min_effect_midpoint >= 0.0
     assert result.conservative_min_effect_myrheim_meyer >= 0.0
+    assert result.sampled_profiles
 
     for row in result.per_model_n:
         assert row.n == 20
