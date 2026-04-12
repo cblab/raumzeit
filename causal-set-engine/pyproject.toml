@@ -9,7 +9,7 @@ description = "Causal set calibration and probe engine scaffold"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Causal Set Team"}]
-dependencies = []
+dependencies = ["matplotlib>=3.7"]
 
 
 [project.scripts]

@@ -6,9 +6,11 @@ import argparse
 import statistics
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 
 from causal_set_engine.config.loaders import load_myrheim_meyer_evaluation_config
 from causal_set_engine.evaluation.myrheim_meyer_study import evaluate_myrheim_meyer_study
+from causal_set_engine.visualization.trends import write_myrheim_meyer_trend_plot
 
 
 def _trend_label(values: tuple[float, ...]) -> str:
@@ -50,6 +52,13 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--interval-samples", type=int, default=50)
     parser.add_argument("--null-p", type=float, default=0.2)
     parser.add_argument("--null-edge-density", type=float, default=0.2)
+    parser.add_argument("--plot", action="store_true", help="write a static trend plot")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("artifacts/plots/evaluate-myrheim"),
+        help="directory for optional plot output files",
+    )
     args = parser.parse_args(argv)
     raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
     config = load_myrheim_meyer_evaluation_config(args, raw_cli_args)
@@ -133,6 +142,10 @@ def main(argv: Sequence[str] | None = None) -> None:
         f"a: mm stdev exceeded chain-proxy stdev in {len(noisy_rows)}/{len(result.per_dimension_n)} "
         "dimension-N cells; inspect per-dimension summaries above."
     )
+
+    if args.plot:
+        plot_path = write_myrheim_meyer_trend_plot(result, args.output_dir / "myrheim_meyer_trend.png")
+        print(f"\nplot output: {plot_path}")
 
 
 if __name__ == "__main__":

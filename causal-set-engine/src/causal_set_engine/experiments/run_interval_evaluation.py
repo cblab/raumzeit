@@ -5,9 +5,11 @@ from __future__ import annotations
 import argparse
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 
 from causal_set_engine.config.loaders import load_interval_evaluation_config
 from causal_set_engine.evaluation.interval_study import evaluate_global_interval_statistics
+from causal_set_engine.visualization.distributions import write_interval_abundance_comparison_plots
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -35,6 +37,13 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--null-p", type=float, default=0.2)
     parser.add_argument("--null-edge-density", type=float, default=0.2)
     parser.add_argument("--k-max", type=int, default=5)
+    parser.add_argument("--plot", action="store_true", help="write static interval-abundance comparison plots")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("artifacts/plots/evaluate-intervals"),
+        help="directory for optional plot output files",
+    )
 
     args = parser.parse_args(argv)
     raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
@@ -82,6 +91,21 @@ def main(argv: Sequence[str] | None = None) -> None:
             f"{row.model:<21} N={row.n:<4} links(mean count)={link_summary.mean_count:.2f} "
             f"links(mean density)={link_summary.mean_density:.4f}"
         )
+
+    if args.plot:
+        density_paths = write_interval_abundance_comparison_plots(
+            result,
+            args.output_dir,
+            use_density=True,
+        )
+        count_paths = write_interval_abundance_comparison_plots(
+            result,
+            args.output_dir,
+            use_density=False,
+        )
+        print("\nplot outputs:")
+        for path in (*density_paths, *count_paths):
+            print(path)
 
 
 if __name__ == "__main__":

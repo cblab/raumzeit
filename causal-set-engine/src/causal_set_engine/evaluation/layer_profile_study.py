@@ -14,7 +14,8 @@ from causal_set_engine.generators.minkowski_4d import generate_minkowski_4d
 from causal_set_engine.generators.null_models import generate_fixed_edge_count_poset
 from causal_set_engine.generators.random_poset import generate_random_poset
 from causal_set_engine.observables.cst import (
-    compute_layer_profile_summary,
+    compute_layer_profile,
+    summarize_layer_profile,
     compute_midpoint_scaling_statistic,
     sampled_qualifying_intervals,
 )
@@ -41,6 +42,18 @@ class LayerProfileModelNRow:
     under_sampled_runs: int
 
 
+
+
+@dataclass(frozen=True)
+class LayerProfileSample:
+    """One sampled interval profile retained for researcher-facing plotting."""
+
+    model: str
+    n: int
+    seed: int
+    interval_index: int
+    profile: tuple[int, ...]
+
 @dataclass(frozen=True)
 class LayerProfileSeparationRow:
     model: str
@@ -57,6 +70,7 @@ class LayerProfileSeparationRow:
 class LayerProfileEvaluationResult:
     per_model_n: tuple[LayerProfileModelNRow, ...]
     separation_rows: tuple[LayerProfileSeparationRow, ...]
+    sampled_profiles: tuple[LayerProfileSample, ...]
     conservative_min_effect_layers: float
     conservative_min_effect_midpoint: float
     conservative_min_effect_myrheim_meyer: float
@@ -89,8 +103,9 @@ def _model_rows(
     min_interval_size: int,
     max_sampled_intervals: int,
     interval_seed_offset: int,
-) -> tuple[LayerProfileModelNRow, list[dict[str, float]]]:
+) -> tuple[LayerProfileModelNRow, list[dict[str, float]], list[LayerProfileSample]]:
     rows: list[dict[str, float]] = []
+    sampled_profiles: list[LayerProfileSample] = []
     for seed in range(seed_start, seed_start + runs):
         cset = generator(n, seed)
         metrics = run_once(cset, interval_samples=50, seed=seed)
@@ -106,14 +121,24 @@ def _model_rows(
         peak_layer_indices: list[float] = []
         boundary_fractions: list[float] = []
         midpoint_dimensions: list[float] = []
-        for x, y in sampling.sampled_pairs:
-            summary = compute_layer_profile_summary(cset, x, y)
+        for interval_index, (x, y) in enumerate(sampling.sampled_pairs):
+            profile = compute_layer_profile(cset, x, y)
+            summary = summarize_layer_profile(profile)
             occupied_layers.append(float(summary.occupied_layer_count))
             peak_layer_sizes.append(float(summary.peak_layer_size))
             peak_layer_indices.append(float(summary.peak_layer_index))
             boundary_fractions.append(summary.first_last_layer_fraction)
             midpoint_dimensions.append(
                 compute_midpoint_scaling_statistic(cset, x, y).derived_dimension_estimate
+            )
+            sampled_profiles.append(
+                LayerProfileSample(
+                    model=model,
+                    n=n,
+                    seed=seed,
+                    interval_index=interval_index,
+                    profile=profile,
+                )
             )
 
         rows.append(
@@ -147,7 +172,7 @@ def _model_rows(
         qualifying_interval_count_mean=statistics.fmean(row["qualifying_interval_count"] for row in rows),
         under_sampled_runs=int(sum(row["under_sampled"] for row in rows)),
     )
-    return model_row, rows
+    return model_row, rows, sampled_profiles
 
 
 def evaluate_layer_profiles_study(
@@ -167,9 +192,10 @@ def evaluate_layer_profiles_study(
     mk_rows_by_dim_n: dict[tuple[int, int], list[dict[str, float]]] = {}
     random_rows_by_n: dict[int, list[dict[str, float]]] = {}
     fixed_rows_by_n: dict[int, list[dict[str, float]]] = {}
+    sampled_profiles: list[LayerProfileSample] = []
 
     for n in n_values:
-        random_row, random_runs = _model_rows(
+        random_row, random_runs, random_samples = _model_rows(
             model="null-random-poset",
             generator=lambda n_val, seed: generate_random_poset(
                 n=n_val,
@@ -185,9 +211,10 @@ def evaluate_layer_profiles_study(
         )
         per_model_n.append(random_row)
         random_rows_by_n[n] = random_runs
+        sampled_profiles.extend(random_samples)
 
         fixed_edge_count = edge_count_from_density(n, null_edge_density)
-        fixed_row, fixed_runs = _model_rows(
+        fixed_row, fixed_runs, fixed_samples = _model_rows(
             model="null-fixed-edge-poset",
             generator=lambda n_val, seed: generate_fixed_edge_count_poset(
                 n=n_val,
@@ -203,9 +230,10 @@ def evaluate_layer_profiles_study(
         )
         per_model_n.append(fixed_row)
         fixed_rows_by_n[n] = fixed_runs
+        sampled_profiles.extend(fixed_samples)
 
         for dimension in dimensions:
-            row, rows = _model_rows(
+            row, rows, model_samples = _model_rows(
                 model=f"minkowski-{dimension}d",
                 generator=_minkowski_generator(dimension),
                 n=n,
@@ -217,6 +245,7 @@ def evaluate_layer_profiles_study(
             )
             per_model_n.append(row)
             mk_rows_by_dim_n[(dimension, n)] = rows
+            sampled_profiles.extend(model_samples)
 
     separation_rows: list[LayerProfileSeparationRow] = []
     layer_effects: list[float] = []
@@ -269,6 +298,7 @@ def evaluate_layer_profiles_study(
     return LayerProfileEvaluationResult(
         per_model_n=tuple(per_model_n),
         separation_rows=tuple(separation_rows),
+        sampled_profiles=tuple(sampled_profiles),
         conservative_min_effect_layers=min(abs(value) for value in layer_effects),
         conservative_min_effect_midpoint=min(abs(value) for value in midpoint_effects),
         conservative_min_effect_myrheim_meyer=min(abs(value) for value in mm_effects),

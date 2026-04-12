@@ -6,9 +6,11 @@ import argparse
 import statistics
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 
 from causal_set_engine.config.loaders import load_midpoint_evaluation_config
 from causal_set_engine.evaluation.midpoint_scaling_study import evaluate_midpoint_scaling_study
+from causal_set_engine.visualization.trends import write_midpoint_dimension_trend_plot
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -38,6 +40,13 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--min-interval-size", type=int, default=8)
     parser.add_argument("--max-sampled-intervals", type=int, default=64)
     parser.add_argument("--interval-seed-offset", type=int, default=10_000)
+    parser.add_argument("--plot", action="store_true", help="write a static trend plot")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path("artifacts/plots/evaluate-midpoint"),
+        help="directory for optional plot output files",
+    )
 
     args = parser.parse_args(argv)
     raw_cli_args = list(argv) if argv is not None else sys.argv[1:]
@@ -131,6 +140,13 @@ def main(argv: Sequence[str] | None = None) -> None:
         "runs with fewer sampled intervals than requested; inspect sampled/qualifying and "
         "under_sampled columns above."
     )
+
+    if args.plot:
+        plot_path = write_midpoint_dimension_trend_plot(
+            result,
+            args.output_dir / "midpoint_dimension_trend.png",
+        )
+        print(f"\nplot output: {plot_path}")
 
 
 if __name__ == "__main__":
