@@ -12,6 +12,7 @@ from causal_set_engine.experiments import (
     run_growth_family_probe,
     run_myrheim_meyer_evaluation,
     run_interval_evaluation,
+    run_midpoint_evaluation,
 )
 
 
@@ -41,6 +42,10 @@ def build_parser() -> argparse.ArgumentParser:
         "evaluate-intervals",
         help="run focused global interval-statistics workflow",
     )
+    subparsers.add_parser(
+        "evaluate-midpoint",
+        help="run focused midpoint-scaling workflow",
+    )
     return parser
 
 
@@ -66,6 +71,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
     if args.command == "evaluate-intervals":
         run_interval_evaluation.main(remaining)
+        return
+    if args.command == "evaluate-midpoint":
+        run_midpoint_evaluation.main(remaining)
         return
 
     parser.error(f"unknown command: {args.command}")
